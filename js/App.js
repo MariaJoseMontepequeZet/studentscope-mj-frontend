@@ -77,7 +77,7 @@
         set('sidebarNombre', nombreCompleto);
         set('sidebarRol', d && d.rol === 'administrador' ? 'Administrador' : 'Usuario');
         var av = document.getElementById('sidebarAvatar');
-        if (av) av.textContent = nombreCompleto.charAt(0).toUpperCase();
+        if (av) av.innerHTML = window.EduTrack.avatar((d && d.email) || nombreCompleto);
     }
 
     function esAdministrador() {
@@ -275,7 +275,6 @@
             .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i')
             .replace(/ó/g, 'o').replace(/ú/g, 'u').replace(/\s+/g, '');
     }
-    function iniciales(n, a) { return ((n[0] || '') + (a[0] || '')).toUpperCase(); }
     function progresoClass(p) { return p >= 100 ? 'progress-fill--complete' : p < 40 ? 'progress-fill--low' : ''; }
     function formatFecha(d) {
         if (typeof d !== 'string') return '—';
@@ -304,7 +303,7 @@
             return '<article class="student-card' + (e.activo ? '' : ' student-card--inactive') + '" ' +
                 'style="animation-delay:' + Math.min(i * 30, 300) + 'ms" data-id="' + num(e.id) + '">' +
                 '<div class="card-header">' +
-                '<div class="card-avatar">' + esc(iniciales(e.nombre, e.apellido)) + '</div>' +
+                '<div class="card-avatar" aria-hidden="true">' + window.EduTrack.avatar(e.email) + '</div>' +
                 '<div class="card-info">' +
                 '<p class="card-name">' + esc(e.nombre + ' ' + e.apellido) + '</p>' +
                 '<p class="card-email">' + esc(e.email) + '</p>' +

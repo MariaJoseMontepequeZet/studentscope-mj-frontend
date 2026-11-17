@@ -1,0 +1,41 @@
+.avatar-usuario {
+    display: inline-flex;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.avatar-usuario svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.avatar-usuario--sm {
+    width: 32px;
+    height: 32px;
+}
+
+.cuenta-nombre {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.card-avatar svg,
+.db-sidebar__user-avatar svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.card-avatar,
+.db-sidebar__user-avatar {
+    overflow: hidden;
+    padding: 0;
+}
+
+.db-sidebar__user-avatar {
+    width: 40px;
+    height: 40px;
+}

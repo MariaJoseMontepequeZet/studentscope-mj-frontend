@@ -53,7 +53,8 @@
             : '<button class="btn btn-danger btn--sm" data-action="cuenta-eliminar" data-id="' + id + '" aria-label="Eliminar la cuenta de ' + nombre + '">Eliminar</button>';
 
         return '<tr class="db-table__row">' +
-            '<td class="db-table__td"><strong>' + nombre + '</strong>' + (esYo ? ' <span class="cuenta-yo">Tú</span>' : '') + '</td>' +
+            '<td class="db-table__td"><div class="cuenta-nombre"><span class="avatar-usuario avatar-usuario--sm" aria-hidden="true">' + window.EduTrack.avatar(cuenta.email) + '</span>' +
+            '<span><strong>' + nombre + '</strong>' + (esYo ? ' <span class="cuenta-yo">Tú</span>' : '') + '</span></div></td>' +
             '<td class="db-table__td">' + esc(cuenta.email) + '</td>' +
             '<td class="db-table__td"><span class="rol-badge' + (esAdmin ? ' rol-badge--admin' : '') + '">' +
             (esAdmin ? 'Administrador' : 'Usuario') + '</span></td>' +
