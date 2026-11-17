@@ -11,54 +11,18 @@
     const esc = window.EduTrack.escaparHTML;
     const num = window.EduTrack.aNumero;
     const ico = window.EduTrack.icono;
+    const api = window.EduTrack.api;
 
-    var DATASET_INICIAL = [
-        { id: 1, nombre: 'Juan', apellido: 'Pérez', email: 'pjuan5058@gmail.com', ciudad: 'Bogotá', curso: 'Desarrollo Web', progreso: 75, fechaInscripcion: '2023-01-15', plan: 'Premium', montoUSD: 99.99, activo: true },
-        { id: 2, nombre: 'María', apellido: 'Gómez', email: 'maria.gomez91@gmail.com', ciudad: 'Medellín', curso: 'Diseño UX/UI', progreso: 60, fechaInscripcion: '2023-02-20', plan: 'Básico', montoUSD: 29.99, activo: true },
-        { id: 3, nombre: 'Carlos', apellido: 'López', email: 'carlos.lopezdev@gmail.com', ciudad: 'Cali', curso: 'Marketing Digital', progreso: 85, fechaInscripcion: '2023-03-10', plan: 'Premium', montoUSD: 99.99, activo: true },
-        { id: 4, nombre: 'Ana', apellido: 'Martínez', email: 'anamartinez14@gmail.com', ciudad: 'Bogotá', curso: 'Desarrollo Web', progreso: 90, fechaInscripcion: '2023-04-05', plan: 'Básico', montoUSD: 29.99, activo: true },
-        { id: 5, nombre: 'Luis', apellido: 'García', email: 'luisgarcia.tech@gmail.com', ciudad: 'Medellín', curso: 'Diseño UX/UI', progreso: 70, fechaInscripcion: '2023-05-10', plan: 'Premium', montoUSD: 99.99, activo: true },
-        { id: 6, nombre: 'Andrés', apellido: 'Rodríguez', email: 'andresrodriguez92@gmail.com', ciudad: 'Bogotá', curso: 'Python y Data Science', progreso: 45, fechaInscripcion: '2023-06-15', plan: 'Básico', montoUSD: 29.99, activo: true },
-        { id: 7, nombre: 'Valentina', apellido: 'Torres', email: 'valetorres.dev@gmail.com', ciudad: 'Medellín', curso: 'Full Stack Web', progreso: 80, fechaInscripcion: '2023-07-20', plan: 'Premium', montoUSD: 99.99, activo: true },
-        { id: 8, nombre: 'Felipe', apellido: 'González', email: 'felipegonzalez.co@gmail.com', ciudad: 'Bogotá', curso: 'Python y Data Science', progreso: 30, fechaInscripcion: '2023-08-10', plan: 'Estándar', montoUSD: 59.99, activo: true },
-        { id: 9, nombre: 'Daniela', apellido: 'Vargas', email: 'danielavargas14@gmail.com', ciudad: 'Cali', curso: 'DevOps y Cloud', progreso: 100, fechaInscripcion: '2023-09-05', plan: 'Premium', montoUSD: 99.99, activo: false },
-        { id: 10, nombre: 'Santiago', apellido: 'Herrera', email: 'santiagoherrera.med@gmail.com', ciudad: 'Medellín', curso: 'Desarrollo Web', progreso: 55, fechaInscripcion: '2023-10-12', plan: 'Básico', montoUSD: 29.99, activo: true },
-        { id: 11, nombre: 'Sofía', apellido: 'Jiménez', email: 'sofiajimenez.bog@gmail.com', ciudad: 'Bogotá', curso: 'Diseño UX/UI', progreso: 70, fechaInscripcion: '2023-11-18', plan: 'Estándar', montoUSD: 59.99, activo: true },
-        { id: 12, nombre: 'Miguel', apellido: 'Castro', email: 'miguelcastro.bar@gmail.com', ciudad: 'Barranquilla', curso: 'SQL y Bases de Datos', progreso: 90, fechaInscripcion: '2024-01-08', plan: 'Premium', montoUSD: 99.99, activo: true },
-        { id: 13, nombre: 'Camila', apellido: 'Ruiz', email: 'camilaruiz2024@gmail.com', ciudad: 'Bogotá', curso: 'Marketing Digital', progreso: 40, fechaInscripcion: '2024-02-14', plan: 'Básico', montoUSD: 29.99, activo: true },
-        { id: 14, nombre: 'Diego', apellido: 'Mendoza', email: 'diegomendoza.tech@gmail.com', ciudad: 'Medellín', curso: 'React Native', progreso: 65, fechaInscripcion: '2024-03-20', plan: 'Estándar', montoUSD: 59.99, activo: true },
-        { id: 15, nombre: 'Isabella', apellido: 'Suárez', email: 'isabellasuarez.col@gmail.com', ciudad: 'Bogotá', curso: 'Python y Data Science', progreso: 100, fechaInscripcion: '2024-04-10', plan: 'Premium', montoUSD: 99.99, activo: false },
-        { id: 16, nombre: 'Nicolás', apellido: 'Reyes', email: 'nicolasreyes.crt@gmail.com', ciudad: 'Cartagena', curso: 'Desarrollo Web', progreso: 20, fechaInscripcion: '2024-05-05', plan: 'Básico', montoUSD: 29.99, activo: true },
-        { id: 17, nombre: 'Adriana', apellido: 'Molina', email: 'adrianamolina.dev@gmail.com', ciudad: 'Medellín', curso: 'Python y Data Science', progreso: 75, fechaInscripcion: '2024-06-15', plan: 'Estándar', montoUSD: 59.99, activo: true },
-        { id: 18, nombre: 'Alejandro', apellido: 'Ortega', email: 'alejandroortega88@gmail.com', ciudad: 'Bogotá', curso: 'Full Stack Web', progreso: 85, fechaInscripcion: '2024-07-22', plan: 'Premium', montoUSD: 99.99, activo: true },
-        { id: 19, nombre: 'Paola', apellido: 'Silva', email: 'paolasilva.cali@gmail.com', ciudad: 'Cali', curso: 'Diseño UX/UI', progreso: 50, fechaInscripcion: '2024-08-18', plan: 'Básico', montoUSD: 29.99, activo: true },
-        { id: 20, nombre: 'Sebastián', apellido: 'Rojas', email: 'sebastianrojas.buc@gmail.com', ciudad: 'Bucaramanga', curso: 'DevOps y Cloud', progreso: 15, fechaInscripcion: '2024-09-10', plan: 'Estándar', montoUSD: 59.99, activo: true },
-        { id: 21, nombre: 'Natalia', apellido: 'Vega', email: 'nataliavega.bog@gmail.com', ciudad: 'Bogotá', curso: 'SQL y Bases de Datos', progreso: 100, fechaInscripcion: '2024-10-05', plan: 'Premium', montoUSD: 99.99, activo: false },
-        { id: 22, nombre: 'David', apellido: 'Navarro', email: 'davidnavarro.med@gmail.com', ciudad: 'Medellín', curso: 'React Native', progreso: 45, fechaInscripcion: '2024-11-12', plan: 'Básico', montoUSD: 29.99, activo: false },
-        { id: 23, nombre: 'Camilo', apellido: 'Ramírez', email: 'camiloramirez.col@gmail.com', ciudad: 'Bogotá', curso: 'Marketing Digital', progreso: 60, fechaInscripcion: '2024-12-08', plan: 'Estándar', montoUSD: 59.99, activo: true },
-        { id: 24, nombre: 'Laura', apellido: 'Moreno', email: 'lauramoreno.bar@gmail.com', ciudad: 'Barranquilla', curso: 'Full Stack Web', progreso: 80, fechaInscripcion: '2025-01-15', plan: 'Premium', montoUSD: 99.99, activo: true },
-        { id: 25, nombre: 'Roberto', apellido: 'Castillo', email: 'robertocastillo.dev@gmail.com', ciudad: 'Cali', curso: 'Desarrollo Web', progreso: 35, fechaInscripcion: '2025-02-10', plan: 'Básico', montoUSD: 29.99, activo: true },
-        { id: 26, nombre: 'Claudia', apellido: 'Patiño', email: 'claudiapatino.bog@gmail.com', ciudad: 'Bogotá', curso: 'DevOps y Cloud', progreso: 90, fechaInscripcion: '2025-03-05', plan: 'Estándar', montoUSD: 59.99, activo: true },
-        { id: 27, nombre: 'Fernando', apellido: 'Ospina', email: 'fernandoospina.per@gmail.com', ciudad: 'Pereira', curso: 'Python y Data Science', progreso: 25, fechaInscripcion: '2025-04-01', plan: 'Básico', montoUSD: 29.99, activo: false },
-        { id: 28, nombre: 'Marcela', apellido: 'Acosta', email: 'marcelaacosta.med@gmail.com', ciudad: 'Medellín', curso: 'Diseño UX/UI', progreso: 70, fechaInscripcion: '2025-04-15', plan: 'Estándar', montoUSD: 59.99, activo: true },
-        { id: 29, nombre: 'Iván', apellido: 'Bermúdez', email: 'ivanbermudez.tech@gmail.com', ciudad: 'Bogotá', curso: 'React Native', progreso: 55, fechaInscripcion: '2025-04-20', plan: 'Premium', montoUSD: 99.99, activo: true },
-        { id: 30, nombre: 'Sandra', apellido: 'Quintero', email: 'sandraquintero.bar@gmail.com', ciudad: 'Barranquilla', curso: 'SQL y Bases de Datos', progreso: 100, fechaInscripcion: '2024-01-20', plan: 'Premium', montoUSD: 99.99, activo: false },
-        { id: 31, nombre: 'Gustavo', apellido: 'Londoño', email: 'gustavolondono.col@gmail.com', ciudad: 'Medellín', curso: 'Marketing Digital', progreso: 40, fechaInscripcion: '2024-02-28', plan: 'Básico', montoUSD: 29.99, activo: true },
-        { id: 32, nombre: 'Juliana', apellido: 'Franco', email: 'julianafranco.bog@gmail.com', ciudad: 'Bogotá', curso: 'Full Stack Web', progreso: 65, fechaInscripcion: '2024-03-15', plan: 'Estándar', montoUSD: 59.99, activo: true },
-        { id: 33, nombre: 'Mateo', apellido: 'Salcedo', email: 'mateosalcedo.crt@gmail.com', ciudad: 'Cartagena', curso: 'DevOps y Cloud', progreso: 100, fechaInscripcion: '2023-12-10', plan: 'Premium', montoUSD: 99.99, activo: false },
-        { id: 34, nombre: 'Andrea', apellido: 'Prada', email: 'andreaprada.bog@gmail.com', ciudad: 'Bogotá', curso: 'Desarrollo Web', progreso: 50, fechaInscripcion: '2024-04-25', plan: 'Básico', montoUSD: 29.99, activo: false },
-        { id: 35, nombre: 'Hernán', apellido: 'Zapata', email: 'hernanzapata.col@gmail.com', ciudad: 'Cali', curso: 'React Native', progreso: 75, fechaInscripcion: '2024-05-30', plan: 'Estándar', montoUSD: 59.99, activo: true }
-    ];
-
-    /* ── Catálogo completo de 30 cursos (js/Catalogo.js) ── */
-    var CATALOGO_CURSOS = window.EduTrack.catalogo.cursos;
-
-    var STORAGE_KEY = 'edutrack_estudiantes';
     var PLANES_MONTO = { 'Básico': 29.99, 'Estándar': 59.99, 'Premium': 99.99 };
 
     var state = {
         estudiantes: [],
-        listaFiltrada: [],
+        total: 0,
+        paginas: 0,
+        resumen: null,
+        cursos: [],
+        peticion: 0,
+        temporizadorBusqueda: null,
         editandoId: null,
         grafico: null,
         graficoPlan: null,
@@ -97,11 +61,7 @@
                 aplicarRol();
                 activarSeccion('dashboard');
                 actualizarFechaTopbar();
-                cargarDatos();
-                poblarSelectCiudades();
-                filtrar();
-                actualizarKPIs();
-                actualizarGrafico();
+                cargarPanel();
             }
             if (nombre === 'landing') {
                 window.EduTrack && window.EduTrack.closeSidebar && window.EduTrack.closeSidebar();
@@ -132,15 +92,24 @@
         if (!admin) cerrarPanelNotificaciones();
     }
 
+    function invalidarReportes() {
+        var sec = document.getElementById('secReportes');
+        if (sec) {
+            sec._rendered = false;
+            sec.innerHTML = '';
+        }
+        if (state.graficoPlan) { state.graficoPlan.destroy(); state.graficoPlan = null; }
+        if (state.graficoProgreso) { state.graficoProgreso.destroy(); state.graficoProgreso = null; }
+    }
+
     function reiniciarVistasDinamicas() {
-        ['secReportes', 'secConfiguracion', 'secCuentas'].forEach(function (id) {
+        ['secConfiguracion', 'secCuentas'].forEach(function (id) {
             var sec = document.getElementById(id);
             if (!sec) return;
             sec._rendered = false;
             sec.innerHTML = '';
         });
-        if (state.graficoPlan) { state.graficoPlan.destroy(); state.graficoPlan = null; }
-        if (state.graficoProgreso) { state.graficoProgreso.destroy(); state.graficoProgreso = null; }
+        invalidarReportes();
     }
 
     function actualizarFechaTopbar() {
@@ -185,7 +154,7 @@
             }
         });
 
-        if (seccion === 'cursos') renderizarCursos();
+        if (seccion === 'cursos') mostrarCursos();
         if (seccion === 'reportes') renderizarReportes();
         if (seccion === 'cuentas') window.EduTrack.cuentas.mostrar();
         if (seccion === 'configuracion') renderizarConfiguracion();
@@ -209,65 +178,93 @@
     /* ════════════════════════════════════════════
        DATOS
     ════════════════════════════════════════════ */
-    var CLAVE_CUARENTENA = 'edutrack_estudiantes_invalidos';
-    var MAX_CUARENTENA = 200;
-
-    function apartarInvalidos(invalidos) {
-        try {
-            var previos = JSON.parse(localStorage.getItem(CLAVE_CUARENTENA) || '[]');
-            var todos = (Array.isArray(previos) ? previos : []).concat(invalidos);
-            localStorage.setItem(CLAVE_CUARENTENA, JSON.stringify(todos.slice(-MAX_CUARENTENA)));
-        } catch (e) { console.warn('No se pudo guardar la cuarentena', e); }
+    function avisarErrorCarga(error) {
+        if (error && error.estado === 401) return;
+        showToast((error && error.message) || 'No se pudieron cargar los datos', 'error');
     }
 
-    function depurarEstudiantes(guardados) {
-        if (!Array.isArray(guardados) || !guardados.length) return [];
-        var resultado = window.EduTrack.validar.dataset(guardados);
-        if (resultado.registrosInvalidos.length) {
-            apartarInvalidos(resultado.registrosInvalidos);
-            showToast('Se apartaron ' + resultado.registrosInvalidos.length +
-                ' registros inválidos de los datos guardados', 'info');
+    async function cargarResumen() {
+        state.resumen = await api.get('/api/resumen');
+        poblarSelectCiudades();
+        actualizarKPIs();
+        actualizarGrafico();
+    }
+
+    async function cargarPanel() {
+        try {
+            var resultados = await Promise.all([api.get('/api/resumen'), api.get('/api/cursos')]);
+            state.resumen = resultados[0];
+            state.cursos = resultados[1].cursos;
+        } catch (error) {
+            avisarErrorCarga(error);
+            return;
         }
-        return resultado.registrosValidos;
+        if (!state.usuario) return;
+        poblarCursos();
+        poblarSelectCiudades();
+        actualizarKPIs();
+        actualizarGrafico();
+        if (esAdministrador()) await cargarEstudiantes();
     }
 
-    function cargarDatos() {
+    function valorDe(id) { return ((document.getElementById(id) || {}).value || '').trim(); }
+
+    function consultaEstudiantes() {
+        var p = new URLSearchParams();
+        [['buscar', 'searchInput'], ['ciudad', 'filterCiudad'], ['plan', 'filterPlan'], ['estado', 'filterEstado']]
+            .forEach(function (par) {
+                var v = valorDe(par[1]);
+                if (v) p.set(par[0], v);
+            });
+        p.set('pagina', state.paginaActual);
+        p.set('limite', state.itemsPorPagina);
+        return p.toString();
+    }
+
+    async function cargarEstudiantes() {
+        var turno = ++state.peticion;
         try {
-            var raw = localStorage.getItem(STORAGE_KEY);
-            if (raw) {
-                var guardados = JSON.parse(raw);
-                var depurados = depurarEstudiantes(guardados);
-                if (depurados.length) {
-                    state.estudiantes = depurados;
-                    if (depurados.length !== guardados.length) guardarDatos();
-                    return;
-                }
+            var r = await api.get('/api/estudiantes?' + consultaEstudiantes());
+            if (turno !== state.peticion) return;
+            if (r.paginas > 0 && state.paginaActual > r.paginas) {
+                state.paginaActual = r.paginas;
+                return cargarEstudiantes();
             }
-        } catch (e) { console.warn('localStorage error', e); }
-        state.estudiantes = DATASET_INICIAL.slice();
-        guardarDatos();
+            state.estudiantes = r.estudiantes;
+            state.total = r.total;
+            state.paginas = r.paginas;
+            renderizarCards();
+        } catch (error) {
+            if (turno !== state.peticion) return;
+            avisarErrorCarga(error);
+            if (!state.estudiantes.length) {
+                mostrarEstadoListado('No se pudo cargar', 'Revisa tu conexión e inténtalo de nuevo.');
+            }
+        }
     }
 
-    function guardarDatos() {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.estudiantes)); }
-        catch { showToast('Error al guardar', 'error'); }
+    async function refrescarDatos() {
+        invalidarReportes();
+        try {
+            await cargarResumen();
+            await cargarEstudiantes();
+        } catch (error) {
+            avisarErrorCarga(error);
+        }
     }
 
     /* ════════════════════════════════════════════
        KPIs
     ════════════════════════════════════════════ */
     function actualizarKPIs() {
-        var activos = state.estudiantes.filter(function (e) { return e.activo; }).length;
-        var total = state.estudiantes.length;
-        var avg = total
-            ? Math.round(state.estudiantes.reduce(function (s, e) { return s + e.progreso; }, 0) / total)
-            : 0;
+        var r = state.resumen;
+        if (!r) return;
         var set = function (id, val) { var el = document.getElementById(id); if (el) el.textContent = val; };
-        set('kpiCursos', activos);
-        set('kpiProgreso', avg + '%');
-        set('kpiTotal', total);
+        set('kpiCursos', r.activos);
+        set('kpiProgreso', r.progresoPromedio + '%');
+        set('kpiTotal', r.total);
         var bar = document.getElementById('kpiProgresoBar');
-        if (bar) bar.style.setProperty('--progress-value', avg + '%');
+        if (bar) bar.style.setProperty('--progress-value', r.progresoPromedio + '%');
     }
 
     /* ════════════════════════════════════════════
@@ -286,21 +283,24 @@
         return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : '—';
     }
 
-    function renderizarCards(lista) {
+    function mostrarEstadoListado(titulo, texto) {
         var grid = document.getElementById('studentsGrid');
         if (!grid) return;
-        if (!lista || !lista.length) {
-            grid.innerHTML = '<div class="empty-state"><div class="empty-state__icon">' + ico('buscar') + '</div>' +
-                '<p class="empty-state__title">Sin resultados</p>' +
-                '<p>Ajusta los filtros o agrega un estudiante.</p></div>';
-            actualizarContador(0);
-            renderizarPaginacion(0);
+        grid.innerHTML = '<div class="empty-state"><div class="empty-state__icon">' + ico('buscar') + '</div>' +
+            '<p class="empty-state__title">' + esc(titulo) + '</p>' +
+            '<p>' + esc(texto) + '</p></div>';
+        actualizarContador(0);
+        renderizarPaginacion();
+    }
+
+    function renderizarCards() {
+        var grid = document.getElementById('studentsGrid');
+        if (!grid) return;
+        if (!state.estudiantes.length) {
+            mostrarEstadoListado('Sin resultados', 'Ajusta los filtros o agrega un estudiante.');
             return;
         }
-        var inicio = (state.paginaActual - 1) * state.itemsPorPagina;
-        var fin = inicio + state.itemsPorPagina;
-        var paginaDatos = lista.slice(inicio, fin);
-        grid.innerHTML = paginaDatos.map(function (e, i) {
+        grid.innerHTML = state.estudiantes.map(function (e, i) {
             return '<article class="student-card' + (e.activo ? '' : ' student-card--inactive') + '" ' +
                 'style="animation-delay:' + Math.min(i * 30, 300) + 'ms" data-id="' + num(e.id) + '">' +
                 '<div class="card-header">' +
@@ -313,7 +313,7 @@
                 '</div>' +
                 '<div class="card-body">' +
                 '<div class="card-detail"><span class="card-detail__icon">' + ico('ubicacion') + '</span><span>' + esc(e.ciudad) + '</span></div>' +
-                '<div class="card-detail"><span class="card-detail__icon">' + ico('monitor') + '</span><span>' + esc(e.curso) + '</span></div>' +
+                '<div class="card-detail"><span class="card-detail__icon">' + ico('monitor') + '</span><span>' + esc(e.curso.nombre) + '</span></div>' +
                 '<div class="card-detail"><span class="card-detail__icon">' + ico('calendario') + '</span><span>' + esc(formatFecha(e.fechaInscripcion)) + '</span></div>' +
                 '</div>' +
                 '<div class="progress-wrap">' +
@@ -326,11 +326,11 @@
                 '</div>' +
                 '</article>';
         }).join('');
-        actualizarContador(lista.length);
-        renderizarPaginacion(lista.length);
+        actualizarContador(state.total);
+        renderizarPaginacion();
     }
 
-    function renderizarPaginacion(totalItems) {
+    function renderizarPaginacion() {
         var container = document.getElementById('paginationContainer');
         if (!container) {
             container = document.createElement('div');
@@ -339,21 +339,19 @@
             var grid = document.getElementById('studentsGrid');
             if (grid) grid.parentNode.insertBefore(container, grid.nextSibling);
         }
-        var totalPaginas = Math.ceil(totalItems / state.itemsPorPagina);
-        if (totalPaginas <= 1) { container.innerHTML = ''; return; }
+        if (state.paginas <= 1) { container.innerHTML = ''; return; }
         var bA = state.paginaActual === 1 ? 'disabled' : '';
-        var bS = state.paginaActual === totalPaginas ? 'disabled' : '';
+        var bS = state.paginaActual === state.paginas ? 'disabled' : '';
         container.innerHTML =
             '<button class="btn btn-secondary btn--sm" data-action="pagina" data-page="' + (state.paginaActual - 1) + '" ' + bA + '>← Anterior</button>' +
-            '<span class="pagination__info">Página ' + state.paginaActual + ' de ' + totalPaginas + '</span>' +
+            '<span class="pagination__info">Página ' + state.paginaActual + ' de ' + state.paginas + '</span>' +
             '<button class="btn btn-secondary btn--sm" data-action="pagina" data-page="' + (state.paginaActual + 1) + '" ' + bS + '>Siguiente →</button>';
     }
 
     function cambiarPagina(p) {
-        var totalPaginas = Math.ceil(state.listaFiltrada.length / state.itemsPorPagina);
-        if (p >= 1 && p <= totalPaginas) {
+        if (p >= 1 && p <= state.paginas && p !== state.paginaActual) {
             state.paginaActual = p;
-            renderizarCards(state.listaFiltrada);
+            cargarEstudiantes();
             var sec = document.getElementById('secEstudiantes');
             if (sec) sec.scrollIntoView({ behavior: 'smooth' });
         }
@@ -361,28 +359,24 @@
 
     function actualizarContador(n) {
         var el = document.getElementById('resultsCount');
-        if (el) el.innerHTML = 'Mostrando <strong>' + n + '</strong> estudiantes en total';
+        if (el) el.innerHTML = 'Mostrando <strong>' + num(n) + '</strong> estudiantes en total';
     }
 
     /* ════════════════════════════════════════════
        FILTRAR (estudiantes)
     ════════════════════════════════════════════ */
     function filtrar() {
-        var q = ((document.getElementById('searchInput') || {}).value || '').toLowerCase().trim();
-        var ciudad = ((document.getElementById('filterCiudad') || {}).value || '');
-        var plan = ((document.getElementById('filterPlan') || {}).value || '');
-        var estado = ((document.getElementById('filterEstado') || {}).value || '');
-        var hay = q || ciudad || plan || estado;
+        clearTimeout(state.temporizadorBusqueda);
+        var hay = valorDe('searchInput') || valorDe('filterCiudad') || valorDe('filterPlan') || valorDe('filterEstado');
         var btn = document.getElementById('btnResetFiltros');
         if (btn) btn.classList.toggle('visible', !!hay);
-        state.listaFiltrada = state.estudiantes.filter(function (e) {
-            return (!q || (e.nombre + ' ' + e.apellido).toLowerCase().includes(q) || e.email.toLowerCase().includes(q))
-                && (!ciudad || e.ciudad === ciudad)
-                && (!plan || e.plan === plan)
-                && (!estado || (estado === 'activo' ? e.activo : !e.activo));
-        });
         state.paginaActual = 1;
-        renderizarCards(state.listaFiltrada);
+        return cargarEstudiantes();
+    }
+
+    function buscarConRetraso() {
+        clearTimeout(state.temporizadorBusqueda);
+        state.temporizadorBusqueda = setTimeout(filtrar, 300);
     }
 
     /* ════════════════════════════════════════════
@@ -390,6 +384,7 @@
     ════════════════════════════════════════════ */
     function abrirModal(id) {
         if (!esAdministrador()) return;
+        if (!state.cursos.length) { showToast('Los cursos aún no se han cargado', 'info'); return; }
         state.editandoId = id || null;
         limpiarFormulario();
         if (id) {
@@ -400,7 +395,7 @@
             document.getElementById('fApellido').value = e.apellido;
             document.getElementById('fEmail').value = e.email;
             document.getElementById('fCiudad').value = e.ciudad;
-            document.getElementById('fCurso').value = e.curso;
+            document.getElementById('fCurso').value = e.curso.id;
             document.getElementById('fPlan').value = e.plan;
             document.getElementById('fProgreso').value = e.progreso;
             document.getElementById('fProgresoVal').textContent = e.progreso + '%';
@@ -434,7 +429,7 @@
         f.querySelectorAll('.form-group__error').forEach(function (el) { el.classList.remove('visible'); el.textContent = ''; });
     }
 
-    function guardarEstudiante() {
+    async function guardarEstudiante() {
         if (!esAdministrador()) return;
         var g = function (id) { return document.getElementById(id); };
         var d = {
@@ -442,7 +437,7 @@
             apellido: g('fApellido').value.trim(),
             email: g('fEmail').value.trim(),
             ciudad: g('fCiudad').value,
-            curso: g('fCurso').value,
+            cursoId: g('fCurso').value,
             plan: g('fPlan').value,
             progreso: parseInt(g('fProgreso').value, 10),
             fecha: g('fFecha').value,
@@ -450,36 +445,58 @@
         };
         if (validarCampos(d).length) return;
 
-        var id = state.editandoId || siguienteId();
         var registro = {
-            id: id, nombre: d.nombre, apellido: d.apellido, email: d.email,
-            ciudad: d.ciudad, curso: d.curso, plan: d.plan,
+            id: state.editandoId || 1, nombre: d.nombre, apellido: d.apellido, email: d.email,
+            ciudad: d.ciudad, curso: g('fCurso').selectedOptions[0].textContent, plan: d.plan,
             progreso: d.progreso, fechaInscripcion: d.fecha,
-            montoUSD: PLANES_MONTO[d.plan] || 29.99, activo: d.activo
+            montoUSD: PLANES_MONTO[d.plan], activo: d.activo
         };
         if (!validarRegistroCompleto(registro)) return;
 
-        if (state.editandoId) {
-            var idx = state.estudiantes.findIndex(function (e) { return e.id === state.editandoId; });
-            if (idx > -1) Object.assign(state.estudiantes[idx], registro);
-            showToast('Estudiante actualizado', 'success');
-        } else {
-            state.estudiantes.push(registro);
-            showToast('Estudiante agregado', 'success');
+        var cuerpo = {
+            nombre: d.nombre, apellido: d.apellido, email: d.email, ciudad: d.ciudad,
+            cursoId: Number(d.cursoId), plan: d.plan, progreso: d.progreso,
+            fechaInscripcion: d.fecha, activo: d.activo
+        };
+        var editando = state.editandoId;
+        var boton = document.querySelector('[data-action="guardar-estudiante"]');
+        ocupado(boton, true, 'Guardando…');
+        try {
+            if (editando) await api.patch('/api/estudiantes/' + editando, cuerpo);
+            else await api.post('/api/estudiantes', cuerpo);
+            cerrarModal();
+            showToast(editando ? 'Estudiante actualizado' : 'Estudiante agregado', 'success');
+            await refrescarDatos();
+        } catch (error) {
+            if (error.codigo === 'ESTUDIANTE_NO_ENCONTRADO') {
+                cerrarModal();
+                showToast(error.message, 'error');
+                await refrescarDatos();
+            } else {
+                mostrarErroresDelServidor(error);
+            }
+        } finally {
+            ocupado(boton, false);
         }
-        guardarDatos(); cerrarModal(); poblarSelectCiudades(); filtrar(); actualizarKPIs(); actualizarGrafico();
-    }
-
-    function siguienteId() {
-        return state.estudiantes.length
-            ? Math.max.apply(null, state.estudiantes.map(function (e) { return e.id; })) + 1
-            : 1;
     }
 
     var ENTRADA_POR_CAMPO = {
         nombre: 'fNombre', apellido: 'fApellido', email: 'fEmail', ciudad: 'fCiudad',
-        curso: 'fCurso', plan: 'fPlan', progreso: 'fProgreso', fechaInscripcion: 'fFecha'
+        curso: 'fCurso', cursoId: 'fCurso', plan: 'fPlan', progreso: 'fProgreso',
+        fechaInscripcion: 'fFecha'
     };
+
+    function mostrarErroresDelServidor(error) {
+        var campos = error.campos || {};
+        var usado = false;
+        Object.keys(campos).forEach(function (campo) {
+            if (ENTRADA_POR_CAMPO[campo]) {
+                setFieldError(ENTRADA_POR_CAMPO[campo], campos[campo]);
+                usado = true;
+            }
+        });
+        if (!usado) avisarErrorCarga(error);
+    }
 
     function validarRegistroCompleto(registro) {
         var errores = window.EduTrack.validar.registro(registro).errores.filter(function (e) {
@@ -497,7 +514,7 @@
     function validarCampos(d) {
         var err = [];
         [['fNombre', d.nombre, 'Nombre requerido'], ['fApellido', d.apellido, 'Apellido requerido'],
-        ['fCiudad', d.ciudad, 'Selecciona ciudad'], ['fCurso', d.curso, 'Selecciona curso'],
+        ['fCiudad', d.ciudad, 'Selecciona ciudad'], ['fCurso', d.cursoId, 'Selecciona curso'],
         ['fPlan', d.plan, 'Selecciona plan'], ['fFecha', d.fecha, 'Fecha requerida']
         ].forEach(function (r) {
             setFieldError(r[0], !r[1] ? r[2] : '');
@@ -506,10 +523,6 @@
         var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!d.email || !re.test(d.email)) {
             setFieldError('fEmail', 'Email inválido'); err.push('fEmail');
-        } else if (state.estudiantes.find(function (e) {
-            return e.email.toLowerCase() === d.email.toLowerCase() && e.id !== state.editandoId;
-        })) {
-            setFieldError('fEmail', 'Email ya registrado'); err.push('fEmail');
         } else { setFieldError('fEmail', ''); }
         if (isNaN(d.progreso) || d.progreso < 0 || d.progreso > 100) {
             setFieldError('fProgreso', 'Entre 0 y 100'); err.push('fProgreso');
@@ -535,10 +548,14 @@
         abrirConfirm(
             '¿Eliminar estudiante?',
             'Vas a eliminar a <strong>' + esc(e.nombre + ' ' + e.apellido) + '</strong>. Esta acción no se puede deshacer.',
-            function () {
-                state.estudiantes = state.estudiantes.filter(function (x) { return x.id !== id; });
-                guardarDatos(); poblarSelectCiudades(); filtrar(); actualizarKPIs(); actualizarGrafico();
-                showToast('Estudiante eliminado', 'info');
+            async function () {
+                try {
+                    await api.delete('/api/estudiantes/' + id);
+                    showToast('Estudiante eliminado', 'info');
+                } catch (error) {
+                    avisarErrorCarga(error);
+                }
+                await refrescarDatos();
             }
         );
     }
@@ -557,10 +574,9 @@
        GRÁFICO DASHBOARD
     ════════════════════════════════════════════ */
     function actualizarGrafico() {
-        var cnt = {};
-        state.estudiantes.forEach(function (e) { cnt[e.ciudad] = (cnt[e.ciudad] || 0) + 1; });
-        var cities = Object.keys(cnt).sort(function (a, b) { return cnt[b] - cnt[a]; });
-        var vals = cities.map(function (c) { return cnt[c]; });
+        if (!state.resumen) return;
+        var cities = state.resumen.porCiudad.map(function (c) { return c.ciudad; });
+        var vals = state.resumen.porCiudad.map(function (c) { return c.total; });
         var clrs = ['rgba(245,166,35,.85)', 'rgba(59,130,246,.85)', 'rgba(34,197,94,.85)',
             'rgba(139,92,246,.85)', 'rgba(249,115,22,.85)', 'rgba(236,72,153,.85)', 'rgba(20,184,166,.85)'];
         var bgColors = cities.map(function (_, i) { return clrs[i % clrs.length]; });
@@ -612,20 +628,28 @@
         'marketing': { label: 'Marketing' }
     };
 
+    async function mostrarCursos() {
+        var sec = document.getElementById('secCursos');
+        if (!sec) return;
+        if (!state.cursos.length) sec.innerHTML = '<p class="cursos-count">Cargando cursos…</p>';
+        try {
+            state.cursos = (await api.get('/api/cursos')).cursos;
+        } catch (error) {
+            avisarErrorCarga(error);
+            if (!state.cursos.length) sec.innerHTML = '<p class="cursos-count">No se pudieron cargar los cursos.</p>';
+            return;
+        }
+        renderizarCursos();
+    }
+
     function renderizarCursos() {
         var sec = document.getElementById('secCursos');
         if (!sec) return;
 
         var filtro = state.filtroCategoria || 'todos';
         var lista = filtro === 'todos'
-            ? CATALOGO_CURSOS
-            : CATALOGO_CURSOS.filter(function (c) { return c.categoria === filtro; });
-
-        /* Contar inscritos reales del dataset */
-        var inscritosPorCurso = {};
-        state.estudiantes.forEach(function (e) {
-            inscritosPorCurso[e.curso] = (inscritosPorCurso[e.curso] || 0) + 1;
-        });
+            ? state.cursos
+            : state.cursos.filter(function (c) { return c.categoria === filtro; });
 
         var coloresCat = {
             'web': '#3B82F6', 'data': '#F5A623', 'devops': '#8B5CF6',
@@ -633,37 +657,32 @@
             'marketing': '#22C55E'
         };
 
-        /* Tabs de filtro */
         var tabsHTML = Object.keys(CATEGORIAS_INFO).map(function (k) {
-            var info = CATEGORIAS_INFO[k];
             var activo = (k === filtro) ? ' cat-tab--active' : '';
             return '<button class="cat-tab' + activo + '" data-cat="' + k + '">' +
-                info.label + '</button>';
+                esc(CATEGORIAS_INFO[k].label) + '</button>';
         }).join('');
 
-        /* Cards de cursos */
         var cardsHTML = lista.map(function (c) {
-            var real = inscritosPorCurso[c.nombre] || c.inscritos;
             var color = coloresCat[c.categoria] || '#F5A623';
+            var categoria = CATEGORIAS_INFO[c.categoria] ? CATEGORIAS_INFO[c.categoria].label : c.categoria;
             var nivelClass = c.nivel === 'Avanzado' ? 'nivel--avanzado' : c.nivel === 'Intermedio' ? 'nivel--intermedio' : 'nivel--basico';
             return '<article class="curso-card">' +
                 '<div class="curso-card__top" style="--cat-color:' + color + '">' +
                 '<span class="curso-cat-badge" style="background:' + color + '20;color:' + color + ';border-color:' + color + '40">' +
-                CATEGORIAS_INFO[c.categoria].label + '</span>' +
-                '<span class="curso-nivel ' + nivelClass + '">' + c.nivel + '</span>' +
+                esc(categoria) + '</span>' +
+                '<span class="curso-nivel ' + nivelClass + '">' + esc(c.nivel) + '</span>' +
                 '</div>' +
-                '<h3 class="curso-card__title">' + c.nombre + '</h3>' +
-                '<p class="curso-card__desc">' + c.descripcion + '</p>' +
+                '<h3 class="curso-card__title">' + esc(c.nombre) + '</h3>' +
+                '<p class="curso-card__desc">' + esc(c.descripcion) + '</p>' +
                 '<div class="curso-card__meta">' +
-                '<span>' + c.instructor + '</span>' +
-                '<span>' + c.semanas + ' sem</span>' +
-                '<span>' + real + ' inscritos</span>' +
+                '<span>' + esc(c.instructor) + '</span>' +
+                '<span>' + num(c.semanas) + ' sem</span>' +
+                '<span>' + num(c.inscritos) + ' inscritos</span>' +
                 '</div>' +
                 '<div class="curso-card__footer">' +
-                '<span class="plan-badge plan-badge--' + planSlug(c.precio) + '">' + c.precio + '</span>' +
-                '<span class="curso-card__precio">' +
-                (c.precio === 'Premium' ? '$99.99' : c.precio === 'Estándar' ? '$59.99' : '$29.99') +
-                ' USD</span>' +
+                '<span class="plan-badge plan-badge--' + esc(planSlug(c.plan)) + '">' + esc(c.plan) + '</span>' +
+                '<span class="curso-card__precio">$' + num(c.precioUSD).toFixed(2) + ' USD</span>' +
                 '</div>' +
                 '</article>';
         }).join('');
@@ -671,13 +690,12 @@
         sec.innerHTML =
             '<header class="page-header">' +
             '<div><h2 class="page-header__title">Catálogo de <span>Cursos</span></h2>' +
-            '<p class="page-header__meta">' + CATALOGO_CURSOS.length + ' cursos disponibles · StudentScope MJ</p></div>' +
+            '<p class="page-header__meta">' + state.cursos.length + ' cursos disponibles · StudentScope MJ</p></div>' +
             '</header>' +
             '<div class="cat-tabs" role="tablist" aria-label="Filtrar por categoría">' + tabsHTML + '</div>' +
             '<p class="cursos-count">Mostrando <strong>' + lista.length + '</strong> curso' + (lista.length !== 1 ? 's' : '') + '</p>' +
             '<div class="cursos-grid">' + cardsHTML + '</div>';
 
-        /* Eventos de los tabs */
         sec.querySelectorAll('.cat-tab').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 state.filtroCategoria = this.getAttribute('data-cat');
@@ -689,31 +707,35 @@
     /* ════════════════════════════════════════════
        SECCIÓN REPORTES
     ════════════════════════════════════════════ */
-    function renderizarReportes() {
+    async function renderizarReportes() {
         var sec = document.getElementById('secReportes');
-        if (!sec || sec._rendered) return;
+        if (!sec || sec._rendered || sec._cargando) return;
 
-        var total = state.estudiantes.length;
-        var activos = state.estudiantes.filter(function (e) { return e.activo; }).length;
-        var avg = total ? Math.round(state.estudiantes.reduce(function (s, e) { return s + e.progreso; }, 0) / total) : 0;
-        var ingresos = state.estudiantes.reduce(function (s, e) { return s + e.montoUSD; }, 0).toFixed(2);
-        var completos = state.estudiantes.filter(function (e) { return e.progreso === 100; }).length;
+        sec._cargando = true;
+        var datos;
+        try {
+            datos = await api.get('/api/reportes');
+        } catch (error) {
+            avisarErrorCarga(error);
+            sec.innerHTML = '<p class="cursos-count">No se pudieron cargar los reportes.</p>';
+            return;
+        } finally {
+            sec._cargando = false;
+        }
 
         sec.innerHTML =
             '<header class="page-header">' +
             '<div><h2 class="page-header__title">Reportes <span>Analíticos</span></h2>' +
-            '<p class="page-header__meta">Datos en tiempo real · ' + total + ' estudiantes</p></div>' +
+            '<p class="page-header__meta">Datos en tiempo real · ' + num(datos.total) + ' estudiantes</p></div>' +
             '</header>' +
 
-            /* KPI resumen */
             '<div class="rep-kpi-grid">' +
-            kpiBox('dinero', 'Ingresos totales', '$' + ingresos, 'USD acumulado', '--kpi-blue-bg', '--kpi-blue-border', '--kpi-blue-icon') +
-            kpiBox('graduacion', 'Completaron curso', completos, 'con progreso 100%', '--kpi-yellow-bg', '--kpi-yellow-border', '--kpi-yellow-icon') +
-            kpiBox('verificado', 'Tasa de retención', Math.round(activos / total * 100) + '%', activos + ' activos de ' + total, '--kpi-blue-bg', '--kpi-blue-border', '--kpi-blue-icon') +
-            kpiBox('barras', 'Progreso promedio', avg + '%', 'promedio general', '--kpi-purple-bg', '--kpi-purple-border', '--kpi-purple-icon') +
+            kpiBox('dinero', 'Ingresos totales', '$' + num(datos.ingresosUSD).toFixed(2), 'USD acumulado', '--kpi-blue-bg', '--kpi-blue-border', '--kpi-blue-icon') +
+            kpiBox('graduacion', 'Completaron curso', String(datos.completaron), 'con progreso 100%', '--kpi-yellow-bg', '--kpi-yellow-border', '--kpi-yellow-icon') +
+            kpiBox('verificado', 'Tasa de retención', datos.retencionPorcentaje + '%', datos.activos + ' activos de ' + datos.total, '--kpi-blue-bg', '--kpi-blue-border', '--kpi-blue-icon') +
+            kpiBox('barras', 'Progreso promedio', datos.progresoPromedio + '%', 'promedio general', '--kpi-purple-bg', '--kpi-purple-border', '--kpi-purple-icon') +
             '</div>' +
 
-            /* Gráficos */
             '<div class="rep-charts-row">' +
             '<section class="rep-chart-box" aria-label="Distribución por plan">' +
             '<h3 class="rep-chart-title">Estudiantes por plan</h3>' +
@@ -725,17 +747,15 @@
             '</section>' +
             '</div>' +
 
-            /* Tabla top 10 */
             '<section class="rep-table-section" aria-label="Top estudiantes por progreso">' +
             '<h3 class="rep-chart-title">Top 10 estudiantes por progreso</h3>' +
             '<div class="db-table-wrapper">' +
-            renderizarTablaTop10() +
+            renderizarTablaTop10(datos.top) +
             '</div>' +
             '</section>';
 
-        /* Esperar un tick para que el DOM esté pintado */
-        setTimeout(function () { crearGraficosReportes(); }, 50);
         sec._rendered = true;
+        crearGraficosReportes(datos);
     }
 
     function kpiBox(icon, label, value, sub, bgVar, borderVar, colorVar) {
@@ -748,13 +768,12 @@
             '</div></article>';
     }
 
-    function renderizarTablaTop10() {
-        var top = state.estudiantes.slice().sort(function (a, b) { return b.progreso - a.progreso; }).slice(0, 10);
+    function renderizarTablaTop10(top) {
         var rows = top.map(function (e, i) {
             return '<tr class="db-table__row">' +
                 '<td class="db-table__td"><strong>' + (i + 1) + '</strong></td>' +
                 '<td class="db-table__td">' + esc(e.nombre + ' ' + e.apellido) + '</td>' +
-                '<td class="db-table__td">' + esc(e.curso) + '</td>' +
+                '<td class="db-table__td">' + esc(e.curso.nombre) + '</td>' +
                 '<td class="db-table__td">' +
                 '<div style="display:flex;align-items:center;gap:.5rem">' +
                 '<div style="flex:1;height:6px;background:var(--color-bg-elevated);border-radius:999px;overflow:hidden">' +
@@ -771,20 +790,18 @@
             '</tr></thead><tbody>' + rows + '</tbody></table>';
     }
 
-    function crearGraficosReportes() {
+    function crearGraficosReportes(datos) {
         if (typeof Chart === 'undefined') return;
 
         /* Gráfico 1: por plan (doughnut) */
-        var cnt = { 'Básico': 0, 'Estándar': 0, 'Premium': 0 };
-        state.estudiantes.forEach(function (e) { if (cnt[e.plan] !== undefined) cnt[e.plan]++; });
         var ctxPlan = document.getElementById('repChartPlan');
         if (ctxPlan && !state.graficoPlan) {
             state.graficoPlan = new Chart(ctxPlan, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Básico', 'Estándar', 'Premium'],
+                    labels: datos.porPlan.map(function (p) { return p.plan; }),
                     datasets: [{
-                        data: [cnt['Básico'], cnt['Estándar'], cnt['Premium']],
+                        data: datos.porPlan.map(function (p) { return p.total; }),
                         backgroundColor: ['rgba(34,197,94,.8)', 'rgba(59,130,246,.8)', 'rgba(245,166,35,.8)'],
                         borderWidth: 0, hoverOffset: 6
                     }]
@@ -803,23 +820,14 @@
         }
 
         /* Gráfico 2: progreso por rangos (bar horizontal) */
-        var rangos = { '0-24%': 0, '25-49%': 0, '50-74%': 0, '75-99%': 0, '100%': 0 };
-        state.estudiantes.forEach(function (e) {
-            var p = e.progreso;
-            if (p < 25) rangos['0-24%']++;
-            else if (p < 50) rangos['25-49%']++;
-            else if (p < 75) rangos['50-74%']++;
-            else if (p < 100) rangos['75-99%']++;
-            else rangos['100%']++;
-        });
         var ctxProg = document.getElementById('repChartProgreso');
         if (ctxProg && !state.graficoProgreso) {
             state.graficoProgreso = new Chart(ctxProg, {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(rangos),
+                    labels: datos.rangosProgreso.map(function (r) { return r.rango; }),
                     datasets: [{
-                        label: 'Estudiantes', data: Object.values(rangos),
+                        label: 'Estudiantes', data: datos.rangosProgreso.map(function (r) { return r.total; }),
                         backgroundColor: ['rgba(239,68,68,.75)', 'rgba(249,115,22,.75)', 'rgba(245,166,35,.75)',
                             'rgba(59,130,246,.75)', 'rgba(34,197,94,.75)'],
                         borderRadius: 6, borderSkipped: false
@@ -927,11 +935,6 @@
             '<p class="config-action-sub">Compatible con Excel y Google Sheets</p></div>' +
             '<button class="btn btn-secondary" data-action="exportar-csv">Exportar CSV</button>' +
             '</div>' +
-            '<div class="config-action-row config-action-row--danger">' +
-            '<div><p class="config-action-title">Restablecer datos</p>' +
-            '<p class="config-action-sub">Elimina todos los cambios y restaura los 35 registros originales</p></div>' +
-            '<button class="btn btn-danger" data-action="restablecer-datos">Restablecer</button>' +
-            '</div>' +
             '</div>' +
             '<p class="config-version">StudentScope MJ v2.3 · Vanilla JS · CSS Puro · Sin frameworks</p>' +
             '</section>') : '') +
@@ -1003,54 +1006,47 @@
         showToast('Preferencias de notificaciones guardadas', 'success');
     }
 
-    function exportarJSON() {
-        var blob = new Blob([JSON.stringify(state.estudiantes, null, 2)], { type: 'application/json' });
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url; a.download = 'edutrack_estudiantes.json'; a.click();
-        URL.revokeObjectURL(url);
-        showToast('JSON exportado correctamente', 'success');
+    async function obtenerTodosLosEstudiantes() {
+        var todos = [];
+        var pagina = 1;
+        var paginas;
+        do {
+            var r = await api.get('/api/estudiantes?pagina=' + pagina + '&limite=100');
+            todos = todos.concat(r.estudiantes);
+            paginas = r.paginas;
+            pagina++;
+        } while (pagina <= paginas);
+        return todos;
     }
 
-    function exportarCSV() {
-        var headers = ['id', 'nombre', 'apellido', 'email', 'ciudad', 'curso', 'progreso', 'fechaInscripcion', 'plan', 'montoUSD', 'activo'];
-        var rows = [headers.join(',')];
-        state.estudiantes.forEach(function (e) {
-            rows.push(headers.map(function (h) {
-                var v = e[h];
-                if (typeof v === 'string' && v.indexOf(',') > -1) v = '"' + v + '"';
-                return v;
-            }).join(','));
-        });
-        var blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    function descargar(nombre, contenido, tipo) {
+        var blob = new Blob([contenido], { type: tipo });
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
-        a.href = url; a.download = 'edutrack_estudiantes.csv'; a.click();
+        a.href = url; a.download = nombre; a.click();
         URL.revokeObjectURL(url);
-        showToast('CSV exportado correctamente', 'success');
     }
 
-    function restablecerDatos() {
-        abrirConfirm(
-            '¿Restablecer datos?',
-            'Se borrarán <strong>todos los cambios</strong> y se cargarán los 35 registros originales. Esta acción no se puede deshacer.',
-            function () {
-                state.estudiantes = DATASET_INICIAL.slice();
-                guardarDatos();
-                poblarSelectCiudades();
-                filtrar();
-                actualizarKPIs();
-                actualizarGrafico();
-                /* Forzar re-render de reportes al volver */
-                var secRep = document.getElementById('secReportes');
-                if (secRep) secRep._rendered = false;
-                state.graficoPlan = null;
-                state.graficoProgreso = null;
-                showToast('Datos restablecidos a los 35 originales', 'info');
-            },
-            'Sí, restablecer'
-        );
+    async function exportar(formato, boton) {
+        if (!esAdministrador()) return;
+        ocupado(boton, true, 'Exportando…');
+        try {
+            var lista = await obtenerTodosLosEstudiantes();
+            if (formato === 'json') {
+                descargar('studentscope_estudiantes.json', JSON.stringify(lista, null, 2), 'application/json');
+            } else {
+                descargar('studentscope_estudiantes.csv', window.EduTrack.csv.aCSV(lista), 'text/csv;charset=utf-8;');
+            }
+            showToast((formato === 'json' ? 'JSON' : 'CSV') + ' exportado correctamente', 'success');
+        } catch (error) {
+            avisarErrorCarga(error);
+        } finally {
+            ocupado(boton, false);
+        }
     }
+
+    function exportarJSON(boton) { return exportar('json', boton); }
+    function exportarCSV(boton) { return exportar('csv', boton); }
 
     /* ════════════════════════════════════════════
        HELPERS
@@ -1061,17 +1057,30 @@
     }
 
     function poblarSelectCiudades() {
-        var arr = [];
-        state.estudiantes.forEach(function (e) { if (arr.indexOf(e.ciudad) === -1) arr.push(e.ciudad); });
-        arr.sort();
-        var sel = document.getElementById('filterCiudad'); if (!sel) return;
+        var sel = document.getElementById('filterCiudad');
+        if (!sel || !state.resumen) return;
+        var ciudades = state.resumen.porCiudad.map(function (c) { return c.ciudad; }).sort();
         var cur = sel.value;
         while (sel.options.length > 1) sel.remove(1);
-        arr.forEach(function (c) {
+        ciudades.forEach(function (c) {
             var o = document.createElement('option'); o.value = c; o.textContent = c;
             if (c === cur) o.selected = true;
             sel.appendChild(o);
         });
+    }
+
+    function poblarCursos() {
+        var select = document.getElementById('fCurso');
+        if (!select) return;
+        var actual = select.value;
+        while (select.options.length > 1) select.remove(1);
+        state.cursos.forEach(function (curso) {
+            var opcion = document.createElement('option');
+            opcion.value = curso.id;
+            opcion.textContent = curso.nombre;
+            select.appendChild(opcion);
+        });
+        select.value = actual;
     }
 
     var _toastTimer;
@@ -1094,93 +1103,56 @@
     ════════════════════════════════════════════ */
     var notifPanelAbierto = false;
 
-    function generarNotificaciones() {
-        var notifs = [];
-        var ahora = new Date();
-
-        /* 1. Estudiantes inactivos con bajo progreso (abandono) */
-        state.estudiantes
-            .filter(function (e) { return !e.activo && e.progreso < 50; })
-            .forEach(function (e) {
-                notifs.push({
-                    tipo: 'warning',
-                    icono: 'alerta',
-                    titulo: 'Posible abandono',
-                    texto: e.nombre + ' ' + e.apellido + ' está inactivo con solo ' + e.progreso + '% de progreso.',
-                    tiempo: 'Hoy'
-                });
-            });
-
-        /* 2. Estudiantes con progreso 100% aún activos */
-        state.estudiantes
-            .filter(function (e) { return e.activo && e.progreso === 100; })
-            .forEach(function (e) {
-                notifs.push({
-                    tipo: 'success',
-                    icono: 'graduacion',
-                    titulo: '¡Curso completado!',
-                    texto: e.nombre + ' ' + e.apellido + ' completó "' + e.curso + '" al 100%.',
-                    tiempo: 'Hoy'
-                });
-            });
-
-        /* 3. Estudiantes con progreso bajo (< 30%) y activos */
-        state.estudiantes
-            .filter(function (e) { return e.activo && e.progreso < 30; })
-            .forEach(function (e) {
-                notifs.push({
-                    tipo: 'info',
-                    icono: 'tendenciaBaja',
-                    titulo: 'Progreso bajo',
-                    texto: e.nombre + ' ' + e.apellido + ' lleva solo ' + e.progreso + '% en "' + e.curso + '".',
-                    tiempo: 'Reciente'
-                });
-            });
-
-        /* 4. Resumen general */
-        var activos = state.estudiantes.filter(function (e) { return e.activo; }).length;
-        var inactivos = state.estudiantes.length - activos;
-        var avg = state.estudiantes.length
-            ? Math.round(state.estudiantes.reduce(function (s, e) { return s + e.progreso; }, 0) / state.estudiantes.length)
-            : 0;
-
-        notifs.unshift({
-            tipo: 'stat',
-            icono: 'barras',
-            titulo: 'Resumen del sistema',
-            texto: state.estudiantes.length + ' estudiantes · ' + activos + ' activos · ' + inactivos + ' inactivos · Promedio ' + avg + '%',
+    function generarNotificaciones(r) {
+        var inactivos = r.total - r.activos;
+        var bajos = (r.rangosProgreso.find(function (x) { return x.rango === '0-24%'; }) || { total: 0 }).total;
+        var notifs = [{
+            tipo: 'stat', icono: 'barras', titulo: 'Resumen del sistema',
+            texto: r.total + ' estudiantes · ' + r.activos + ' activos · ' + inactivos + ' inactivos · Promedio ' + r.progresoPromedio + '%',
             tiempo: 'Ahora'
-        });
-
-        /* 5. Ingresos del mes actual */
-        var mesActual = ahora.getMonth();
-        var anioActual = ahora.getFullYear();
-        var meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-        var ingresosMes = state.estudiantes
-            .filter(function (e) {
-                var d = new Date(e.fechaInscripcion);
-                return d.getMonth() === mesActual && d.getFullYear() === anioActual;
-            })
-            .reduce(function (s, e) { return s + e.montoUSD; }, 0);
-
-        if (ingresosMes > 0) {
+        }];
+        if (inactivos > 0) {
             notifs.push({
-                tipo: 'success',
-                icono: 'dinero',
-                titulo: 'Ingresos ' + meses[mesActual],
-                texto: '$' + ingresosMes.toFixed(2) + ' USD generados este mes.',
-                tiempo: 'Este mes'
+                tipo: 'warning', icono: 'alerta', titulo: 'Estudiantes inactivos',
+                texto: inactivos + ' de ' + r.total + ' estudiantes están inactivos (retención ' + r.retencionPorcentaje + '%).',
+                tiempo: 'Hoy'
             });
         }
-
-        return notifs.slice(0, 12); /* máximo 12 notificaciones */
+        if (r.completaron > 0) {
+            notifs.push({
+                tipo: 'success', icono: 'graduacion', titulo: 'Cursos completados',
+                texto: r.completaron + ' estudiantes completaron su curso al 100%.',
+                tiempo: 'Hoy'
+            });
+        }
+        if (bajos > 0) {
+            notifs.push({
+                tipo: 'info', icono: 'tendenciaBaja', titulo: 'Progreso bajo',
+                texto: bajos + ' estudiantes llevan menos del 25% de progreso.',
+                tiempo: 'Reciente'
+            });
+        }
+        notifs.push({
+            tipo: 'success', icono: 'dinero', titulo: 'Ingresos acumulados',
+            texto: '$' + num(r.ingresosUSD).toFixed(2) + ' USD en inscripciones.',
+            tiempo: 'Total'
+        });
+        return notifs;
     }
 
-    function abrirPanelNotificaciones() {
+    async function abrirPanelNotificaciones() {
         var panel = document.getElementById('notifPanel');
         if (!panel || !esAdministrador()) return;
+        if (notifPanelAbierto) { cerrarPanelNotificaciones(); return; }
 
-        var notifs = generarNotificaciones();
+        var datos;
+        try {
+            datos = await api.get('/api/reportes');
+        } catch (error) {
+            avisarErrorCarga(error);
+            return;
+        }
+        var notifs = generarNotificaciones(datos);
         var colores = {
             warning: { bg: 'rgba(245,166,35,0.08)', border: 'rgba(245,166,35,0.25)', dot: '#F5A623' },
             success: { bg: 'rgba(34,197,94,0.08)', border: 'rgba(34,197,94,0.25)', dot: '#22C55E' },
@@ -1204,20 +1176,17 @@
         }).join('');
 
         var panelContent = document.getElementById('notifPanelContent');
-        if (panelContent) {
-            panelContent.innerHTML = itemsHTML ||
-                '<p class="notif-empty">No hay notificaciones pendientes.</p>';
-        }
+        if (panelContent) panelContent.innerHTML = itemsHTML;
 
         var badge = document.getElementById('notifBadge');
-        var warnings = notifs.filter(function (n) { return n.tipo === 'warning'; }).length;
+        var inactivos = datos.total - datos.activos;
         if (badge) {
-            badge.textContent = warnings || '';
-            badge.style.display = warnings ? 'flex' : 'none';
+            badge.textContent = inactivos || '';
+            badge.style.display = inactivos ? 'flex' : 'none';
         }
 
-        notifPanelAbierto = !notifPanelAbierto;
-        panel.classList.toggle('is-open', notifPanelAbierto);
+        notifPanelAbierto = true;
+        panel.classList.add('is-open');
     }
 
     function cerrarPanelNotificaciones() {
@@ -1276,6 +1245,16 @@
 
     function limpiarSesionLocal() {
         state.usuario = null;
+        state.estudiantes = [];
+        state.total = 0;
+        state.paginas = 0;
+        state.resumen = null;
+        state.cursos = [];
+        state.paginaActual = 1;
+        state.peticion++;
+        ['searchInput', 'filterCiudad', 'filterPlan', 'filterEstado'].forEach(function (id) {
+            var el = document.getElementById(id); if (el) el.value = '';
+        });
         cerrarPanelNotificaciones();
         window.EduTrack.cuentas.reiniciar();
     }
@@ -1383,20 +1362,8 @@
     /* ════════════════════════════════════════════
        INIT
     ════════════════════════════════════════════ */
-    function poblarCursos() {
-        var select = document.getElementById('fCurso');
-        if (!select) return;
-        window.EduTrack.catalogo.nombres.forEach(function (nombre) {
-            var opcion = document.createElement('option');
-            opcion.value = nombre;
-            opcion.textContent = nombre;
-            select.appendChild(opcion);
-        });
-    }
-
     function init() {
         window.EduTrack.pintarIconos();
-        poblarCursos();
 
         var vLanding = document.getElementById('view-landing');
         if (vLanding) vLanding.classList.add('view--active');
@@ -1435,7 +1402,7 @@
         initNavSidebar();
 
         var si = document.getElementById('searchInput');
-        if (si) si.addEventListener('input', filtrar);
+        if (si) si.addEventListener('input', buscarConRetraso);
         ['filterCiudad', 'filterPlan', 'filterEstado'].forEach(function (id) {
             var el = document.getElementById(id); if (el) el.addEventListener('change', filtrar);
         });
@@ -1494,9 +1461,8 @@
         'guardar-perfil': function () { guardarPerfil(); },
         'cambiar-password': function () { cambiarPassword(); },
         'guardar-notificaciones': function () { guardarNotificaciones(); },
-        'exportar-json': function () { exportarJSON(); },
-        'exportar-csv': function () { exportarCSV(); },
-        'restablecer-datos': function () { restablecerDatos(); }
+        'exportar-json': function (el) { exportarJSON(el); },
+        'exportar-csv': function (el) { exportarCSV(el); }
     };
 
     /* API pública */
@@ -1514,7 +1480,6 @@
     window.EduTrack.guardarNotificaciones = guardarNotificaciones;
     window.EduTrack.exportarJSON = exportarJSON;
     window.EduTrack.exportarCSV = exportarCSV;
-    window.EduTrack.restablecerDatos = restablecerDatos;
     window.EduTrack.cerrarPanelNotificaciones = cerrarPanelNotificaciones;
     window.EduTrack.toast = showToast;
     window.EduTrack.confirmar = abrirConfirm;
