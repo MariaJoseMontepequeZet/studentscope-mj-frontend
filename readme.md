@@ -18,13 +18,13 @@ Hecho por María José Montepeque Zet.
 * **Dashboard analítico:** indicadores clave y gráficas con Chart.js.
 * **Gestión de estudiantes (CRUD):**
   * Vista en tarjetas.
-  * Búsqueda y filtros por nombre, ciudad, plan y estado.
-  * Paginación.
-  * Formularios modales para agregar, editar y eliminar, con persistencia en `localStorage`.
-* **Catálogo de cursos:** 30 cursos filtrables por categoría.
-* **Reportes:** ingresos, retención, progreso promedio, gráficas por plan y por rango de progreso, y Top 10 de estudiantes.
-* **Configuración:** exportación a JSON y CSV, y restablecimiento de los datos iniciales.
-* **Notificaciones:** panel que genera alertas a partir de los datos (abandono, cursos completados).
+  * Búsqueda y filtros por nombre, ciudad, plan y estado, resueltos en el servidor.
+  * Paginación del servidor.
+  * Formularios modales para agregar, editar y eliminar, guardados en la base de datos a través de la API. Los errores del servidor se muestran junto al campo correspondiente.
+* **Catálogo de cursos:** 30 cursos filtrables por categoría, con el número real de inscritos.
+* **Reportes (solo administrador):** ingresos, retención, progreso promedio, gráficas por plan y por rango de progreso, y Top 10 de estudiantes.
+* **Configuración:** exportación a JSON y CSV de todos los estudiantes, descargados desde la API.
+* **Notificaciones:** panel del administrador con alertas calculadas a partir de los reportes (inactivos, cursos completados, progreso bajo).
 * **Sidebar accesible:** menú colapsable con control de foco, cierre con Escape y adaptación a móvil.
 * **Motor de validación:** módulo independiente con 20 reglas de negocio sobre el dataset.
 
@@ -47,17 +47,18 @@ Hecho por María José Montepeque Zet.
 | `css/Style.css` | Estilos globales: variables, tipografía, botones, insignias, toasts y Landing. |
 | `css/Dashboard.css` | Estilos del panel: Sidebar, Topbar, indicadores y tablas. |
 | `css/Estudiantes.css` | Estilos de la gestión de estudiantes: tarjetas, filtros, paginación y modales. |
-| `js/App.js` | Lógica principal: enrutador, CRUD, gráficas, cursos, reportes, configuración y notificaciones. |
+| `js/App.js` | Lógica principal: enrutador, sesión, estudiantes, gráficas, cursos, reportes, configuración y notificaciones; todos los datos vienen de la API. |
 | `js/Sidebar.js` | Control del menú lateral: eventos, accesibilidad y cambio de tamaño. |
 | `js/Catalogo.js` | Catálogo oficial de 30 cursos: única fuente para la interfaz y el validador. |
 | `js/Validacion.js` | Motor de validación con 20 reglas de negocio, para un dataset completo o para un registro. |
+| `js/Csv.js` | Generación del archivo CSV: comillas, saltos de línea y protección contra fórmulas de hoja de cálculo. |
 | `js/Escapar.js` | Utilidades de seguridad: escape de HTML y conversión segura a número. |
 | `js/Iconos.js` | Iconos SVG propios y función que los inserta en los elementos con `data-icono`. |
 | `js/Api.js` | Cliente de la API: envía las cookies de sesión, traduce errores y avisa cuando la sesión expira. |
 | `js/Cuentas.js` | Sección Cuentas del administrador: lista, búsqueda, edición, cambio de rol y eliminación. |
 | `css/Cuentas.css` | Estilos de la gestión de cuentas. |
 | `scripts/servir.mjs` | Servidor local de desarrollo: sirve el frontend y reenvía `/api` al backend. |
-| `json/Datos.json` | Copia del dataset inicial de 35 estudiantes, igual al de `App.js`. |
+| `json/Datos.json` | Dataset de ejemplo de 35 estudiantes, solo de referencia: la aplicación ya no lo usa. |
 | `test/` | Pruebas automáticas con Vitest: las 20 reglas del validador y las utilidades de escape. |
 | `package.json` | Scripts y herramientas de desarrollo (solo para pruebas y calidad de código; la aplicación no las usa). |
 | `eslint.config.mjs` | Reglas de ESLint para el código del navegador, las pruebas y el validador. |
@@ -86,7 +87,7 @@ Con la cookie de sesión no se puede abrir `index.html` directamente ni servirlo
 
 Los nombres de archivos y carpetas distinguen mayúsculas y minúsculas en servidores Linux (por ejemplo, `css/Style.css`).
 
-Los estudiantes, cursos y reportes todavía usan datos de ejemplo guardados en el `localStorage` del navegador. Se pueden restablecer desde la sección Configuración del Dashboard, que ve el administrador.
+Estudiantes, cursos, resumen y reportes vienen de la API (PostgreSQL), así que todos los usuarios ven los mismos datos. Un usuario normal solo recibe el catálogo de cursos y el resumen en números; el servidor le niega los datos de estudiantes. Para que haya datos de ejemplo en el backend local, usa `npm run db:sembrar` allí.
 
 ---
 
@@ -127,7 +128,7 @@ Las pruebas cargan `js/Validacion.js` y `js/Escapar.js` con `require`, porque es
 
 ## Arquitectura de JavaScript
 
-Cada archivo usa una IIFE para no contaminar el objeto global. Solo se expone lo necesario en `window.EduTrack`. Ese nombre y la clave `edutrack_estudiantes` de `localStorage` se mantienen por compatibilidad con los datos ya guardados; se renombrarán al modularizar el código.
+Cada archivo usa una IIFE para no contaminar el objeto global. Solo se expone lo necesario en `window.EduTrack`. Ese nombre se mantiene por ahora y se renombrará al modularizar el código.
 
 * **Estado centralizado:** `App.js` mantiene un objeto `state` con la vista actual, los estudiantes, los filtros y las instancias de las gráficas.
 * **Renderizado:** los componentes se vuelven a pintar con plantillas de texto cuando cambia el estado.
@@ -172,8 +173,8 @@ Reglas relevantes:
 
 Dónde se usa en la aplicación:
 
-* **Al cargar los datos guardados:** se validan antes de mostrarlos. Los registros con errores no se muestran ni se borran: se guardan aparte en la clave `edutrack_estudiantes_invalidos` de `localStorage` (hasta 200) y un aviso indica cuántos se apartaron. Si no queda ninguno válido, se cargan los 35 estudiantes de ejemplo.
-* **Al guardar desde el formulario:** el registro completo pasa por `registro()`. Los errores se muestran junto al campo correspondiente y las advertencias no bloquean el guardado. El campo de fecha ya limita el rango permitido.
+* **Al guardar desde el formulario:** el registro completo pasa por `registro()` para dar respuesta inmediata. Los errores se muestran junto al campo correspondiente y las advertencias no bloquean el guardado. El campo de fecha ya limita el rango permitido. El servidor aplica las mismas reglas como segunda defensa.
+* **`dataset()`** ya no se usa en la interfaz, porque los datos los valida el servidor al guardarlos; se conserva con sus pruebas como motor de auditoría.
 
 ---
 
@@ -236,3 +237,14 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * El validador se conecta a la aplicación: se aplica al cargar `localStorage` (con cuarentena de lo inválido) y al guardar desde el formulario.
 * La portada anunciaba 8 cursos oficiales; ahora indica 30.
 * 92 pruebas en total.
+
+### Estudiantes, cursos y reportes desde la API
+* Estudiantes: listado, búsqueda, filtros y paginación se resuelven en el servidor (la búsqueda espera 300 ms tras escribir y descarta respuestas atrasadas). Alta, edición y baja llaman a la API y muestran los errores del servidor junto a cada campo, incluido el correo duplicado.
+* Si se elimina el último registro de la última página, la lista retrocede a la página anterior.
+* Dashboard: indicadores y gráfica por ciudad desde `/api/resumen`; el selector de ciudades sale de ahí.
+* Cursos: catálogo y número de inscritos desde `/api/cursos`; el selector del formulario usa el identificador del curso.
+* Reportes y notificaciones: desde `/api/reportes`. Las notificaciones pasan a ser resúmenes (inactivos, completados, progreso bajo, ingresos) en lugar de una alerta por estudiante.
+* Configuración: la exportación descarga todos los estudiantes desde la API. El CSV ahora entrecomilla comas, comillas y saltos de línea, y neutraliza valores que empiezan por `=`, `+`, `-` o `@` para que no se ejecuten como fórmulas.
+* Se elimina "Restablecer datos" y todo el uso de `localStorage` para estudiantes (dataset embebido, cuarentena y claves).
+* El usuario normal ya no pide datos de estudiantes: el panel de solo lectura sale del resumen, y el servidor lo respalda con `403`.
+* 102 pruebas en total.
