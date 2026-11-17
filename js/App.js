@@ -32,7 +32,9 @@
         paginaActual: 1,
         itemsPorPagina: 12,
         filtroCategoria: 'todos',
-        usuario: null
+        usuario: null,
+        avatarElegido: null,
+        avatarOpciones: []
     };
 
     /* ════════════════════════════════════════════
@@ -77,7 +79,7 @@
         set('sidebarNombre', nombreCompleto);
         set('sidebarRol', d && d.rol === 'administrador' ? 'Administrador' : 'Usuario');
         var av = document.getElementById('sidebarAvatar');
-        if (av) av.innerHTML = window.EduTrack.avatar((d && d.email) || nombreCompleto);
+        if (av) av.innerHTML = window.EduTrack.avatar(semillaDe(d) || nombreCompleto);
     }
 
     function esAdministrador() {
@@ -890,6 +892,21 @@
             '<button class="btn btn-primary" id="btnGuardarPerfil" data-action="guardar-perfil">Guardar perfil</button>' +
             '</div></section>' +
 
+            /* Tarjeta: Avatar */
+            '<section class="config-card config-card--avatar" aria-labelledby="cfg-avatar">' +
+            '<h3 class="config-card__title" id="cfg-avatar">Mi avatar</h3>' +
+            '<div class="avatar-editor">' +
+            '<div class="avatar-usuario avatar-editor__vista" id="avatarVista" aria-hidden="true"></div>' +
+            '<div class="avatar-editor__opciones" id="avatarOpciones" role="radiogroup" aria-label="Elige un avatar"></div>' +
+            '</div>' +
+            '<div class="avatar-editor__acciones">' +
+            '<button class="btn btn-secondary" type="button" data-action="avatar-mezclar">Mezclar</button>' +
+            '<button class="btn btn-secondary" type="button" data-action="avatar-predeterminado">Usar el predeterminado</button>' +
+            '<button class="btn btn-primary" type="button" id="btnGuardarAvatar" data-action="avatar-guardar">Guardar avatar</button>' +
+            '</div>' +
+            '<span class="form-group__error" id="avatarError" aria-live="polite"></span>' +
+            '</section>' +
+
             /* Tarjeta: Seguridad */
             '<section class="config-card" aria-labelledby="cfg-seg">' +
             '<h3 class="config-card__title" id="cfg-seg">Seguridad</h3>' +
@@ -941,6 +958,7 @@
             '</div>';
 
         sec._rendered = true;
+        iniciarSelectorAvatar();
     }
 
     function toggleRow(id, label, checked) {
@@ -998,6 +1016,82 @@
             setFieldError('cfgPassNueva', campos.passwordNueva || (campos.passwordActual ? '' : error.message));
         } finally {
             if (boton) boton.disabled = false;
+        }
+    }
+
+    var OPCIONES_AVATAR = 12;
+
+    function semillaDe(usuario) {
+        return (usuario && (usuario.avatarSemilla || usuario.email)) || '';
+    }
+
+    function semillaAleatoria() {
+        var bytes = new Uint8Array(6);
+        crypto.getRandomValues(bytes);
+        return Array.from(bytes, function (b) { return b.toString(36).padStart(2, '0'); }).join('');
+    }
+
+    function mezclarOpcionesAvatar() {
+        var opciones = [state.avatarElegido];
+        while (opciones.length < OPCIONES_AVATAR) opciones.push(semillaAleatoria());
+        state.avatarOpciones = opciones;
+    }
+
+    function iniciarSelectorAvatar() {
+        state.avatarElegido = (state.usuario && state.usuario.avatarSemilla) || null;
+        mezclarOpcionesAvatar();
+        renderizarSelectorAvatar();
+    }
+
+    function renderizarSelectorAvatar() {
+        var vista = document.getElementById('avatarVista');
+        var contenedor = document.getElementById('avatarOpciones');
+        if (!vista || !contenedor || !state.usuario) return;
+
+        var correo = state.usuario.email;
+        vista.innerHTML = window.EduTrack.avatar(state.avatarElegido || correo);
+        contenedor.innerHTML = state.avatarOpciones.map(function (semilla, i) {
+            var activa = semilla === state.avatarElegido;
+            return '<button type="button" class="avatar-opcion' + (activa ? ' avatar-opcion--activa' : '') + '" ' +
+                'role="radio" aria-checked="' + activa + '" aria-label="Avatar ' + (i + 1) + '" ' +
+                'data-action="avatar-elegir" data-indice="' + i + '">' +
+                window.EduTrack.avatar(semilla || correo) + '</button>';
+        }).join('');
+
+        var guardado = state.usuario.avatarSemilla || null;
+        var boton = document.getElementById('btnGuardarAvatar');
+        if (boton) boton.disabled = state.avatarElegido === guardado;
+        mostrarErrorCampo('avatarError', '');
+    }
+
+    function elegirAvatar(indice) {
+        if (indice < 0 || indice >= state.avatarOpciones.length) return;
+        state.avatarElegido = state.avatarOpciones[indice];
+        renderizarSelectorAvatar();
+    }
+
+    function usarAvatarPredeterminado() {
+        state.avatarElegido = null;
+        if (state.avatarOpciones.indexOf(null) === -1) state.avatarOpciones[0] = null;
+        renderizarSelectorAvatar();
+    }
+
+    function mezclarAvatares() {
+        mezclarOpcionesAvatar();
+        renderizarSelectorAvatar();
+    }
+
+    async function guardarAvatar(boton) {
+        ocupado(boton, true, 'Guardando…');
+        try {
+            var r = await api.patch('/api/auth/yo', { avatarSemilla: state.avatarElegido });
+            actualizarUsuarioActual(r.usuario);
+            showToast('Avatar guardado', 'success');
+        } catch (error) {
+            mostrarErrorCampo('avatarError', (error.campos && error.campos.avatarSemilla) || error.message);
+        } finally {
+            ocupado(boton, false);
+            renderizarSelectorAvatar();
         }
     }
 
@@ -1459,6 +1553,10 @@
         'cerrar-notificaciones': function () { cerrarPanelNotificaciones(); },
         'guardar-perfil': function () { guardarPerfil(); },
         'cambiar-password': function () { cambiarPassword(); },
+        'avatar-elegir': function (el) { elegirAvatar(num(el.getAttribute('data-indice'))); },
+        'avatar-mezclar': function () { mezclarAvatares(); },
+        'avatar-predeterminado': function () { usarAvatarPredeterminado(); },
+        'avatar-guardar': function (el) { guardarAvatar(el); },
         'guardar-notificaciones': function () { guardarNotificaciones(); },
         'exportar-json': function (el) { exportarJSON(el); },
         'exportar-csv': function (el) { exportarCSV(el); }

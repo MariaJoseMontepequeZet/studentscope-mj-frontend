@@ -258,3 +258,10 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * El SVG se inserta en línea; sus identificadores internos llevan un sufijo propio de cada avatar, así que no chocan entre sí.
 * Se elimina la inicial en texto de las tarjetas y del menú lateral.
 * 107 pruebas en total.
+
+### Avatar editable
+* Nueva tarjeta "Mi avatar" en Configuración (Mi perfil para usuarios normales): vista previa, galería de 12 opciones, "Mezclar" para generar otras, "Usar el predeterminado" y "Guardar avatar".
+* La opción elegida se conserva al mezclar. Guardar queda desactivado mientras no haya cambios.
+* Se guarda en la API como `avatarSemilla` (`PATCH /api/auth/yo`). Sin semilla guardada, el avatar sale del correo, como antes.
+* El avatar elegido se usa en el menú lateral y en la lista de cuentas. Las tarjetas de estudiantes siguen usando el correo del estudiante.
+* Requiere el backend con la migración 003.
