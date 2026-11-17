@@ -2,7 +2,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 
 export default [
-  { ignores: ['node_modules/', 'docs/', 'coverage/'] },
+  { ignores: ['node_modules/', 'docs/', 'coverage/', 'js/vendor/'] },
   js.configs.recommended,
   {
     files: ['js/**/*.js'],
@@ -19,6 +19,10 @@ export default [
     languageOptions: {
       globals: { ...globals.node }
     }
+  },
+  {
+    files: ['scripts/avatares-entrada.mjs'],
+    languageOptions: { globals: { ...globals.browser } }
   },
   {
     files: ['test/**/*.js', '*.mjs', 'scripts/**/*.mjs'],

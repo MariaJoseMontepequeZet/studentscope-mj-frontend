@@ -9,13 +9,19 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "format": "prettier --write test scripts eslint.config.mjs vitest.config.mjs",
-    "format:check": "prettier --check test scripts eslint.config.mjs vitest.config.mjs"
+    "format:check": "prettier --check test scripts eslint.config.mjs vitest.config.mjs",
+    "build:avatares": "node scripts/construir-avatares.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "esbuild": "^0.28.2",
     "eslint": "^10.14.0",
     "globals": "^17.14.0",
     "prettier": "^3.10.1",
     "vitest": "^5.1.0"
+  },
+  "dependencies": {
+    "@dicebear/core": "^10.7.0",
+    "@dicebear/styles": "^10.6.0"
   }
 }

@@ -52,6 +52,9 @@ Hecho por María José Montepeque Zet.
 | `js/Catalogo.js` | Catálogo oficial de 30 cursos: única fuente para la interfaz y el validador. |
 | `js/Validacion.js` | Motor de validación con 20 reglas de negocio, para un dataset completo o para un registro. |
 | `js/Csv.js` | Generación del archivo CSV: comillas, saltos de línea y protección contra fórmulas de hoja de cálculo. |
+| `js/vendor/avatares.js` | Generador de avatares (DiceBear, estilo voxel-art) empaquetado para el navegador. No se edita a mano: se genera con `npm run build:avatares`. |
+| `css/Avatares.css` | Tamaños y recorte circular de los avatares. |
+| `scripts/avatares-entrada.mjs` | Código fuente del generador de avatares; `avatares-opciones.mjs` guarda la configuración (colores y probabilidades) y `construir-avatares.mjs` lo empaqueta con esbuild. |
 | `js/Escapar.js` | Utilidades de seguridad: escape de HTML y conversión segura a número. |
 | `js/Iconos.js` | Iconos SVG propios y función que los inserta en los elementos con `data-icono`. |
 | `js/Api.js` | Cliente de la API: envía las cookies de sesión, traduce errores y avisa cuando la sesión expira. |
@@ -248,3 +251,10 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * Se elimina "Restablecer datos" y todo el uso de `localStorage` para estudiantes (dataset embebido, cuarentena y claves).
 * El usuario normal ya no pide datos de estudiantes: el panel de solo lectura sale del resumen, y el servidor lo respalda con `403`.
 * 102 pruebas en total.
+
+### Avatares con DiceBear
+* Cada persona tiene un avatar de estilo voxel-art generado a partir de su correo: siempre el mismo para la misma persona, sin guardar imágenes. Se usa en el menú lateral, en la lista de cuentas y en las tarjetas de estudiantes.
+* Se agregan `@dicebear/core` y `@dicebear/styles`. Como la aplicación no tiene paso de compilación, el generador se empaqueta con esbuild en `js/vendor/avatares.js`, que se sube al repositorio para que el despliegue lo copie. Tras cambiar la configuración o actualizar DiceBear hay que ejecutar `npm run build:avatares`.
+* El SVG se inserta en línea; sus identificadores internos llevan un sufijo propio de cada avatar, así que no chocan entre sí.
+* Se elimina la inicial en texto de las tarjetas y del menú lateral.
+* 107 pruebas en total.
