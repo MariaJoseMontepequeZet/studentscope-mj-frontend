@@ -272,3 +272,9 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * `js/Catalogo.js` deja de traer la cifra `inscritos` de cada curso (eran números inventados que ya nada usaba): el conteo real viene de `/api/cursos`. Una prueba impide que vuelvan.
 * El CSV con escape de comillas, comas y saltos de línea y el BOM para Excel ya se entregaron junto con la exportación desde la API.
 * 108 pruebas en total.
+
+### Integración continua
+* Nuevo flujo `CI` (`.github/workflows/ci.yml`): en cada PR hacia `dev` o `main` ejecuta lint, la comprobación de formato, las pruebas y verifica que `js/vendor/avatares.js` coincide con lo que genera `npm run build:avatares`. Corre en un ejecutor de GitHub, no en el servidor.
+* Se formatean con Prettier tres archivos de los avatares que no cumplían `format:check`.
+* El flujo de despliegue usa `actions/checkout@v5`.
+* Para que un PR no se pueda fusionar si el CI falla, se exige el check `Lint y pruebas` en la regla de protección de ramas de GitHub.
