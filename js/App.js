@@ -94,14 +94,18 @@
         if (!admin) cerrarPanelNotificaciones();
     }
 
-    function invalidarReportes() {
-        var sec = document.getElementById('secReportes');
-        if (sec) {
-            sec._rendered = false;
-            sec.innerHTML = '';
-        }
+    function destruirGraficosReportes() {
         if (state.graficoPlan) { state.graficoPlan.destroy(); state.graficoPlan = null; }
         if (state.graficoProgreso) { state.graficoProgreso.destroy(); state.graficoProgreso = null; }
+    }
+
+    function vaciarReportes() {
+        var sec = document.getElementById('secReportes');
+        if (sec) {
+            sec._turno = (sec._turno || 0) + 1;
+            sec.innerHTML = '';
+        }
+        destruirGraficosReportes();
     }
 
     function reiniciarVistasDinamicas() {
@@ -111,7 +115,7 @@
             sec._rendered = false;
             sec.innerHTML = '';
         });
-        invalidarReportes();
+        vaciarReportes();
     }
 
     function actualizarFechaTopbar() {
@@ -246,7 +250,6 @@
     }
 
     async function refrescarDatos() {
-        invalidarReportes();
         try {
             await cargarResumen();
             await cargarEstudiantes();
@@ -710,19 +713,22 @@
     ════════════════════════════════════════════ */
     async function renderizarReportes() {
         var sec = document.getElementById('secReportes');
-        if (!sec || sec._rendered || sec._cargando) return;
+        if (!sec) return;
 
-        sec._cargando = true;
+        var turno = (sec._turno = (sec._turno || 0) + 1);
         var datos;
         try {
             datos = await api.get('/api/reportes');
         } catch (error) {
+            if (turno !== sec._turno) return;
             avisarErrorCarga(error);
-            sec.innerHTML = '<p class="cursos-count">No se pudieron cargar los reportes.</p>';
+            if (!sec.firstElementChild) {
+                sec.innerHTML = '<p class="cursos-count">No se pudieron cargar los reportes.</p>';
+            }
             return;
-        } finally {
-            sec._cargando = false;
         }
+        if (turno !== sec._turno) return;
+        destruirGraficosReportes();
 
         sec.innerHTML =
             '<header class="page-header">' +
@@ -755,7 +761,6 @@
             '</div>' +
             '</section>';
 
-        sec._rendered = true;
         crearGraficosReportes(datos);
     }
 
