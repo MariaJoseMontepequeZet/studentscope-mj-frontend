@@ -265,3 +265,10 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * Se guarda en la API como `avatarSemilla` (`PATCH /api/auth/yo`). Sin semilla guardada, el avatar sale del correo, como antes.
 * El avatar elegido se usa en el menú lateral y en la lista de cuentas. Las tarjetas de estudiantes siguen usando el correo del estudiante.
 * Requiere el backend con la migración 003.
+
+### Día 7 - Reportes al día y catálogo sin cifras inventadas
+* Reportes se vuelve a pedir al servidor cada vez que se abre la sección, así que refleja cambios hechos desde otro navegador o por otra persona. Antes se guardaba en pantalla hasta que este usuario cambiaba un estudiante.
+* Abrir y cerrar Reportes rápido ya no deja gráficas viejas ni duplicadas; las respuestas atrasadas se descartan y las gráficas anteriores se destruyen antes de crear las nuevas.
+* `js/Catalogo.js` deja de traer la cifra `inscritos` de cada curso (eran números inventados que ya nada usaba): el conteo real viene de `/api/cursos`. Una prueba impide que vuelvan.
+* El CSV con escape de comillas, comas y saltos de línea y el BOM para Excel ya se entregaron junto con la exportación desde la API.
+* 108 pruebas en total.
