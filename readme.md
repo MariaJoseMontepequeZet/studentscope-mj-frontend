@@ -273,6 +273,14 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * El CSV con escape de comillas, comas y saltos de línea y el BOM para Excel ya se entregaron junto con la exportación desde la API.
 * 108 pruebas en total.
 
+### Demo pública para el portafolio
+* Botón "Probar la demo" en la portada y en el inicio de sesión: entra sin registrarse con la cuenta de demostración (`POST /api/auth/demo`).
+* La dirección `/?demo=1` entra sola a la demo si no hay sesión. Es la que se usa en el `iframe` del portafolio.
+* La demo ve Estudiantes, Reportes, Cursos y las notificaciones, y puede crear, editar, eliminar y exportar estudiantes. No ve Cuentas y su Configuración solo muestra la exportación: el servidor le niega cuentas y perfil con `403`.
+* Un aviso en el panel explica que es una demo con datos que se restauran solos.
+* Los permisos de interfaz se separan en administrador (todo) y gestión (administrador o demo).
+* Requiere el backend con `DEMO_HABILITADA=true`; si está apagado, el botón muestra "La demo no está disponible por ahora".
+
 ### Integración continua
 * Nuevo flujo `CI` (`.github/workflows/ci.yml`): en cada PR hacia `dev` o `main` ejecuta lint, la comprobación de formato, las pruebas y verifica que `js/vendor/avatares.js` coincide con lo que genera `npm run build:avatares`. Corre en un ejecutor de GitHub, no en el servidor.
 * Se formatean con Prettier tres archivos de los avatares que no cumplían `format:check`.
