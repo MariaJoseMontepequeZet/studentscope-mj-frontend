@@ -25,6 +25,12 @@ describe('catalogo de cursos', () => {
     });
   });
 
+  it('no trae cifras de inscritos: el conteo real lo calcula el servidor', () => {
+    catalogo.cursos.forEach((curso) => {
+      expect(curso).not.toHaveProperty('inscritos');
+    });
+  });
+
   it('el validador usa exactamente los nombres del catalogo', () => {
     expect(validar.CURSOS_VALIDOS).toEqual(catalogo.nombres);
   });

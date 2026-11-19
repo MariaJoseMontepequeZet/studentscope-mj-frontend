@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/Estudiantes.css" />
     <link rel="stylesheet" href="css/Cuentas.css" />
     <link rel="stylesheet" href="css/Avatares.css" />
+    <link rel="stylesheet" href="css/Demo.css" />
 
     <style>
         /* ── Vistas (view router) ── */
@@ -228,6 +229,7 @@
                 <div class="hero-cta">
                     <button class="btn btn-primary" data-action="ir-login">Iniciar sesión →</button>
                     <button class="btn btn-secondary" data-action="ir-registro">Crear cuenta</button>
+                    <button class="btn btn-secondary" data-action="entrar-demo">Probar la demo</button>
                 </div>
             </div>
         </header>
@@ -376,6 +378,10 @@
                 <p class="login-hint">¿No tienes cuenta?
                     <button type="button" class="login-link" data-action="ir-registro">Crear cuenta</button>
                 </p>
+                <p class="login-hint">¿Solo quieres mirar?
+                    <button type="button" class="login-link" data-action="entrar-demo">Probar la demo sin registrarte</button>
+                </p>
+                <p id="demoError" class="login-error" role="alert"></p>
                 <p class="login-hint">
                     <button type="button" class="login-link" data-action="ir-landing">Volver al inicio</button>
                 </p>
@@ -459,7 +465,7 @@
                                 <span class="db-sidebar__nav-icon" data-icono="panel"></span> <span class="db-sidebar__nav-text">Dashboard</span>
                             </a>
                         </li>
-                        <li class="db-sidebar__nav-item" data-solo-admin>
+                        <li class="db-sidebar__nav-item" data-gestion>
                             <a href="#" class="db-sidebar__nav-link" data-section="estudiantes">
                                 <span class="db-sidebar__nav-icon" data-icono="usuarios"></span> <span class="db-sidebar__nav-text">Estudiantes</span>
                             </a>
@@ -469,7 +475,7 @@
                                 <span class="db-sidebar__nav-icon" data-icono="libro"></span> <span class="db-sidebar__nav-text">Cursos</span>
                             </a>
                         </li>
-                        <li class="db-sidebar__nav-item" data-solo-admin>
+                        <li class="db-sidebar__nav-item" data-gestion>
                             <a href="#" class="db-sidebar__nav-link" data-section="reportes">
                                 <span class="db-sidebar__nav-icon" data-icono="tendencia"></span> <span class="db-sidebar__nav-text">Reportes</span>
                             </a>
@@ -522,7 +528,7 @@
                     </div>
 
                     <div class="db-topbar__actions">
-                        <div class="notif-wrapper" data-solo-admin>
+                        <div class="notif-wrapper" data-gestion>
                             <button id="btnNotificaciones" class="db-topbar__icon-btn" aria-label="Abrir notificaciones"
                                 aria-haspopup="true" aria-expanded="false">
                                 <span data-icono="campana"></span>
@@ -547,6 +553,12 @@
                     </div>
                 </header>
                 <div class="db-content">
+
+                    <p id="avisoDemo" class="aviso-demo" role="note" hidden>
+                        <strong>Modo demo.</strong> Puedes crear, editar y eliminar estudiantes. Los datos de ejemplo
+                        se restauran solos cada cierto tiempo y las cuentas no se pueden modificar. No ingreses datos
+                        reales.
+                    </p>
 
                     <div id="secDashboard" class="db-section">
 

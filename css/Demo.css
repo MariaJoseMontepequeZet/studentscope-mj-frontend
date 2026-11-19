@@ -1,0 +1,14 @@
+.aviso-demo {
+    margin-bottom: 1.25rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(245, 166, 35, 0.35);
+    border-radius: var(--radius-md, 10px);
+    background: rgba(245, 166, 35, 0.08);
+    color: var(--color-text-primary);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.aviso-demo strong {
+    color: var(--color-accent-primary);
+}
