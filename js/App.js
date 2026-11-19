@@ -77,7 +77,7 @@
         var set = function (id, val) { var el = document.getElementById(id); if (el) el.textContent = val; };
         set('greetingNombre', primerNombre);
         set('sidebarNombre', nombreCompleto);
-        set('sidebarRol', d && d.rol === 'administrador' ? 'Administrador' : 'Usuario');
+        set('sidebarRol', d && d.rol === 'administrador' ? 'Administrador' : d && d.rol === 'demo' ? 'Demostración' : 'Usuario');
         var av = document.getElementById('sidebarAvatar');
         if (av) av.innerHTML = window.EduTrack.avatar(semillaDe(d) || nombreCompleto);
     }
@@ -86,12 +86,24 @@
         return !!(state.usuario && state.usuario.rol === 'administrador');
     }
 
+    function esDemo() {
+        return !!(state.usuario && state.usuario.rol === 'demo');
+    }
+
+    function puedeGestionar() {
+        return esAdministrador() || esDemo();
+    }
+
     function aplicarRol() {
         var admin = esAdministrador();
+        var gestion = puedeGestionar();
         document.querySelectorAll('[data-solo-admin]').forEach(function (el) { el.hidden = !admin; });
+        document.querySelectorAll('[data-gestion]').forEach(function (el) { el.hidden = !gestion; });
+        var aviso = document.getElementById('avisoDemo');
+        if (aviso) aviso.hidden = !esDemo();
         var textoConfig = document.querySelector('.db-sidebar__nav-link[data-section="configuracion"] .db-sidebar__nav-text');
-        if (textoConfig) textoConfig.textContent = admin ? 'Configuración' : 'Mi perfil';
-        if (!admin) cerrarPanelNotificaciones();
+        if (textoConfig) textoConfig.textContent = gestion ? 'Configuración' : 'Mi perfil';
+        if (!gestion) cerrarPanelNotificaciones();
     }
 
     function destruirGraficosReportes() {
@@ -138,11 +150,13 @@
         'cuentas': 'secCuentas',
         'configuracion': 'secConfiguracion'
     };
-    var SECCIONES_ADMIN = ['estudiantes', 'reportes', 'cuentas'];
+    var SECCIONES_GESTION = ['estudiantes', 'reportes'];
+    var SECCIONES_ADMIN = ['cuentas'];
 
     function activarSeccion(seccion) {
         if (!SECCIONES[seccion]) return;
         if (SECCIONES_ADMIN.indexOf(seccion) !== -1 && !esAdministrador()) seccion = 'dashboard';
+        if (SECCIONES_GESTION.indexOf(seccion) !== -1 && !puedeGestionar()) seccion = 'dashboard';
 
         document.querySelectorAll('.db-sidebar__nav-link').forEach(function (l) {
             l.classList.toggle('db-sidebar__nav-link--active', l.getAttribute('data-section') === seccion);
@@ -210,7 +224,7 @@
         poblarSelectCiudades();
         actualizarKPIs();
         actualizarGrafico();
-        if (esAdministrador()) await cargarEstudiantes();
+        if (puedeGestionar()) await cargarEstudiantes();
     }
 
     function valorDe(id) { return ((document.getElementById(id) || {}).value || '').trim(); }
@@ -387,7 +401,7 @@
        MODAL ESTUDIANTE
     ════════════════════════════════════════════ */
     function abrirModal(id) {
-        if (!esAdministrador()) return;
+        if (!puedeGestionar()) return;
         if (!state.cursos.length) { showToast('Los cursos aún no se han cargado', 'info'); return; }
         state.editandoId = id || null;
         limpiarFormulario();
@@ -434,7 +448,7 @@
     }
 
     async function guardarEstudiante() {
-        if (!esAdministrador()) return;
+        if (!puedeGestionar()) return;
         var g = function (id) { return document.getElementById(id); };
         var d = {
             nombre: g('fNombre').value.trim(),
@@ -547,7 +561,7 @@
     }
 
     function eliminarEstudiante(id) {
-        if (!esAdministrador()) return;
+        if (!puedeGestionar()) return;
         var e = state.estudiantes.find(function (x) { return x.id === id; }); if (!e) return;
         abrirConfirm(
             '¿Eliminar estudiante?',
@@ -866,9 +880,39 @@
     /* ════════════════════════════════════════════
        SECCIÓN CONFIGURACIÓN
     ════════════════════════════════════════════ */
+    function tarjetaSistema() {
+        return '<section class="config-card" aria-labelledby="cfg-sys">' +
+            '<h3 class="config-card__title" id="cfg-sys">Sistema y datos</h3>' +
+            '<div class="config-actions-list">' +
+            '<div class="config-action-row">' +
+            '<div><p class="config-action-title">Exportar estudiantes (JSON)</p>' +
+            '<p class="config-action-sub">Descarga todos los registros en formato JSON</p></div>' +
+            '<button class="btn btn-secondary" data-action="exportar-json">Exportar</button>' +
+            '</div>' +
+            '<div class="config-action-row">' +
+            '<div><p class="config-action-title">Exportar estudiantes (CSV)</p>' +
+            '<p class="config-action-sub">Compatible con Excel y Google Sheets</p></div>' +
+            '<button class="btn btn-secondary" data-action="exportar-csv">Exportar CSV</button>' +
+            '</div>' +
+            '</div>' +
+            '<p class="config-version">StudentScope MJ v2.3 · Vanilla JS · CSS Puro · Sin frameworks</p>' +
+            '</section>';
+    }
+
+    function renderizarConfiguracionDemo(sec) {
+        sec.innerHTML =
+            '<header class="page-header">' +
+            '<div><h2 class="page-header__title">Configuración <span>de la demo</span></h2>' +
+            '<p class="page-header__meta">La cuenta de demostración no se puede modificar</p></div>' +
+            '</header>' +
+            '<div class="config-grid">' + tarjetaSistema() + '</div>';
+        sec._rendered = true;
+    }
+
     function renderizarConfiguracion() {
         var sec = document.getElementById('secConfiguracion');
         if (!sec || sec._rendered) return;
+        if (esDemo()) { renderizarConfiguracionDemo(sec); return; }
 
         var admin = esAdministrador();
         var u = state.usuario || {};
@@ -942,23 +986,7 @@
             '<button class="btn btn-primary" style="margin-top:1.25rem" data-action="guardar-notificaciones">Guardar preferencias</button>' +
             '</section>' +
 
-            /* Tarjeta: Sistema */
-            '<section class="config-card" aria-labelledby="cfg-sys">' +
-            '<h3 class="config-card__title" id="cfg-sys">Sistema y datos</h3>' +
-            '<div class="config-actions-list">' +
-            '<div class="config-action-row">' +
-            '<div><p class="config-action-title">Exportar estudiantes (JSON)</p>' +
-            '<p class="config-action-sub">Descarga todos los registros en formato JSON</p></div>' +
-            '<button class="btn btn-secondary" data-action="exportar-json">Exportar</button>' +
-            '</div>' +
-            '<div class="config-action-row">' +
-            '<div><p class="config-action-title">Exportar estudiantes (CSV)</p>' +
-            '<p class="config-action-sub">Compatible con Excel y Google Sheets</p></div>' +
-            '<button class="btn btn-secondary" data-action="exportar-csv">Exportar CSV</button>' +
-            '</div>' +
-            '</div>' +
-            '<p class="config-version">StudentScope MJ v2.3 · Vanilla JS · CSS Puro · Sin frameworks</p>' +
-            '</section>') : '') +
+            tarjetaSistema()) : '') +
 
             '</div>';
 
@@ -1126,7 +1154,7 @@
     }
 
     async function exportar(formato, boton) {
-        if (!esAdministrador()) return;
+        if (!puedeGestionar()) return;
         ocupado(boton, true, 'Exportando…');
         try {
             var lista = await obtenerTodosLosEstudiantes();
@@ -1240,7 +1268,7 @@
 
     async function abrirPanelNotificaciones() {
         var panel = document.getElementById('notifPanel');
-        if (!panel || !esAdministrador()) return;
+        if (!panel || !puedeGestionar()) return;
         if (notifPanelAbierto) { cerrarPanelNotificaciones(); return; }
 
         var datos;
@@ -1431,6 +1459,23 @@
         }
     }
 
+    async function iniciarDemo(boton) {
+        mostrarErrorCampo('demoError', '');
+        ocupado(boton, true, 'Entrando…');
+        try {
+            var r = await api.post('/api/auth/demo');
+            entrar(r.usuario);
+        } catch (error) {
+            var mensaje = error.codigo === 'DEMO_NO_DISPONIBLE'
+                ? 'La demo no está disponible por ahora'
+                : error.message;
+            if (state.vistaActual === 'login') mostrarErrorCampo('demoError', mensaje);
+            else showToast(mensaje, 'error');
+        } finally {
+            ocupado(boton, false);
+        }
+    }
+
     async function cerrarSesion() {
         try {
             await window.EduTrack.api.post('/api/auth/logout');
@@ -1453,7 +1498,7 @@
             var r = await window.EduTrack.api.get('/api/auth/yo');
             entrar(r.usuario);
         } catch {
-            /* sin sesión activa: se queda la página de inicio */
+            if (new URLSearchParams(window.location.search).get('demo') === '1') iniciarDemo(null);
         }
     }
 
@@ -1548,6 +1593,7 @@
         'ir-login': function () { mostrarVista('login'); },
         'ir-registro': function () { mostrarVista('registro'); },
         'ir-landing': function () { mostrarVista('landing'); },
+        'entrar-demo': function (el) { iniciarDemo(el); },
         'editar': function (el) { abrirModal(num(el.getAttribute('data-id'))); },
         'eliminar': function (el) { eliminarEstudiante(num(el.getAttribute('data-id'))); },
         'pagina': function (el) { cambiarPagina(num(el.getAttribute('data-page'))); },
