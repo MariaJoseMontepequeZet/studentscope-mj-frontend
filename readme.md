@@ -272,3 +272,11 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * `js/Catalogo.js` deja de traer la cifra `inscritos` de cada curso (eran números inventados que ya nada usaba): el conteo real viene de `/api/cursos`. Una prueba impide que vuelvan.
 * El CSV con escape de comillas, comas y saltos de línea y el BOM para Excel ya se entregaron junto con la exportación desde la API.
 * 108 pruebas en total.
+
+### Demo pública para el portafolio
+* Botón "Probar la demo" en la portada y en el inicio de sesión: entra sin registrarse con la cuenta de demostración (`POST /api/auth/demo`).
+* La dirección `/?demo=1` entra sola a la demo si no hay sesión. Es la que se usa en el `iframe` del portafolio.
+* La demo ve Estudiantes, Reportes, Cursos y las notificaciones, y puede crear, editar, eliminar y exportar estudiantes. No ve Cuentas y su Configuración solo muestra la exportación: el servidor le niega cuentas y perfil con `403`.
+* Un aviso en el panel explica que es una demo con datos que se restauran solos.
+* Los permisos de interfaz se separan en administrador (todo) y gestión (administrador o demo).
+* Requiere el backend con `DEMO_HABILITADA=true`; si está apagado, el botón muestra "La demo no está disponible por ahora".
