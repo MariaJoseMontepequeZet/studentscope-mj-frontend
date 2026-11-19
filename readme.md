@@ -280,3 +280,9 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * Un aviso en el panel explica que es una demo con datos que se restauran solos.
 * Los permisos de interfaz se separan en administrador (todo) y gestión (administrador o demo).
 * Requiere el backend con `DEMO_HABILITADA=true`; si está apagado, el botón muestra "La demo no está disponible por ahora".
+
+### Integración continua
+* Nuevo flujo `CI` (`.github/workflows/ci.yml`): en cada PR hacia `dev` o `main` ejecuta lint, la comprobación de formato, las pruebas y verifica que `js/vendor/avatares.js` coincide con lo que genera `npm run build:avatares`. Corre en un ejecutor de GitHub, no en el servidor.
+* Se formatean con Prettier tres archivos de los avatares que no cumplían `format:check`.
+* El flujo de despliegue usa `actions/checkout@v5`.
+* Para que un PR no se pueda fusionar si el CI falla, se exige el check `Lint y pruebas` en la regla de protección de ramas de GitHub.
