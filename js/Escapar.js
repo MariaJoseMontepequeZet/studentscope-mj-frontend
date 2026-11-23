@@ -26,8 +26,8 @@
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = api;
     } else {
-        window.EduTrack = window.EduTrack || {};
-        window.EduTrack.escaparHTML = escaparHTML;
-        window.EduTrack.aNumero = aNumero;
+        window.StudentScope = window.StudentScope || {};
+        window.StudentScope.escaparHTML = escaparHTML;
+        window.StudentScope.aNumero = aNumero;
     }
 })();

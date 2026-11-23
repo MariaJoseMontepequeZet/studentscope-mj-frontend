@@ -447,6 +447,7 @@
 
 
     <div id="view-dashboard" class="view">
+        <a class="skip-link" href="#contenidoPrincipal">Saltar al contenido</a>
         <div class="db-layout">
 
             <aside id="sidebar" class="db-sidebar" role="navigation" aria-label="Menú principal del dashboard">
@@ -510,7 +511,7 @@
             </aside>
             <div id="sidebarOverlay" class="db-overlay" aria-hidden="true"></div>
 
-            <main class="db-main">
+            <main class="db-main" id="contenidoPrincipal" tabindex="-1">
 
                 <header class="db-topbar">
                     <button id="btnHamburger" class="db-hamburger" aria-label="Abrir menú" aria-expanded="false"
@@ -577,8 +578,7 @@
                                         <p class="db-kpi-card__value" id="kpiCursos">—</p>
                                     </div>
                                     <div class="db-kpi-card__footer">
-                                        <span class="db-kpi-card__delta db-kpi-card__delta--up">↑ 3</span>
-                                        <span class="db-kpi-card__delta-label">vs mes anterior</span>
+                                        <span class="db-kpi-card__delta db-kpi-card__delta--neutral" id="kpiCursosPie">—</span>
                                     </div>
                                 </article>
 
@@ -603,8 +603,7 @@
                                         </div>
                                     </div>
                                     <div class="db-kpi-card__footer">
-                                        <span class="db-kpi-card__delta db-kpi-card__delta--up">↑ 5%</span>
-                                        <span class="db-kpi-card__delta-label">vs mes anterior</span>
+                                        <span class="db-kpi-card__delta db-kpi-card__delta--neutral" id="kpiProgresoPie">—</span>
                                     </div>
                                 </article>
 
@@ -619,8 +618,7 @@
                                         <p class="db-kpi-card__value" id="kpiTotal">—</p>
                                     </div>
                                     <div class="db-kpi-card__footer">
-                                        <span class="db-kpi-card__delta db-kpi-card__delta--up">↑ 8</span>
-                                        <span class="db-kpi-card__delta-label">vs mes anterior</span>
+                                        <span class="db-kpi-card__delta db-kpi-card__delta--neutral" id="kpiTotalPie">—</span>
                                     </div>
                                 </article>
 
@@ -659,6 +657,11 @@
                             <div class="toolbar__select-wrap">
                                 <select id="filterCiudad" aria-label="Filtrar por ciudad">
                                     <option value="">Todas las ciudades</option>
+                                </select>
+                            </div>
+                            <div class="toolbar__select-wrap">
+                                <select id="filterCurso" aria-label="Filtrar por curso">
+                                    <option value="">Todos los cursos</option>
                                 </select>
                             </div>
                             <div class="toolbar__select-wrap">
@@ -881,7 +884,7 @@
     <script src="js/Api.js"></script>
     <script src="js/vendor/avatares.js"></script>
     <script src="js/Cuentas.js"></script>
-    <script src="js/App.js"></script>
+    <script type="module" src="js/App.js"></script>
 
 </body>
 

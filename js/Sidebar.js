@@ -142,9 +142,9 @@
         init();
     }
 
-    window.EduTrack = window.EduTrack || {};
-    window.EduTrack.toggleSidebar = toggleSidebar;
-    window.EduTrack.closeSidebar = closeSidebar;
-    window.EduTrack.openSidebar = openSidebar;
+    window.StudentScope = window.StudentScope || {};
+    window.StudentScope.toggleSidebar = toggleSidebar;
+    window.StudentScope.closeSidebar = closeSidebar;
+    window.StudentScope.openSidebar = openSidebar;
 
 })();

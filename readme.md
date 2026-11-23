@@ -1,11 +1,13 @@
 # StudentScope MJ - Panel de Gestión Educativa
 
-StudentScope MJ es una Single Page Application (SPA) para gestionar y monitorear estudiantes. Está construida sin frameworks (JavaScript y CSS puros) y guarda sus datos en el navegador.
+StudentScope MJ es una aplicación web para gestionar y monitorear estudiantes. El frontend es una Single Page Application sin frameworks (JavaScript y CSS puros) que habla con una API propia y una base de datos PostgreSQL.
 
 Repositorios del proyecto:
 
 * Frontend: `studentscope-mj-frontend` (este repositorio).
-* Backend: `studentscope-mj-backend` (en preparación).
+* Backend: `studentscope-mj-backend`: API, base de datos, servicio de riesgo de abandono, plantillas de n8n y vistas para Power BI.
+
+Demo en vivo: <https://studentscopemj.pamcing.me> (entra con "Probar la demo").
 
 Hecho por María José Montepeque Zet.
 
@@ -30,10 +32,31 @@ Hecho por María José Montepeque Zet.
 
 ---
 
+## Arquitectura
+
+```mermaid
+flowchart LR
+    N[Navegador<br/>SPA de JavaScript] -->|HTML, CSS y JS| C[Caddy]
+    N -->|/api, cookie de sesion| C
+    C -->|/api| A[API Express]
+    A --> P[(PostgreSQL)]
+    A -.->|opcional| R[Servicio de riesgo<br/>FastAPI]
+    M[n8n] -->|reporte semanal y avisos| A
+    B[Power BI] -->|vistas de solo lectura| P
+```
+
+* **Caddy** sirve los archivos estáticos y reenvía `/api` a la API. Es también quien pone las cabeceras de seguridad (política de contenido, HSTS).
+* **La API** guarda la sesión en una cookie `HttpOnly` y valida todo en el servidor, además de en el navegador. Tiene roles: administrador, usuario normal y una cuenta de demostración.
+* **PostgreSQL** impone las reglas de los datos (rangos, claves foráneas, correos únicos), no solo la API.
+* **El servicio de riesgo, n8n y Power BI son opcionales.** La aplicación funciona sin ellos.
+
+---
+
 ## Tecnologías utilizadas
 
 * **Estructura y estilos:** HTML5 semántico y CSS puro (variables, Flexbox, Grid).
-* **Lógica:** JavaScript vanilla con patrón de módulos (IIFE).
+* **Lógica:** JavaScript vanilla con módulos ES (`type="module"`) para la aplicación y scripts clásicos para las utilidades.
+* **Servidor:** API en Node.js con Express y PostgreSQL (repositorio del backend), servida detrás de Caddy.
 * **Gráficas:** Chart.js 4.4.0, cargado desde CDN.
 * **Fuentes:** Google Fonts (Syne, DM Sans).
 
@@ -47,7 +70,15 @@ Hecho por María José Montepeque Zet.
 | `css/Style.css` | Estilos globales: variables, tipografía, botones, insignias, toasts y Landing. |
 | `css/Dashboard.css` | Estilos del panel: Sidebar, Topbar, indicadores y tablas. |
 | `css/Estudiantes.css` | Estilos de la gestión de estudiantes: tarjetas, filtros, paginación y modales. |
-| `js/App.js` | Lógica principal: enrutador, sesión, estudiantes, gráficas, cursos, reportes, configuración y notificaciones; todos los datos vienen de la API. |
+| `js/App.js` | Punto de entrada (módulo ES): arranca la aplicación, reparte los clics por `data-action` y publica la API de `window.StudentScope`. |
+| `js/app/Estado.js` | Objeto `state` y atajos a las utilidades compartidas. |
+| `js/app/Router.js` | Cambio de vista y de sección del panel. |
+| `js/app/Sesion.js` | Inicio de sesión, registro, demo, cierre y restauración de la sesión. |
+| `js/app/Permisos.js` | Quién es administrador, demo o puede gestionar, y qué se muestra según el rol. |
+| `js/app/Datos.js` | Peticiones a la API y tarjetas de indicadores. |
+| `js/app/Estudiantes.js` | Lista, filtros, paginación, formulario, validación y baja de estudiantes, y la gráfica del dashboard. |
+| `js/app/Cursos.js`, `Reportes.js`, `Configuracion.js`, `Notificaciones.js` | Una sección cada uno. |
+| `js/app/Interfaz.js` | Avisos, errores de campo, confirmación y otras ayudas de pantalla. |
 | `js/Sidebar.js` | Control del menú lateral: eventos, accesibilidad y cambio de tamaño. |
 | `js/Catalogo.js` | Catálogo oficial de 30 cursos: única fuente para la interfaz y el validador. |
 | `js/Validacion.js` | Motor de validación con 20 reglas de negocio, para un dataset completo o para un registro. |
@@ -94,6 +125,38 @@ Estudiantes, cursos, resumen y reportes vienen de la API (PostgreSQL), así que 
 
 ---
 
+## Levantar todo con Docker
+
+Sirve para ver la aplicación completa (base de datos, API y frontend) con un solo comando, sin instalar PostgreSQL ni Node. Necesitas Docker con Compose.
+
+1. Clona los dos repositorios uno junto al otro:
+
+```bash
+git clone https://github.com/MariaJoseMontepequeZet/studentscope-mj-backend.git
+git clone https://github.com/MariaJoseMontepequeZet/studentscope-mj-frontend.git
+```
+
+2. Copia el archivo de ejemplo de variables y complétalo (`DB_PASSWORD` y `JWT_SECRET` son obligatorias; el secreto debe tener al menos 32 caracteres):
+
+```bash
+cd studentscope-mj-frontend/despliegue
+cp .env.example .env
+```
+
+3. Construye y levanta:
+
+```bash
+docker compose --env-file .env up -d --build
+```
+
+4. Abre `http://localhost:8080`. Con `ADMIN_EMAIL` y `ADMIN_PASSWORD` entras como administrador, y con `SEMBRAR_EJEMPLO=true` hay 35 estudiantes de ejemplo.
+
+Para apagarlo: `docker compose --env-file .env down`. Agrega `-v` para borrar también la base de datos.
+
+Esta configuración es para probar en tu equipo: sirve por HTTP en el puerto 8080 y no incluye HTTPS. El despliegue real usa su propia configuración, fuera del repositorio.
+
+---
+
 ## Cuentas y roles
 
 * **Registro:** cualquiera crea una cuenta desde la pantalla de registro. Las cuentas nuevas son siempre `usuario`.
@@ -131,14 +194,14 @@ Las pruebas cargan `js/Validacion.js` y `js/Escapar.js` con `require`, porque es
 
 ## Arquitectura de JavaScript
 
-Cada archivo usa una IIFE para no contaminar el objeto global. Solo se expone lo necesario en `window.EduTrack`. Ese nombre se mantiene por ahora y se renombrará al modularizar el código.
+La aplicación está dividida en módulos ES dentro de `js/app/` (uno por sección) y arranca desde `js/App.js`. Las utilidades (`Api.js`, `Escapar.js`, `Csv.js`, `Iconos.js`, `Validacion.js`, `Cuentas.js`, `Sidebar.js`) son scripts clásicos que cuelgan de `window.StudentScope`, el único objeto global.
 
-* **Estado centralizado:** `App.js` mantiene un objeto `state` con la vista actual, los estudiantes, los filtros y las instancias de las gráficas.
+* **Estado centralizado:** `js/app/Estado.js` mantiene un objeto `state` con la vista actual, los estudiantes, los filtros y las instancias de las gráficas.
 * **Renderizado:** los componentes se vuelven a pintar con plantillas de texto cuando cambia el estado.
 * **Seguridad:** todo dato de estudiante que se inserta en una plantilla pasa por `escaparHTML()` (o `aNumero()` si es numérico), y los mensajes emergentes se crean con nodos de texto. Así un nombre como `<img src=x onerror=...>` se muestra como texto y no se ejecuta.
-* **Sesión y roles:** `App.js` guarda el usuario actual en `state.usuario`. Los elementos marcados con `data-solo-admin` se ocultan para quien no es administrador y las secciones de administración vuelven al Dashboard si se intentan abrir sin permiso.
-* **Iconos:** la interfaz no usa emojis. Los iconos son SVG definidos en `Iconos.js`; el HTML los pide con `data-icono="nombre"` y las plantillas de JavaScript con `EduTrack.icono('nombre')`.
-* **Eventos:** no hay manejadores en línea (`onclick`). Los botones declaran `data-action` (y `data-id` o `data-page` cuando hace falta) y un único oyente de clic en `App.js` ejecuta la acción correspondiente. Esto permite una política de seguridad de contenido sin `unsafe-inline` en los scripts.
+* **Sesión y roles:** `js/app/Sesion.js` guarda el usuario actual en `state.usuario`. Los elementos marcados con `data-solo-admin` se ocultan para quien no es administrador y las secciones de administración vuelven al Dashboard si se intentan abrir sin permiso.
+* **Iconos:** la interfaz no usa emojis. Los iconos son SVG definidos en `Iconos.js`; el HTML los pide con `data-icono="nombre"` y las plantillas de JavaScript con `StudentScope.icono('nombre')`.
+* **Eventos:** no hay manejadores en línea (`onclick`). Los botones declaran `data-action` (y `data-id` o `data-page` cuando hace falta) y un único oyente de clic en `js/App.js` ejecuta la acción correspondiente. Esto permite una política de seguridad de contenido sin `unsafe-inline` en los scripts.
 
 ---
 
@@ -153,11 +216,11 @@ Clasifica los problemas en tres niveles:
 Uso en el navegador:
 
 ```javascript
-const resultado = EduTrack.validar.dataset(estudiantes);
+const resultado = StudentScope.validar.dataset(estudiantes);
 console.log(resultado.reporte);
 const registrosSeguros = resultado.registrosValidos;
 
-const unico = EduTrack.validar.registro(nuevoEstudiante);
+const unico = StudentScope.validar.registro(nuevoEstudiante);
 if (!unico.valido) console.log(unico.errores);
 ```
 
@@ -189,7 +252,7 @@ El flujo de trabajo es: una rama por tarea, pull request hacia `dev` y, al cerra
 
 El workflow copia únicamente `index.html`, `css/`, `js/` y `json/` al servidor y ejecuta `desplegar.sh web`, que espera a que el servicio responda sano. Si se agrega una carpeta nueva de recursos, hay que incluirla en el paso de copia del workflow.
 
-La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del repositorio.
+La configuración del servidor real (Docker Compose, Caddy y secretos) vive fuera del repositorio. La carpeta `despliegue/` trae una versión genérica para probar en local; ver "Levantar todo con Docker".
 
 ---
 
@@ -203,7 +266,7 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 ### Renombre del proyecto a StudentScope MJ
 * Se actualizan el título, el logotipo, los textos visibles y los encabezados de los archivos.
 * Los repositorios pasan a llamarse `studentscope-mj-frontend` y `studentscope-mj-backend`.
-* Se conservan `window.EduTrack` y la clave `edutrack_estudiantes` de `localStorage` para no perder los datos guardados.
+* Se conservan `window.StudentScope` y la clave `edutrack_estudiantes` de `localStorage` para no perder los datos guardados.
 
 ### Despliegue automatico
 * Se agrega el workflow `desplegar.yml`, que despliega en el servidor con cada push a `main`.
@@ -236,7 +299,7 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * El catálogo de 30 cursos pasa a `js/Catalogo.js` y es la única fuente: el selector del formulario y el validador salen de ahí. Antes el validador solo conocía 8.
 * La fecha máxima de inscripción deja de estar fija en 2025 y pasa a ser el día de hoy. Un estudiante registrado hoy ya no se marca como inválido.
 * El formulario proponía la fecha de hoy con la hora UTC, que podía ser el día siguiente; ahora usa la fecha local.
-* Nueva función `EduTrack.validar.registro()` y soporte para valores que no son objetos dentro del dataset.
+* Nueva función `StudentScope.validar.registro()` y soporte para valores que no son objetos dentro del dataset.
 * El validador se conecta a la aplicación: se aplica al cargar `localStorage` (con cuarentena de lo inválido) y al guardar desde el formulario.
 * La portada anunciaba 8 cursos oficiales; ahora indica 30.
 * 92 pruebas en total.
@@ -280,6 +343,35 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * Un aviso en el panel explica que es una demo con datos que se restauran solos.
 * Los permisos de interfaz se separan en administrador (todo) y gestión (administrador o demo).
 * Requiere el backend con `DEMO_HABILITADA=true`; si está apagado, el botón muestra "La demo no está disponible por ahora".
+
+### Detalles del panel
+* Las tarjetas del dashboard dejan de mostrar cambios inventados ("+3", "+5%", "+8 vs mes anterior") y muestran datos reales de la API: inactivos, total de estudiantes y activos sobre el total.
+* La lista de estudiantes tiene un filtro por curso, que se suma a los de ciudad, plan y estado y se limpia con "Limpiar filtros".
+* El informe de consola del validador deja de usar símbolos de texto.
+
+### Módulos y espacio de nombres
+* `App.js` (1.644 líneas) se divide en módulos ES dentro de `js/app/`, uno por sección, y `index.html` lo carga con `type="module"`. Sin cambios de comportamiento.
+* El espacio de nombres global pasa de `window.EduTrack` a `window.StudentScope`, el nombre actual del proyecto. El bundle de avatares se regeneró.
+* Una prueba revisa que cada `import` apunte a un archivo real y que cada nombre importado esté exportado, algo que ESLint no detecta.
+* 112 pruebas en total.
+
+### Accesibilidad
+* Los diálogos (estudiante, cuenta y confirmación) mueven el foco adentro al abrirse, mantienen Tab y Shift+Tab dentro, se cierran con Escape y devuelven el foco al botón que los abrió. El de confirmación abre sobre "Cancelar", no sobre la acción destructiva.
+* El texto tenue sube de contraste (de 2,5 a 4,7 sobre las superficies oscuras), que cumple el mínimo AA de 4,5.
+* Nuevo enlace "Saltar al contenido" al inicio del panel para quien navega con teclado.
+* Ya estaban bien y se comprobaron: etiquetas en todos los campos, nombre accesible en todos los botones, sin ids repetidos, `role` y `aria-modal` en los diálogos, y `aria-live` en los avisos.
+* Medido a mano en el navegador; no se corrió Lighthouse.
+
+### Automatizaciones, sin interruptores falsos
+* La tarjeta "Notificaciones" de Configuración tenía cinco interruptores y un botón "Guardar preferencias" que mostraba un aviso de éxito sin guardar nada. Se quita.
+* En su lugar, la tarjeta "Automatizaciones" explica lo que realmente existe: el reporte semanal y el aviso de inactivos, que se activan en el servidor con n8n (plantillas en `docs/automatizacion` del repositorio de la API).
+* Las notificaciones de la campana de la barra superior no cambian: se calculan con los datos reales de los estudiantes.
+
+### Documentación final
+* Nueva sección **Arquitectura** con un diagrama de cómo se conectan el navegador, Caddy, la API, PostgreSQL y los servicios opcionales (riesgo de abandono, n8n y Power BI).
+* Nueva sección **Levantar todo con Docker** y carpeta `despliegue/` con un `docker-compose.yml`, un `Caddyfile` y un `.env.example` genéricos y sin secretos. Se probó de punta a punta: la base y la API quedan sanas, el frontend responde en `http://localhost:8080`, se entra como administrador y se recorren todas las secciones sin errores de la política de seguridad.
+* Se corrigen datos que ya no eran ciertos (la aplicación "guardaba sus datos en el navegador", el backend "en preparación", la arquitectura con IIFE).
+* Los enlaces relativos de los README del frontend, el backend y el portafolio se revisaron con un guion: ninguno está roto.
 
 ### Integración continua
 * Nuevo flujo `CI` (`.github/workflows/ci.yml`): en cada PR hacia `dev` o `main` ejecuta lint, la comprobación de formato, las pruebas y verifica que `js/vendor/avatares.js` coincide con lo que genera `npm run build:avatares`. Corre en un ejecutor de GitHub, no en el servidor.

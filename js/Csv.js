@@ -28,7 +28,7 @@
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = api;
     } else {
-        window.EduTrack = window.EduTrack || {};
-        window.EduTrack.csv = api;
+        window.StudentScope = window.StudentScope || {};
+        window.StudentScope.csv = api;
     }
 })();
