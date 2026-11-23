@@ -1,6 +1,6 @@
 import { avisarErrorCarga, cargarEstudiantes, refrescarDatos } from './Datos.js';
 import { PLANES_MONTO, api, esc, ico, num, state } from './Estado.js';
-import { abrirConfirm, formatFecha, ocupado, planSlug, progresoClass, setFieldError, showToast, valorDe } from './Interfaz.js';
+import { abrirConfirm, abrirDialogo, cerrarDialogo, formatFecha, ocupado, planSlug, progresoClass, setFieldError, showToast, valorDe } from './Interfaz.js';
 import { puedeGestionar } from './Permisos.js';
 
 export function mostrarEstadoListado(titulo, texto) {
@@ -127,12 +127,11 @@ export function abrirModal(id) {
     var campoFecha = document.getElementById('fFecha');
     campoFecha.min = window.StudentScope.validar.FECHA_MINIMA;
     campoFecha.max = window.StudentScope.validar.hoy();
-    document.getElementById('modalOverlay').classList.add('is-open');
-    document.getElementById('fNombre').focus();
+    abrirDialogo(document.getElementById('modalOverlay'), document.getElementById('fNombre'));
 }
 
 export function cerrarModal() {
-    document.getElementById('modalOverlay').classList.remove('is-open');
+    cerrarDialogo(document.getElementById('modalOverlay'));
     state.editandoId = null;
 }
 

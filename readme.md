@@ -299,3 +299,10 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * El espacio de nombres global pasa de `window.EduTrack` a `window.StudentScope`, el nombre actual del proyecto. El bundle de avatares se regeneró.
 * Una prueba revisa que cada `import` apunte a un archivo real y que cada nombre importado esté exportado, algo que ESLint no detecta.
 * 112 pruebas en total.
+
+### Accesibilidad
+* Los diálogos (estudiante, cuenta y confirmación) mueven el foco adentro al abrirse, mantienen Tab y Shift+Tab dentro, se cierran con Escape y devuelven el foco al botón que los abrió. El de confirmación abre sobre "Cancelar", no sobre la acción destructiva.
+* El texto tenue sube de contraste (de 2,5 a 4,7 sobre las superficies oscuras), que cumple el mínimo AA de 4,5.
+* Nuevo enlace "Saltar al contenido" al inicio del panel para quien navega con teclado.
+* Ya estaban bien y se comprobaron: etiquetas en todos los campos, nombre accesible en todos los botones, sin ids repetidos, `role` y `aria-modal` en los diálogos, y `aria-live` en los avisos.
+* Medido a mano en el navegador; no se corrió Lighthouse.

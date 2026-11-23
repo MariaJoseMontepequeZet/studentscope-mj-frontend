@@ -37,15 +37,71 @@ export function setFieldError(id, msg) {
     }
 }
 
+var dialogosAbiertos = [];
+
+var FOCALIZABLES = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), ' +
+    'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function focalizables(overlay) {
+    return Array.prototype.filter.call(overlay.querySelectorAll(FOCALIZABLES), function (el) {
+        return el.getClientRects().length > 0;
+    });
+}
+
+/* Abre un diálogo: recuerda dónde estaba el foco y lo mueve adentro cuando ya es visible. */
+export function abrirDialogo(overlay, inicial) {
+    if (!overlay) return;
+    dialogosAbiertos.push({ overlay: overlay, previo: document.activeElement });
+    overlay.classList.add('is-open');
+    /* El overlay sigue oculto durante el primer fotograma de la transición: el foco se pide un poco después. */
+    function enfocar(intentos) {
+        var destino = inicial || focalizables(overlay)[0];
+        if (!destino || !overlay.classList.contains('is-open')) return;
+        destino.focus();
+        if (document.activeElement !== destino && intentos > 0) setTimeout(function () { enfocar(intentos - 1); }, 60);
+    }
+    setTimeout(function () { enfocar(3); }, 30);
+}
+
+/* Cierra el diálogo y devuelve el foco al elemento que lo abrió. */
+export function cerrarDialogo(overlay) {
+    if (!overlay) return;
+    overlay.classList.remove('is-open');
+    for (var i = dialogosAbiertos.length - 1; i >= 0; i--) {
+        if (dialogosAbiertos[i].overlay !== overlay) continue;
+        var previo = dialogosAbiertos.splice(i, 1)[0].previo;
+        if (previo && previo.isConnected && typeof previo.focus === 'function') previo.focus();
+        break;
+    }
+}
+
+/* Mantiene Tab y Shift+Tab dentro del diálogo que está arriba. */
+export function atraparFoco(evento) {
+    var actual = dialogosAbiertos[dialogosAbiertos.length - 1];
+    if (!actual || !actual.overlay.classList.contains('is-open')) return;
+    var lista = focalizables(actual.overlay);
+    if (!lista.length) return;
+    var primero = lista[0];
+    var ultimo = lista[lista.length - 1];
+    var dentro = actual.overlay.contains(document.activeElement);
+    if (evento.shiftKey && (document.activeElement === primero || !dentro)) {
+        evento.preventDefault();
+        ultimo.focus();
+    } else if (!evento.shiftKey && (document.activeElement === ultimo || !dentro)) {
+        evento.preventDefault();
+        primero.focus();
+    }
+}
+
 export function abrirConfirm(t, m, cb, etiqueta) {
     document.getElementById('confirmTitulo').textContent = t;
     document.getElementById('confirmMsg').innerHTML = m;
     document.getElementById('confirmAceptar').textContent = etiqueta || 'Sí, eliminar';
     state.confirmCb = cb;
-    document.getElementById('confirmOverlay').classList.add('is-open');
+    abrirDialogo(document.getElementById('confirmOverlay'), document.querySelector('#confirmOverlay [data-action="cerrar-confirm"]'));
 }
 
-export function cerrarConfirm() { document.getElementById('confirmOverlay').classList.remove('is-open'); state.confirmCb = null; }
+export function cerrarConfirm() { cerrarDialogo(document.getElementById('confirmOverlay')); state.confirmCb = null; }
 
 export function ejecutarConfirm() { if (typeof state.confirmCb === 'function') state.confirmCb(); cerrarConfirm(); }
 

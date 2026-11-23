@@ -5,7 +5,7 @@
 import { cambiarPassword, elegirAvatar, exportarCSV, exportarJSON, guardarAvatar, guardarNotificaciones, guardarPerfil, mezclarAvatares, usarAvatarPredeterminado } from './app/Configuracion.js';
 import { num, state } from './app/Estado.js';
 import { abrirModal, buscarConRetraso, cambiarPagina, cerrarModal, eliminarEstudiante, filtrar, guardarEstudiante, sincronizarMonto } from './app/Estudiantes.js';
-import { abrirConfirm, cerrarConfirm, ejecutarConfirm, setFieldError, showToast } from './app/Interfaz.js';
+import { abrirConfirm, abrirDialogo, atraparFoco, cerrarConfirm, cerrarDialogo, ejecutarConfirm, setFieldError, showToast } from './app/Interfaz.js';
 import { abrirPanelNotificaciones, cerrarPanelNotificaciones, notifPanelAbierto } from './app/Notificaciones.js';
 import { initNavSidebar, mostrarVista } from './app/Router.js';
 import { actualizarUsuarioActual, cerrarSesion, iniciarDemo, iniciarSesion, registrarCuenta, restaurarSesion, sesionExpirada } from './app/Sesion.js';
@@ -81,6 +81,7 @@ function init() {
 
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') { cerrarModal(); cerrarConfirm(); }
+        if (e.key === 'Tab') atraparFoco(e);
     });
 
     document.addEventListener('click', function (e) {
@@ -136,6 +137,8 @@ window.StudentScope.exportarCSV = exportarCSV;
 window.StudentScope.cerrarPanelNotificaciones = cerrarPanelNotificaciones;
 window.StudentScope.toast = showToast;
 window.StudentScope.confirmar = abrirConfirm;
+window.StudentScope.abrirDialogo = abrirDialogo;
+window.StudentScope.cerrarDialogo = cerrarDialogo;
 window.StudentScope.marcarError = setFieldError;
 window.StudentScope.usuarioActual = function () { return state.usuario; };
 window.StudentScope.actualizarUsuarioActual = actualizarUsuarioActual;

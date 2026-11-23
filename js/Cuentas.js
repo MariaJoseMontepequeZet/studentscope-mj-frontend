@@ -170,13 +170,12 @@
         document.getElementById('cPassword').value = '';
         document.getElementById('cRol').disabled = !!(yo() && cuenta.id === yo().id);
 
-        document.getElementById('cuentaOverlay').classList.add('is-open');
-        document.getElementById('cNombre').focus();
+        window.StudentScope.abrirDialogo(document.getElementById('cuentaOverlay'), document.getElementById('cNombre'));
     }
 
     function cerrarModal() {
         const overlay = document.getElementById('cuentaOverlay');
-        if (overlay) overlay.classList.remove('is-open');
+        window.StudentScope.cerrarDialogo(overlay);
         editando = null;
     }
 
