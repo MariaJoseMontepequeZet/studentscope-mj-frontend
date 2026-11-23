@@ -372,3 +372,9 @@ La configuración del servidor real (Docker Compose, Caddy y secretos) vive fuer
 * Nueva sección **Levantar todo con Docker** y carpeta `despliegue/` con un `docker-compose.yml`, un `Caddyfile` y un `.env.example` genéricos y sin secretos. Se probó de punta a punta: la base y la API quedan sanas, el frontend responde en `http://localhost:8080`, se entra como administrador y se recorren todas las secciones sin errores de la política de seguridad.
 * Se corrigen datos que ya no eran ciertos (la aplicación "guardaba sus datos en el navegador", el backend "en preparación", la arquitectura con IIFE).
 * Los enlaces relativos de los README del frontend, el backend y el portafolio se revisaron con un guion: ninguno está roto.
+
+### Integración continua
+* Nuevo flujo `CI` (`.github/workflows/ci.yml`): en cada PR hacia `dev` o `main` ejecuta lint, la comprobación de formato, las pruebas y verifica que `js/vendor/avatares.js` coincide con lo que genera `npm run build:avatares`. Corre en un ejecutor de GitHub, no en el servidor.
+* Se formatean con Prettier tres archivos de los avatares que no cumplían `format:check`.
+* El flujo de despliegue usa `actions/checkout@v5`.
+* Para que un PR no se pueda fusionar si el CI falla, se exige el check `Lint y pruebas` en la regla de protección de ramas de GitHub.
