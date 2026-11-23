@@ -16,6 +16,6 @@ export function svgDeAvatar(semilla) {
 }
 
 if (typeof window !== 'undefined') {
-  window.EduTrack = window.EduTrack || {};
-  window.EduTrack.avatar = svgDeAvatar;
+  window.StudentScope = window.StudentScope || {};
+  window.StudentScope.avatar = svgDeAvatar;
 }

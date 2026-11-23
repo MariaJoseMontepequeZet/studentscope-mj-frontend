@@ -20,7 +20,7 @@
      * INFO    → observación de negocio, no bloquea el uso
      *
      * Uso rápido:
-     * var resultado = EduTrack.validar.dataset(estudiantes);
+     * var resultado = StudentScope.validar.dataset(estudiantes);
      * console.log(resultado.reporte);
      * renderizarTabla(resultado.registrosValidos);
      * ─────────────────────────────────────────────────────────────
@@ -42,7 +42,7 @@
     /** Cursos oficiales: se toman del catálogo (js/Catalogo.js), única fuente de verdad */
     var catalogo = (typeof module !== 'undefined' && module.exports)
         ? require('./Catalogo.js')
-        : window.EduTrack.catalogo;
+        : window.StudentScope.catalogo;
     var CURSOS_VALIDOS = catalogo.nombres;
 
     /** Ciudades colombianas reconocidas por el sistema */
@@ -1146,9 +1146,9 @@
             // Node.js / CommonJS
             module.exports = api;
         } else if (typeof window !== 'undefined') {
-            // Browser — se integra al namespace global de EduTrack
-            window.EduTrack = window.EduTrack || {};
-            window.EduTrack.validar = api;
+            // Browser — se integra al namespace global de StudentScope
+            window.StudentScope = window.StudentScope || {};
+            window.StudentScope.validar = api;
         }
     }());
 

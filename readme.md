@@ -47,7 +47,15 @@ Hecho por María José Montepeque Zet.
 | `css/Style.css` | Estilos globales: variables, tipografía, botones, insignias, toasts y Landing. |
 | `css/Dashboard.css` | Estilos del panel: Sidebar, Topbar, indicadores y tablas. |
 | `css/Estudiantes.css` | Estilos de la gestión de estudiantes: tarjetas, filtros, paginación y modales. |
-| `js/App.js` | Lógica principal: enrutador, sesión, estudiantes, gráficas, cursos, reportes, configuración y notificaciones; todos los datos vienen de la API. |
+| `js/App.js` | Punto de entrada (módulo ES): arranca la aplicación, reparte los clics por `data-action` y publica la API de `window.StudentScope`. |
+| `js/app/Estado.js` | Objeto `state` y atajos a las utilidades compartidas. |
+| `js/app/Router.js` | Cambio de vista y de sección del panel. |
+| `js/app/Sesion.js` | Inicio de sesión, registro, demo, cierre y restauración de la sesión. |
+| `js/app/Permisos.js` | Quién es administrador, demo o puede gestionar, y qué se muestra según el rol. |
+| `js/app/Datos.js` | Peticiones a la API y tarjetas de indicadores. |
+| `js/app/Estudiantes.js` | Lista, filtros, paginación, formulario, validación y baja de estudiantes, y la gráfica del dashboard. |
+| `js/app/Cursos.js`, `Reportes.js`, `Configuracion.js`, `Notificaciones.js` | Una sección cada uno. |
+| `js/app/Interfaz.js` | Avisos, errores de campo, confirmación y otras ayudas de pantalla. |
 | `js/Sidebar.js` | Control del menú lateral: eventos, accesibilidad y cambio de tamaño. |
 | `js/Catalogo.js` | Catálogo oficial de 30 cursos: única fuente para la interfaz y el validador. |
 | `js/Validacion.js` | Motor de validación con 20 reglas de negocio, para un dataset completo o para un registro. |
@@ -131,13 +139,13 @@ Las pruebas cargan `js/Validacion.js` y `js/Escapar.js` con `require`, porque es
 
 ## Arquitectura de JavaScript
 
-Cada archivo usa una IIFE para no contaminar el objeto global. Solo se expone lo necesario en `window.EduTrack`. Ese nombre se mantiene por ahora y se renombrará al modularizar el código.
+Cada archivo usa una IIFE para no contaminar el objeto global. Solo se expone lo necesario en `window.StudentScope`. Ese nombre se mantiene por ahora y se renombrará al modularizar el código.
 
-* **Estado centralizado:** `App.js` mantiene un objeto `state` con la vista actual, los estudiantes, los filtros y las instancias de las gráficas.
+* **Estado centralizado:** `js/app/Estado.js` mantiene un objeto `state` con la vista actual, los estudiantes, los filtros y las instancias de las gráficas.
 * **Renderizado:** los componentes se vuelven a pintar con plantillas de texto cuando cambia el estado.
 * **Seguridad:** todo dato de estudiante que se inserta en una plantilla pasa por `escaparHTML()` (o `aNumero()` si es numérico), y los mensajes emergentes se crean con nodos de texto. Así un nombre como `<img src=x onerror=...>` se muestra como texto y no se ejecuta.
 * **Sesión y roles:** `App.js` guarda el usuario actual en `state.usuario`. Los elementos marcados con `data-solo-admin` se ocultan para quien no es administrador y las secciones de administración vuelven al Dashboard si se intentan abrir sin permiso.
-* **Iconos:** la interfaz no usa emojis. Los iconos son SVG definidos en `Iconos.js`; el HTML los pide con `data-icono="nombre"` y las plantillas de JavaScript con `EduTrack.icono('nombre')`.
+* **Iconos:** la interfaz no usa emojis. Los iconos son SVG definidos en `Iconos.js`; el HTML los pide con `data-icono="nombre"` y las plantillas de JavaScript con `StudentScope.icono('nombre')`.
 * **Eventos:** no hay manejadores en línea (`onclick`). Los botones declaran `data-action` (y `data-id` o `data-page` cuando hace falta) y un único oyente de clic en `App.js` ejecuta la acción correspondiente. Esto permite una política de seguridad de contenido sin `unsafe-inline` en los scripts.
 
 ---
@@ -153,11 +161,11 @@ Clasifica los problemas en tres niveles:
 Uso en el navegador:
 
 ```javascript
-const resultado = EduTrack.validar.dataset(estudiantes);
+const resultado = StudentScope.validar.dataset(estudiantes);
 console.log(resultado.reporte);
 const registrosSeguros = resultado.registrosValidos;
 
-const unico = EduTrack.validar.registro(nuevoEstudiante);
+const unico = StudentScope.validar.registro(nuevoEstudiante);
 if (!unico.valido) console.log(unico.errores);
 ```
 
@@ -203,7 +211,7 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 ### Renombre del proyecto a StudentScope MJ
 * Se actualizan el título, el logotipo, los textos visibles y los encabezados de los archivos.
 * Los repositorios pasan a llamarse `studentscope-mj-frontend` y `studentscope-mj-backend`.
-* Se conservan `window.EduTrack` y la clave `edutrack_estudiantes` de `localStorage` para no perder los datos guardados.
+* Se conservan `window.StudentScope` y la clave `edutrack_estudiantes` de `localStorage` para no perder los datos guardados.
 
 ### Despliegue automatico
 * Se agrega el workflow `desplegar.yml`, que despliega en el servidor con cada push a `main`.
@@ -236,7 +244,7 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * El catálogo de 30 cursos pasa a `js/Catalogo.js` y es la única fuente: el selector del formulario y el validador salen de ahí. Antes el validador solo conocía 8.
 * La fecha máxima de inscripción deja de estar fija en 2025 y pasa a ser el día de hoy. Un estudiante registrado hoy ya no se marca como inválido.
 * El formulario proponía la fecha de hoy con la hora UTC, que podía ser el día siguiente; ahora usa la fecha local.
-* Nueva función `EduTrack.validar.registro()` y soporte para valores que no son objetos dentro del dataset.
+* Nueva función `StudentScope.validar.registro()` y soporte para valores que no son objetos dentro del dataset.
 * El validador se conecta a la aplicación: se aplica al cargar `localStorage` (con cuarentena de lo inválido) y al guardar desde el formulario.
 * La portada anunciaba 8 cursos oficiales; ahora indica 30.
 * 92 pruebas en total.
@@ -285,3 +293,9 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * Las tarjetas del dashboard dejan de mostrar cambios inventados ("+3", "+5%", "+8 vs mes anterior") y muestran datos reales de la API: inactivos, total de estudiantes y activos sobre el total.
 * La lista de estudiantes tiene un filtro por curso, que se suma a los de ciudad, plan y estado y se limpia con "Limpiar filtros".
 * El informe de consola del validador deja de usar símbolos de texto.
+
+### Módulos y espacio de nombres
+* `App.js` (1.644 líneas) se divide en módulos ES dentro de `js/app/`, uno por sección, y `index.html` lo carga con `type="module"`. Sin cambios de comportamiento.
+* El espacio de nombres global pasa de `window.EduTrack` a `window.StudentScope`, el nombre actual del proyecto. El bundle de avatares se regeneró.
+* Una prueba revisa que cada `import` apunte a un archivo real y que cada nombre importado esté exportado, algo que ESLint no detecta.
+* 112 pruebas en total.

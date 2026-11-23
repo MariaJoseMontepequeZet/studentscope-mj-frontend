@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const require = createRequire(import.meta.url);
 
 const eventos = [];
-globalThis.window = { EduTrack: {} };
+globalThis.window = { StudentScope: {} };
 globalThis.document = { dispatchEvent: (evento) => eventos.push(evento.type) };
 globalThis.CustomEvent = class {
   constructor(type) {
@@ -13,7 +13,7 @@ globalThis.CustomEvent = class {
 };
 
 require('../js/Api.js');
-const { api } = globalThis.window.EduTrack;
+const { api } = globalThis.window.StudentScope;
 
 function responder(estado, cuerpo) {
   return {

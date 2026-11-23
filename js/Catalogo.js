@@ -43,7 +43,7 @@
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = api;
     } else {
-        window.EduTrack = window.EduTrack || {};
-        window.EduTrack.catalogo = api;
+        window.StudentScope = window.StudentScope || {};
+        window.StudentScope.catalogo = api;
     }
 })();
