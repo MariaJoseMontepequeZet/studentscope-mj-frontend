@@ -306,3 +306,9 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * Nuevo enlace "Saltar al contenido" al inicio del panel para quien navega con teclado.
 * Ya estaban bien y se comprobaron: etiquetas en todos los campos, nombre accesible en todos los botones, sin ids repetidos, `role` y `aria-modal` en los diálogos, y `aria-live` en los avisos.
 * Medido a mano en el navegador; no se corrió Lighthouse.
+
+### Integración continua
+* Nuevo flujo `CI` (`.github/workflows/ci.yml`): en cada PR hacia `dev` o `main` ejecuta lint, la comprobación de formato, las pruebas y verifica que `js/vendor/avatares.js` coincide con lo que genera `npm run build:avatares`. Corre en un ejecutor de GitHub, no en el servidor.
+* Se formatean con Prettier tres archivos de los avatares que no cumplían `format:check`.
+* El flujo de despliegue usa `actions/checkout@v5`.
+* Para que un PR no se pueda fusionar si el CI falla, se exige el check `Lint y pruebas` en la regla de protección de ramas de GitHub.
