@@ -280,3 +280,8 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * Un aviso en el panel explica que es una demo con datos que se restauran solos.
 * Los permisos de interfaz se separan en administrador (todo) y gestión (administrador o demo).
 * Requiere el backend con `DEMO_HABILITADA=true`; si está apagado, el botón muestra "La demo no está disponible por ahora".
+
+### Detalles del panel
+* Las tarjetas del dashboard dejan de mostrar cambios inventados ("+3", "+5%", "+8 vs mes anterior") y muestran datos reales de la API: inactivos, total de estudiantes y activos sobre el total.
+* La lista de estudiantes tiene un filtro por curso, que se suma a los de ciudad, plan y estado y se limpia con "Limpiar filtros".
+* El informe de consola del validador deja de usar símbolos de texto.

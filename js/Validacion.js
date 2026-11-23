@@ -922,7 +922,7 @@
                 registrosValidos: [],
                 registrosInvalidos: [],
                 porRegla: { 'V-00': 1 },
-                reporte: '[StudentScope MJ] ✗ Error: dataset() recibió ' +
+                reporte: '[StudentScope MJ] Error: dataset() recibió ' +
                     typeof estudiantes + ' en lugar de Array.'
             };
         }
@@ -942,7 +942,7 @@
                 registrosValidos: [],
                 registrosInvalidos: [],
                 porRegla: { 'V-00': 1 },
-                reporte: '[StudentScope MJ] ✗ Error: El dataset está vacío.'
+                reporte: '[StudentScope MJ] Error: El dataset está vacío.'
             };
         }
 
@@ -1033,7 +1033,7 @@
             '  StudentScope MJ — Reporte de Meta-Validación (dataset)',
             sep,
             '',
-            '  Estado general  : ' + (esValido ? '✓  VÁLIDO — todos los registros aptos' : '✗  CON ERRORES — ver detalle abajo'),
+            '  Estado general  : ' + (esValido ? 'VÁLIDO — todos los registros aptos' : 'CON ERRORES — ver detalle abajo'),
             '  Registros total : ' + estudiantes.length,
             '  Registros OK    : ' + registrosValidos.length + '  (aptos para la interfaz)',
             '  Registros KO    : ' + registrosInvalidos.length + '  (bloqueados por errores)',

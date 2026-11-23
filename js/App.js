@@ -231,7 +231,7 @@
 
     function consultaEstudiantes() {
         var p = new URLSearchParams();
-        [['buscar', 'searchInput'], ['ciudad', 'filterCiudad'], ['plan', 'filterPlan'], ['estado', 'filterEstado']]
+        [['buscar', 'searchInput'], ['ciudad', 'filterCiudad'], ['curso', 'filterCurso'], ['plan', 'filterPlan'], ['estado', 'filterEstado']]
             .forEach(function (par) {
                 var v = valorDe(par[1]);
                 if (v) p.set(par[0], v);
@@ -282,6 +282,9 @@
         set('kpiCursos', r.activos);
         set('kpiProgreso', r.progresoPromedio + '%');
         set('kpiTotal', r.total);
+        set('kpiCursosPie', r.inactivos + (r.inactivos === 1 ? ' inactivo' : ' inactivos'));
+        set('kpiProgresoPie', 'sobre ' + r.total + (r.total === 1 ? ' estudiante' : ' estudiantes'));
+        set('kpiTotalPie', r.activos + ' activos de ' + r.total);
         var bar = document.getElementById('kpiProgresoBar');
         if (bar) bar.style.setProperty('--progress-value', r.progresoPromedio + '%');
     }
@@ -385,7 +388,7 @@
     ════════════════════════════════════════════ */
     function filtrar() {
         clearTimeout(state.temporizadorBusqueda);
-        var hay = valorDe('searchInput') || valorDe('filterCiudad') || valorDe('filterPlan') || valorDe('filterEstado');
+        var hay = valorDe('searchInput') || valorDe('filterCiudad') || valorDe('filterCurso') || valorDe('filterPlan') || valorDe('filterEstado');
         var btn = document.getElementById('btnResetFiltros');
         if (btn) btn.classList.toggle('visible', !!hay);
         state.paginaActual = 1;
@@ -1207,6 +1210,21 @@
             select.appendChild(opcion);
         });
         select.value = actual;
+        poblarFiltroCurso();
+    }
+
+    function poblarFiltroCurso() {
+        var filtro = document.getElementById('filterCurso');
+        if (!filtro) return;
+        var actual = filtro.value;
+        while (filtro.options.length > 1) filtro.remove(1);
+        state.cursos.forEach(function (curso) {
+            var opcion = document.createElement('option');
+            opcion.value = curso.id;
+            opcion.textContent = curso.nombre;
+            filtro.appendChild(opcion);
+        });
+        filtro.value = actual;
     }
 
     var _toastTimer;
@@ -1378,7 +1396,7 @@
         state.cursos = [];
         state.paginaActual = 1;
         state.peticion++;
-        ['searchInput', 'filterCiudad', 'filterPlan', 'filterEstado'].forEach(function (id) {
+        ['searchInput', 'filterCiudad', 'filterCurso', 'filterPlan', 'filterEstado'].forEach(function (id) {
             var el = document.getElementById(id); if (el) el.value = '';
         });
         cerrarPanelNotificaciones();
@@ -1546,13 +1564,13 @@
 
         var si = document.getElementById('searchInput');
         if (si) si.addEventListener('input', buscarConRetraso);
-        ['filterCiudad', 'filterPlan', 'filterEstado'].forEach(function (id) {
+        ['filterCiudad', 'filterCurso', 'filterPlan', 'filterEstado'].forEach(function (id) {
             var el = document.getElementById(id); if (el) el.addEventListener('change', filtrar);
         });
 
         var bReset = document.getElementById('btnResetFiltros');
         if (bReset) bReset.addEventListener('click', function () {
-            ['searchInput', 'filterCiudad', 'filterPlan', 'filterEstado'].forEach(function (id) {
+            ['searchInput', 'filterCiudad', 'filterCurso', 'filterPlan', 'filterEstado'].forEach(function (id) {
                 var el = document.getElementById(id); if (el) el.value = '';
             });
             filtrar();
