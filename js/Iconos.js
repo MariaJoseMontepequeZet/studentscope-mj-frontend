@@ -34,7 +34,7 @@
         });
     }
 
-    window.EduTrack = window.EduTrack || {};
-    window.EduTrack.icono = icono;
-    window.EduTrack.pintarIconos = pintarIconos;
+    window.StudentScope = window.StudentScope || {};
+    window.StudentScope.icono = icono;
+    window.StudentScope.pintarIconos = pintarIconos;
 })();

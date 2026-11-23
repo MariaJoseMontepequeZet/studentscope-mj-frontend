@@ -20,7 +20,7 @@
      * INFO    → observación de negocio, no bloquea el uso
      *
      * Uso rápido:
-     * var resultado = EduTrack.validar.dataset(estudiantes);
+     * var resultado = StudentScope.validar.dataset(estudiantes);
      * console.log(resultado.reporte);
      * renderizarTabla(resultado.registrosValidos);
      * ─────────────────────────────────────────────────────────────
@@ -42,7 +42,7 @@
     /** Cursos oficiales: se toman del catálogo (js/Catalogo.js), única fuente de verdad */
     var catalogo = (typeof module !== 'undefined' && module.exports)
         ? require('./Catalogo.js')
-        : window.EduTrack.catalogo;
+        : window.StudentScope.catalogo;
     var CURSOS_VALIDOS = catalogo.nombres;
 
     /** Ciudades colombianas reconocidas por el sistema */
@@ -922,7 +922,7 @@
                 registrosValidos: [],
                 registrosInvalidos: [],
                 porRegla: { 'V-00': 1 },
-                reporte: '[StudentScope MJ] ✗ Error: dataset() recibió ' +
+                reporte: '[StudentScope MJ] Error: dataset() recibió ' +
                     typeof estudiantes + ' en lugar de Array.'
             };
         }
@@ -942,7 +942,7 @@
                 registrosValidos: [],
                 registrosInvalidos: [],
                 porRegla: { 'V-00': 1 },
-                reporte: '[StudentScope MJ] ✗ Error: El dataset está vacío.'
+                reporte: '[StudentScope MJ] Error: El dataset está vacío.'
             };
         }
 
@@ -1033,7 +1033,7 @@
             '  StudentScope MJ — Reporte de Meta-Validación (dataset)',
             sep,
             '',
-            '  Estado general  : ' + (esValido ? '✓  VÁLIDO — todos los registros aptos' : '✗  CON ERRORES — ver detalle abajo'),
+            '  Estado general  : ' + (esValido ? 'VÁLIDO — todos los registros aptos' : 'CON ERRORES — ver detalle abajo'),
             '  Registros total : ' + estudiantes.length,
             '  Registros OK    : ' + registrosValidos.length + '  (aptos para la interfaz)',
             '  Registros KO    : ' + registrosInvalidos.length + '  (bloqueados por errores)',
@@ -1146,9 +1146,9 @@
             // Node.js / CommonJS
             module.exports = api;
         } else if (typeof window !== 'undefined') {
-            // Browser — se integra al namespace global de EduTrack
-            window.EduTrack = window.EduTrack || {};
-            window.EduTrack.validar = api;
+            // Browser — se integra al namespace global de StudentScope
+            window.StudentScope = window.StudentScope || {};
+            window.StudentScope.validar = api;
         }
     }());
 

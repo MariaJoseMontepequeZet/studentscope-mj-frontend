@@ -55,8 +55,8 @@
         return datos;
     }
 
-    window.EduTrack = window.EduTrack || {};
-    window.EduTrack.api = {
+    window.StudentScope = window.StudentScope || {};
+    window.StudentScope.api = {
         ErrorApi: ErrorApi,
         get: function (ruta) { return pedir('GET', ruta); },
         post: function (ruta, cuerpo) { return pedir('POST', ruta, cuerpo); },

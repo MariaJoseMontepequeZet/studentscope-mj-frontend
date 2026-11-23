@@ -15,6 +15,10 @@ export default [
     }
   },
   {
+    files: ['js/App.js', 'js/app/**/*.js'],
+    languageOptions: { sourceType: 'module' }
+  },
+  {
     files: ['js/Validacion.js'],
     languageOptions: {
       globals: { ...globals.node }

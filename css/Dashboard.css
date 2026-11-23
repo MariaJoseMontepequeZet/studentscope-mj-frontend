@@ -1751,3 +1751,22 @@
         max-height: 70vh;
     }
 }
+.skip-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--color-accent-primary);
+    color: var(--color-text-on-accent);
+    font-weight: 600;
+    transform: translateY(-120%);
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+.db-main:focus {
+    outline: none;
+}
