@@ -26,7 +26,9 @@ describe('svgDeAvatar', () => {
     const svg = svgDeAvatar(hostil);
     expect(svg).not.toContain('alert(1)');
     for (let i = 0; i < 50; i++) {
-      expect(svgDeAvatar(`usuario${i}@example.test`)).not.toMatch(/<script|onload=|onerror=|javascript:/i);
+      expect(svgDeAvatar(`usuario${i}@example.test`)).not.toMatch(
+        /<script|onload=|onerror=|javascript:/i
+      );
     }
   });
 });
