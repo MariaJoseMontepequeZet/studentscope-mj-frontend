@@ -285,3 +285,9 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * Las tarjetas del dashboard dejan de mostrar cambios inventados ("+3", "+5%", "+8 vs mes anterior") y muestran datos reales de la API: inactivos, total de estudiantes y activos sobre el total.
 * La lista de estudiantes tiene un filtro por curso, que se suma a los de ciudad, plan y estado y se limpia con "Limpiar filtros".
 * El informe de consola del validador deja de usar símbolos de texto.
+
+### Integración continua
+* Nuevo flujo `CI` (`.github/workflows/ci.yml`): en cada PR hacia `dev` o `main` ejecuta lint, la comprobación de formato, las pruebas y verifica que `js/vendor/avatares.js` coincide con lo que genera `npm run build:avatares`. Corre en un ejecutor de GitHub, no en el servidor.
+* Se formatean con Prettier tres archivos de los avatares que no cumplían `format:check`.
+* El flujo de despliegue usa `actions/checkout@v5`.
+* Para que un PR no se pueda fusionar si el CI falla, se exige el check `Lint y pruebas` en la regla de protección de ramas de GitHub.
