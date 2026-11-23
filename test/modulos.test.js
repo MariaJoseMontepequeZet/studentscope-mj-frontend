@@ -58,6 +58,14 @@ describe('módulos de la aplicación', () => {
     expect(html).toMatch(/<script type="module" src="js\/App\.js"><\/script>/);
   });
 
+  it('index.html tiene descripción, favicon y un main por vista', () => {
+    const html = leer(join(raiz, 'index.html'));
+    expect(html).toMatch(/<meta name="description" content="[^"]{50,}"/);
+    expect(html).toMatch(/<link rel="icon" href="data:image\/svg\+xml/);
+    expect(html).toMatch(/<main id="contenidoLanding">/);
+    expect(html).toMatch(/<main class="db-main" id="contenidoPrincipal"/);
+  });
+
   it('el código ya no usa el nombre antiguo del espacio de nombres', () => {
     for (const archivo of archivos) {
       expect(leer(archivo)).not.toContain('EduTrack');
