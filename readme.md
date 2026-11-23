@@ -1,11 +1,13 @@
 # StudentScope MJ - Panel de Gestión Educativa
 
-StudentScope MJ es una Single Page Application (SPA) para gestionar y monitorear estudiantes. Está construida sin frameworks (JavaScript y CSS puros) y guarda sus datos en el navegador.
+StudentScope MJ es una aplicación web para gestionar y monitorear estudiantes. El frontend es una Single Page Application sin frameworks (JavaScript y CSS puros) que habla con una API propia y una base de datos PostgreSQL.
 
 Repositorios del proyecto:
 
 * Frontend: `studentscope-mj-frontend` (este repositorio).
-* Backend: `studentscope-mj-backend` (en preparación).
+* Backend: `studentscope-mj-backend`: API, base de datos, servicio de riesgo de abandono, plantillas de n8n y vistas para Power BI.
+
+Demo en vivo: <https://studentscopemj.pamcing.me> (entra con "Probar la demo").
 
 Hecho por María José Montepeque Zet.
 
@@ -30,10 +32,31 @@ Hecho por María José Montepeque Zet.
 
 ---
 
+## Arquitectura
+
+```mermaid
+flowchart LR
+    N[Navegador<br/>SPA de JavaScript] -->|HTML, CSS y JS| C[Caddy]
+    N -->|/api, cookie de sesion| C
+    C -->|/api| A[API Express]
+    A --> P[(PostgreSQL)]
+    A -.->|opcional| R[Servicio de riesgo<br/>FastAPI]
+    M[n8n] -->|reporte semanal y avisos| A
+    B[Power BI] -->|vistas de solo lectura| P
+```
+
+* **Caddy** sirve los archivos estáticos y reenvía `/api` a la API. Es también quien pone las cabeceras de seguridad (política de contenido, HSTS).
+* **La API** guarda la sesión en una cookie `HttpOnly` y valida todo en el servidor, además de en el navegador. Tiene roles: administrador, usuario normal y una cuenta de demostración.
+* **PostgreSQL** impone las reglas de los datos (rangos, claves foráneas, correos únicos), no solo la API.
+* **El servicio de riesgo, n8n y Power BI son opcionales.** La aplicación funciona sin ellos.
+
+---
+
 ## Tecnologías utilizadas
 
 * **Estructura y estilos:** HTML5 semántico y CSS puro (variables, Flexbox, Grid).
-* **Lógica:** JavaScript vanilla con patrón de módulos (IIFE).
+* **Lógica:** JavaScript vanilla con módulos ES (`type="module"`) para la aplicación y scripts clásicos para las utilidades.
+* **Servidor:** API en Node.js con Express y PostgreSQL (repositorio del backend), servida detrás de Caddy.
 * **Gráficas:** Chart.js 4.4.0, cargado desde CDN.
 * **Fuentes:** Google Fonts (Syne, DM Sans).
 
@@ -102,6 +125,38 @@ Estudiantes, cursos, resumen y reportes vienen de la API (PostgreSQL), así que 
 
 ---
 
+## Levantar todo con Docker
+
+Sirve para ver la aplicación completa (base de datos, API y frontend) con un solo comando, sin instalar PostgreSQL ni Node. Necesitas Docker con Compose.
+
+1. Clona los dos repositorios uno junto al otro:
+
+```bash
+git clone https://github.com/MariaJoseMontepequeZet/studentscope-mj-backend.git
+git clone https://github.com/MariaJoseMontepequeZet/studentscope-mj-frontend.git
+```
+
+2. Copia el archivo de ejemplo de variables y complétalo (`DB_PASSWORD` y `JWT_SECRET` son obligatorias; el secreto debe tener al menos 32 caracteres):
+
+```bash
+cd studentscope-mj-frontend/despliegue
+cp .env.example .env
+```
+
+3. Construye y levanta:
+
+```bash
+docker compose --env-file .env up -d --build
+```
+
+4. Abre `http://localhost:8080`. Con `ADMIN_EMAIL` y `ADMIN_PASSWORD` entras como administrador, y con `SEMBRAR_EJEMPLO=true` hay 35 estudiantes de ejemplo.
+
+Para apagarlo: `docker compose --env-file .env down`. Agrega `-v` para borrar también la base de datos.
+
+Esta configuración es para probar en tu equipo: sirve por HTTP en el puerto 8080 y no incluye HTTPS. El despliegue real usa su propia configuración, fuera del repositorio.
+
+---
+
 ## Cuentas y roles
 
 * **Registro:** cualquiera crea una cuenta desde la pantalla de registro. Las cuentas nuevas son siempre `usuario`.
@@ -139,14 +194,14 @@ Las pruebas cargan `js/Validacion.js` y `js/Escapar.js` con `require`, porque es
 
 ## Arquitectura de JavaScript
 
-Cada archivo usa una IIFE para no contaminar el objeto global. Solo se expone lo necesario en `window.StudentScope`. Ese nombre se mantiene por ahora y se renombrará al modularizar el código.
+La aplicación está dividida en módulos ES dentro de `js/app/` (uno por sección) y arranca desde `js/App.js`. Las utilidades (`Api.js`, `Escapar.js`, `Csv.js`, `Iconos.js`, `Validacion.js`, `Cuentas.js`, `Sidebar.js`) son scripts clásicos que cuelgan de `window.StudentScope`, el único objeto global.
 
 * **Estado centralizado:** `js/app/Estado.js` mantiene un objeto `state` con la vista actual, los estudiantes, los filtros y las instancias de las gráficas.
 * **Renderizado:** los componentes se vuelven a pintar con plantillas de texto cuando cambia el estado.
 * **Seguridad:** todo dato de estudiante que se inserta en una plantilla pasa por `escaparHTML()` (o `aNumero()` si es numérico), y los mensajes emergentes se crean con nodos de texto. Así un nombre como `<img src=x onerror=...>` se muestra como texto y no se ejecuta.
-* **Sesión y roles:** `App.js` guarda el usuario actual en `state.usuario`. Los elementos marcados con `data-solo-admin` se ocultan para quien no es administrador y las secciones de administración vuelven al Dashboard si se intentan abrir sin permiso.
+* **Sesión y roles:** `js/app/Sesion.js` guarda el usuario actual en `state.usuario`. Los elementos marcados con `data-solo-admin` se ocultan para quien no es administrador y las secciones de administración vuelven al Dashboard si se intentan abrir sin permiso.
 * **Iconos:** la interfaz no usa emojis. Los iconos son SVG definidos en `Iconos.js`; el HTML los pide con `data-icono="nombre"` y las plantillas de JavaScript con `StudentScope.icono('nombre')`.
-* **Eventos:** no hay manejadores en línea (`onclick`). Los botones declaran `data-action` (y `data-id` o `data-page` cuando hace falta) y un único oyente de clic en `App.js` ejecuta la acción correspondiente. Esto permite una política de seguridad de contenido sin `unsafe-inline` en los scripts.
+* **Eventos:** no hay manejadores en línea (`onclick`). Los botones declaran `data-action` (y `data-id` o `data-page` cuando hace falta) y un único oyente de clic en `js/App.js` ejecuta la acción correspondiente. Esto permite una política de seguridad de contenido sin `unsafe-inline` en los scripts.
 
 ---
 
@@ -197,7 +252,7 @@ El flujo de trabajo es: una rama por tarea, pull request hacia `dev` y, al cerra
 
 El workflow copia únicamente `index.html`, `css/`, `js/` y `json/` al servidor y ejecuta `desplegar.sh web`, que espera a que el servicio responda sano. Si se agrega una carpeta nueva de recursos, hay que incluirla en el paso de copia del workflow.
 
-La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del repositorio.
+La configuración del servidor real (Docker Compose, Caddy y secretos) vive fuera del repositorio. La carpeta `despliegue/` trae una versión genérica para probar en local; ver "Levantar todo con Docker".
 
 ---
 
@@ -311,3 +366,9 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * La tarjeta "Notificaciones" de Configuración tenía cinco interruptores y un botón "Guardar preferencias" que mostraba un aviso de éxito sin guardar nada. Se quita.
 * En su lugar, la tarjeta "Automatizaciones" explica lo que realmente existe: el reporte semanal y el aviso de inactivos, que se activan en el servidor con n8n (plantillas en `docs/automatizacion` del repositorio de la API).
 * Las notificaciones de la campana de la barra superior no cambian: se calculan con los datos reales de los estudiantes.
+
+### Documentación final
+* Nueva sección **Arquitectura** con un diagrama de cómo se conectan el navegador, Caddy, la API, PostgreSQL y los servicios opcionales (riesgo de abandono, n8n y Power BI).
+* Nueva sección **Levantar todo con Docker** y carpeta `despliegue/` con un `docker-compose.yml`, un `Caddyfile` y un `.env.example` genéricos y sin secretos. Se probó de punta a punta: la base y la API quedan sanas, el frontend responde en `http://localhost:8080`, se entra como administrador y se recorren todas las secciones sin errores de la política de seguridad.
+* Se corrigen datos que ya no eran ciertos (la aplicación "guardaba sus datos en el navegador", el backend "en preparación", la arquitectura con IIFE).
+* Los enlaces relativos de los README del frontend, el backend y el portafolio se revisaron con un guion: ninguno está roto.

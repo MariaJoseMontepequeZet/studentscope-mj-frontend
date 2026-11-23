@@ -1,0 +1,64 @@
+name: studentscope-mj
+
+# Levanta la base de datos, la API y el frontend. Necesita el repositorio del backend clonado
+# junto a este: ../../studentscope-mj-backend. Ver la seccion "Levantar todo con Docker" del README.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - studentscope_mj_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ../../studentscope-mj-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: "3100"
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      SEMBRAR_EJEMPLO: ${SEMBRAR_EJEMPLO:-false}
+      DEMO_HABILITADA: ${DEMO_HABILITADA:-false}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3100/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  web:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ../index.html:/srv/index.html:ro
+      - ../css:/srv/css:ro
+      - ../js:/srv/js:ro
+      - ../json:/srv/json:ro
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  studentscope_mj_db:
