@@ -2,7 +2,7 @@
  * StudentScope MJ: punto de entrada de la aplicación.
  * Cada sección vive en su propio módulo dentro de js/app/.
  */
-import { cambiarPassword, elegirAvatar, exportarCSV, exportarJSON, guardarAvatar, guardarNotificaciones, guardarPerfil, mezclarAvatares, usarAvatarPredeterminado } from './app/Configuracion.js';
+import { cambiarPassword, elegirAvatar, exportarCSV, exportarJSON, guardarAvatar, guardarPerfil, mezclarAvatares, usarAvatarPredeterminado } from './app/Configuracion.js';
 import { num, state } from './app/Estado.js';
 import { abrirModal, buscarConRetraso, cambiarPagina, cerrarModal, eliminarEstudiante, filtrar, guardarEstudiante, sincronizarMonto } from './app/Estudiantes.js';
 import { abrirConfirm, abrirDialogo, atraparFoco, cerrarConfirm, cerrarDialogo, ejecutarConfirm, setFieldError, showToast } from './app/Interfaz.js';
@@ -114,7 +114,6 @@ const ACCIONES = {
     'avatar-mezclar': function () { mezclarAvatares(); },
     'avatar-predeterminado': function () { usarAvatarPredeterminado(); },
     'avatar-guardar': function (el) { guardarAvatar(el); },
-    'guardar-notificaciones': function () { guardarNotificaciones(); },
     'exportar-json': function (el) { exportarJSON(el); },
     'exportar-csv': function (el) { exportarCSV(el); }
 };
@@ -131,7 +130,6 @@ window.StudentScope.mostrarVista = mostrarVista;
 window.StudentScope.cambiarPagina = cambiarPagina;
 window.StudentScope.guardarPerfil = guardarPerfil;
 window.StudentScope.cambiarPassword = cambiarPassword;
-window.StudentScope.guardarNotificaciones = guardarNotificaciones;
 window.StudentScope.exportarJSON = exportarJSON;
 window.StudentScope.exportarCSV = exportarCSV;
 window.StudentScope.cerrarPanelNotificaciones = cerrarPanelNotificaciones;

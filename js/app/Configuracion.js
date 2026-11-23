@@ -97,17 +97,16 @@ export function renderizarConfiguracion() {
         '</div></section>' +
 
         (admin ? (
-        /* Tarjetas solo para administradores: Notificaciones y Sistema */
+        /* Tarjetas solo para administradores: Automatizaciones y Sistema */
         '<section class="config-card" aria-labelledby="cfg-notif">' +
-        '<h3 class="config-card__title" id="cfg-notif">Notificaciones</h3>' +
-        '<div class="config-toggles">' +
-        toggleRow('notifEmail', 'Notificaciones por email', true) +
-        toggleRow('notifProgreso', 'Alertas de progreso bajo (<40%)', true) +
-        toggleRow('notifNuevos', 'Nuevos registros de estudiantes', true) +
-        toggleRow('notifInactivos', 'Recordatorio de inactivos', false) +
-        toggleRow('notifReportes', 'Reportes semanales automáticos', false) +
+        '<h3 class="config-card__title" id="cfg-notif">Automatizaciones</h3>' +
+        '<div class="config-actions-list">' +
+        '<div class="config-action-row"><div><p class="config-action-title">Reporte semanal por correo</p>' +
+        '<p class="config-action-sub">Cada lunes, con ingresos, retención y progreso. Se activa en el servidor con n8n.</p></div></div>' +
+        '<div class="config-action-row"><div><p class="config-action-title">Aviso de estudiantes inactivos</p>' +
+        '<p class="config-action-sub">Cada día, quiénes dejaron el curso sin terminarlo. Se activa en el servidor con n8n.</p></div></div>' +
         '</div>' +
-        '<button class="btn btn-primary" style="margin-top:1.25rem" data-action="guardar-notificaciones">Guardar preferencias</button>' +
+        '<p class="config-version">No se configuran desde esta pantalla: las plantillas están en docs/automatizacion del repositorio de la API.</p>' +
         '</section>' +
 
         tarjetaSistema()) : '') +
@@ -116,15 +115,6 @@ export function renderizarConfiguracion() {
 
     sec._rendered = true;
     iniciarSelectorAvatar();
-}
-
-function toggleRow(id, label, checked) {
-    return '<div class="toggle-row">' +
-        '<label class="toggle-label" for="' + id + '">' + label + '</label>' +
-        '<label class="toggle-switch" aria-label="' + label + '">' +
-        '<input type="checkbox" id="' + id + '"' + (checked ? ' checked' : '') + ' />' +
-        '<span class="toggle-track"><span class="toggle-thumb"></span></span>' +
-        '</label></div>';
 }
 
 /* Acciones de configuración */
@@ -250,10 +240,6 @@ export async function guardarAvatar(boton) {
         ocupado(boton, false);
         renderizarSelectorAvatar();
     }
-}
-
-export function guardarNotificaciones() {
-    showToast('Preferencias de notificaciones guardadas', 'success');
 }
 
 function descargar(nombre, contenido, tipo) {

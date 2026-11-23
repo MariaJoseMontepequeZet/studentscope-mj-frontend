@@ -306,3 +306,8 @@ La configuración del servidor (Docker Compose, Caddy y secretos) vive fuera del
 * Nuevo enlace "Saltar al contenido" al inicio del panel para quien navega con teclado.
 * Ya estaban bien y se comprobaron: etiquetas en todos los campos, nombre accesible en todos los botones, sin ids repetidos, `role` y `aria-modal` en los diálogos, y `aria-live` en los avisos.
 * Medido a mano en el navegador; no se corrió Lighthouse.
+
+### Automatizaciones, sin interruptores falsos
+* La tarjeta "Notificaciones" de Configuración tenía cinco interruptores y un botón "Guardar preferencias" que mostraba un aviso de éxito sin guardar nada. Se quita.
+* En su lugar, la tarjeta "Automatizaciones" explica lo que realmente existe: el reporte semanal y el aviso de inactivos, que se activan en el servidor con n8n (plantillas en `docs/automatizacion` del repositorio de la API).
+* Las notificaciones de la campana de la barra superior no cambian: se calculan con los datos reales de los estudiantes.
