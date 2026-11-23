@@ -13,6 +13,22 @@ Hecho por María José Montepeque Zet.
 
 ---
 
+## Capturas
+
+Tomadas de la demo en vivo con los datos de ejemplo (nombres y correos ficticios).
+
+| Portada | Dashboard |
+| :--- | :--- |
+| ![Portada con los botones para iniciar sesión, crear cuenta y probar la demo](docs/capturas/portada.png) | ![Dashboard con estudiantes activos, progreso promedio y gráfica por ciudad](docs/capturas/dashboard.png) |
+
+| Estudiantes | Cursos |
+| :--- | :--- |
+| ![Gestión de estudiantes con búsqueda, filtros y tarjetas](docs/capturas/estudiantes.png) | ![Catálogo de 30 cursos filtrable por categoría](docs/capturas/cursos.png) |
+
+| Reportes | Móvil |
+| :--- | :--- |
+| ![Reportes con ingresos, retención y gráficas por plan y progreso](docs/capturas/reportes.png) | ![Dashboard en un teléfono](docs/capturas/movil.png) |
+
 ## Características principales
 
 * **SPA con enrutador ligero:** navegación entre Landing, Login, Registro y Dashboard sin recargar la página.
