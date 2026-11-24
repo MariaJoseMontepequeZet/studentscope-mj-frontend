@@ -6,6 +6,10 @@ node_modules/
 .env.*
 !.env.example
 
+# Instalaciones por cliente: contienen claves y copias de seguridad
+despliegue/clientes/
+despliegue/respaldos/
+
 # Sistema operativo y editores
 .DS_Store
 Thumbs.db
