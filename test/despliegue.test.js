@@ -14,6 +14,13 @@ describe('instalaciones por cliente', () => {
     expect(compose).toContain('image: studentscope-mj-api:local');
   });
 
+  it('la API de cada cliente corre en produccion para que la cookie de sesion lleve Secure', () => {
+    const compose = leer('despliegue/docker-compose.yml');
+
+    expect(compose).toContain('NODE_ENV: production');
+    expect(compose).not.toContain('NODE_ENV: development');
+  });
+
   it('las claves y los respaldos de los clientes no se suben a git', () => {
     const ignorados = leer('.gitignore');
 
