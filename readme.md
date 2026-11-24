@@ -179,12 +179,14 @@ La aplicación no separa los datos por empresa: todos los administradores de una
 
 | Comando | Qué hace |
 | :--- | :--- |
-| `./clientes.sh nuevo acme --admin admin@acme.com` | Crea la instalación `acme`: genera sus claves, la levanta en el primer puerto libre desde el 8101 y guarda la contraseña inicial del administrador en `clientes/acme.credenciales.txt`. Con `--ejemplo` carga 35 estudiantes de muestra y con `--puerto N` elige el puerto. |
+| `./clientes.sh nuevo acme --admin admin@acme.com` | Crea la instalación `acme`: genera sus claves, la levanta en el primer puerto libre desde el 8101 y guarda la contraseña inicial del administrador en `clientes/acme.credenciales.txt`. Con `--ejemplo` carga 35 estudiantes de muestra, con `--puerto N` elige el puerto y con `--n8n avisos@acme.com` agrega n8n (ver abajo). |
 | `./clientes.sh lista` | Muestra cada cliente, su puerto y si responde. |
 | `./clientes.sh actualizar` | Construye la imagen de la API una vez y recrea la API de cada cliente, esperando a que quede sana. Antes haz `git pull` de los dos repositorios. |
 | `./clientes.sh respaldar` | Copia la base de cada cliente a `respaldos/<cliente>/` y conserva las últimas 7. |
 
-Para publicar un cliente, apunta su subdominio (en Cloudflare o tu proxy) al puerto que mostró `nuevo`. Las claves (`clientes/`) y los respaldos (`respaldos/`) no se suben a git. El servicio de n8n de cada cliente se agrega aparte, con su propia cuenta de servicio y su correo de destino.
+Para publicar un cliente, apunta su subdominio (en Cloudflare o tu proxy) al puerto que mostró `nuevo`. Las claves (`clientes/`) y los respaldos (`respaldos/`) no se suben a git. **n8n por cliente (`--n8n correo`).** Crea en esa instalación una cuenta administradora solo para n8n (`automatizacion@<dominio del administrador>`, con clave generada que solo lee n8n desde el `.env` del cliente) y levanta n8n 2.48.7 en un puerto propio desde el 5681, atado a `127.0.0.1`: se abre con un túnel SSH. Los avisos salen y llegan al correo indicado, así que no se mezclan entre empresas. Después se importan las plantillas de `docs/automatizacion/n8n/` del backend y se conecta el SMTP, como en la guía de automatización. Los flujos y la credencial SMTP viven en el volumen de n8n y `respaldar` no los copia: las plantillas se pueden volver a importar, la credencial hay que recrearla.
+
+Estado de la prueba: la creación de la cuenta de servicio (login, rol administrador, lectura de reportes y estudiantes) y la configuración del compose se verificaron con Docker. El **arranque del contenedor de n8n no se pudo verificar** en el equipo de desarrollo (el almacén de imágenes de Docker quedó dañado al llenarse el disco), aunque la misma versión de n8n y las mismas variables sí se probaron con las plantillas fuera de Docker. Antes de usarlo con un cliente real, créalo primero como cliente de prueba en el servidor y comprueba que n8n abre.
 
 Los nombres llevan letras minúsculas, números y guiones. El script no borra instalaciones; para quitar una: `docker compose -p sscope-acme --env-file clientes/acme.env down -v` (el `-v` borra su base de datos).
 
@@ -418,3 +420,4 @@ La configuración del servidor real (Docker Compose, Caddy y secretos) vive fuer
 * El `docker-compose.yml` toma el puerto de `WEB_PUERTO` (por defecto 8080) y etiqueta la imagen de la API para construirla una sola vez.
 * Probado con dos clientes a la vez: cada uno con su base de datos, sus claves y su puerto. La cuenta de un cliente no entra en el otro, una sesión de uno no sirve en el otro, y un estudiante creado en uno no aparece en el otro.
 * Una prueba vigila que el compose siga parametrizado, que las claves y respaldos queden fuera de git y que el script tenga finales de línea de Linux.
+* `nuevo --n8n correo` crea una cuenta de servicio y un n8n por cliente (`docker-compose.n8n.yml`). El arranque del contenedor queda por verificar en el servidor, como explica la sección anterior.

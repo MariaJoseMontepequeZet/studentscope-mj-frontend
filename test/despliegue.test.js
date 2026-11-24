@@ -30,6 +30,17 @@ describe('instalaciones por cliente', () => {
     expect(leer('.gitattributes')).toMatch(/\*\.sh\s+text\s+eol=lf/);
   });
 
+  it('n8n por cliente: versión fija, solo local y con las claves del cliente', () => {
+    const n8n = leer('despliegue/docker-compose.n8n.yml');
+
+    expect(n8n).toMatch(/image: n8nio\/n8n:\d+\.\d+\.\d+/);
+    expect(n8n).toContain('"127.0.0.1:${N8N_PUERTO}:5678"');
+    for (const variable of ['N8N_STUDENTSCOPE_EMAIL', 'N8N_STUDENTSCOPE_PASSWORD', 'N8N_AVISOS_DESTINO']) {
+      expect(n8n).toContain('${' + variable + '}');
+    }
+    expect(leer('despliegue/clientes.sh')).toContain('docker-compose.n8n.yml');
+  });
+
   it('el script ofrece los cuatro comandos', () => {
     const script = leer('despliegue/clientes.sh');
 
