@@ -173,6 +173,23 @@ Esta configuración es para probar en tu equipo: sirve por HTTP en el puerto 808
 
 ---
 
+## Una instalación por cliente
+
+La aplicación no separa los datos por empresa: todos los administradores de una instalación ven a todos los estudiantes. Para dar el servicio a varias empresas, cada una tiene **su propia instalación**, con su base de datos, su API y su puerto. `despliegue/clientes.sh` lo automatiza. Se ejecuta dentro de `despliegue/` y necesita Docker.
+
+| Comando | Qué hace |
+| :--- | :--- |
+| `./clientes.sh nuevo acme --admin admin@acme.com` | Crea la instalación `acme`: genera sus claves, la levanta en el primer puerto libre desde el 8101 y guarda la contraseña inicial del administrador en `clientes/acme.credenciales.txt`. Con `--ejemplo` carga 35 estudiantes de muestra y con `--puerto N` elige el puerto. |
+| `./clientes.sh lista` | Muestra cada cliente, su puerto y si responde. |
+| `./clientes.sh actualizar` | Construye la imagen de la API una vez y recrea la API de cada cliente, esperando a que quede sana. Antes haz `git pull` de los dos repositorios. |
+| `./clientes.sh respaldar` | Copia la base de cada cliente a `respaldos/<cliente>/` y conserva las últimas 7. |
+
+Para publicar un cliente, apunta su subdominio (en Cloudflare o tu proxy) al puerto que mostró `nuevo`. Las claves (`clientes/`) y los respaldos (`respaldos/`) no se suben a git. El servicio de n8n de cada cliente se agrega aparte, con su propia cuenta de servicio y su correo de destino.
+
+Los nombres llevan letras minúsculas, números y guiones. El script no borra instalaciones; para quitar una: `docker compose -p sscope-acme --env-file clientes/acme.env down -v` (el `-v` borra su base de datos).
+
+---
+
 ## Cuentas y roles
 
 * **Registro:** cualquiera crea una cuenta desde la pantalla de registro. Las cuentas nuevas son siempre `usuario`.
@@ -394,4 +411,10 @@ La configuración del servidor real (Docker Compose, Caddy y secretos) vive fuer
 * Nuevo flujo `CI` (`.github/workflows/ci.yml`): en cada PR hacia `dev` o `main` ejecuta lint, la comprobación de formato, las pruebas y verifica que `js/vendor/avatares.js` coincide con lo que genera `npm run build:avatares`. Corre en un ejecutor de GitHub, no en el servidor.
 * Se formatean con Prettier tres archivos de los avatares que no cumplían `format:check`.
 * El flujo de despliegue usa `actions/checkout@v5`.
-* Para que un PR no se pueda fusionar si el CI falla, se exige el check `Lint y pruebas` en la regla de protección de ramas de GitHub.
+* Para impedir que un PR se fusione con el CI en rojo habría que exigir el check `Lint y pruebas` en una regla de protección de ramas. En un repositorio privado de cuenta gratuita GitHub no aplica esas reglas, así que hoy se revisa a mano antes de fusionar.
+
+### Una instalación por cliente
+* Nuevo `despliegue/clientes.sh` para vender la aplicación con una instalación aislada por cliente: `nuevo`, `lista`, `actualizar` y `respaldar`.
+* El `docker-compose.yml` toma el puerto de `WEB_PUERTO` (por defecto 8080) y etiqueta la imagen de la API para construirla una sola vez.
+* Probado con dos clientes a la vez: cada uno con su base de datos, sus claves y su puerto. La cuenta de un cliente no entra en el otro, una sesión de uno no sirve en el otro, y un estudiante creado en uno no aparece en el otro.
+* Una prueba vigila que el compose siga parametrizado, que las claves y respaldos queden fuera de git y que el script tenga finales de línea de Linux.
