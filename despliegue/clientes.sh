@@ -3,7 +3,7 @@
 # Cada cliente tiene su propia base de datos, su API y su puerto: no comparten nada entre si.
 #
 # Uso:
-#   ./clientes.sh nuevo <nombre> --admin <correo> [--puerto N] [--ejemplo]
+#   ./clientes.sh nuevo <nombre> --admin <correo> [--puerto N] [--ejemplo] [--n8n <correo_de_avisos>]
 #   ./clientes.sh lista
 #   ./clientes.sh actualizar
 #   ./clientes.sh respaldar
@@ -13,6 +13,7 @@ cd "$(dirname "$0")"
 DIR_CLIENTES=clientes
 DIR_RESPALDOS=respaldos
 PUERTO_INICIAL=8101
+PUERTO_N8N_INICIAL=5681
 RESPALDOS_A_CONSERVAR=7
 
 uso() {
@@ -28,7 +29,11 @@ fallar() {
 compose() {
   local cliente=$1
   shift
-  docker compose -p "sscope-$cliente" --env-file "$DIR_CLIENTES/$cliente.env" -f docker-compose.yml "$@"
+  local archivos=(-f docker-compose.yml)
+  if grep -qs '^N8N_PUERTO=' "$DIR_CLIENTES/$cliente.env"; then
+    archivos+=(-f docker-compose.n8n.yml)
+  fi
+  docker compose -p "sscope-$cliente" --env-file "$DIR_CLIENTES/$cliente.env" "${archivos[@]}" "$@"
 }
 
 nombres_de_clientes() {
@@ -54,7 +59,7 @@ clave_con_letras_y_numeros() {
 
 puerto_ocupado() {
   local puerto=$1
-  grep -qs "^WEB_PUERTO=$puerto\$" "$DIR_CLIENTES"/*.env && return 0
+  grep -qsE "^(WEB_PUERTO|N8N_PUERTO)=$puerto\$" "$DIR_CLIENTES"/*.env && return 0
   (exec 3<>"/dev/tcp/127.0.0.1/$puerto") 2>/dev/null && return 0
   return 1
 }
@@ -72,15 +77,47 @@ esperar_sano() {
   return 1
 }
 
+crear_cuenta_n8n() {
+  local nombre=$1 puerto=$2 admin=$3 clave_admin=$4 avisos=$5 puerto_n8n=$6
+  local base="http://127.0.0.1:$puerto" json='Content-Type: application/json'
+  local servicio="automatizacion@${admin#*@}" clave jar respuesta id
+  clave=$(clave_con_letras_y_numeros)
+  jar=$(mktemp)
+
+  curl -fs -c "$jar" -o /dev/null -H "$json" -d "{\"email\":\"$admin\",\"password\":\"$clave_admin\"}" "$base/api/auth/login" \
+    || fallar "no se pudo iniciar sesion como administrador para crear la cuenta de n8n"
+  respuesta=$(curl -fs -H "$json" -d "{\"nombre\":\"Automatizacion\",\"email\":\"$servicio\",\"password\":\"$clave\"}" "$base/api/auth/registro") \
+    || fallar "no se pudo crear la cuenta $servicio"
+  id=$(printf '%s' "$respuesta" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
+  [ -n "$id" ] || fallar "no se pudo leer el id de la cuenta $servicio"
+  curl -fs -b "$jar" -X PATCH -o /dev/null -H "$json" -d '{"rol":"administrador"}' "$base/api/usuarios/$id" \
+    || fallar "no se pudo hacer administradora a $servicio"
+  rm -f "$jar"
+
+  cat >> "$DIR_CLIENTES/$nombre.env" <<ENV
+N8N_PUERTO=$puerto_n8n
+N8N_STUDENTSCOPE_EMAIL=$servicio
+N8N_STUDENTSCOPE_PASSWORD=$clave
+N8N_AVISOS_REMITENTE=$avisos
+N8N_AVISOS_DESTINO=$avisos
+ENV
+  cat >> "$DIR_CLIENTES/$nombre.credenciales.txt" <<TXT
+n8n: http://127.0.0.1:$puerto_n8n (solo desde el servidor; desde tu equipo: ssh -L $puerto_n8n:127.0.0.1:$puerto_n8n usuario@servidor)
+Cuenta de n8n en la aplicacion: $servicio (la contrasena esta en $nombre.env y solo la lee n8n)
+Avisos por correo: $avisos
+TXT
+}
+
 cmd_nuevo() {
-  local nombre=${1:-} admin="" puerto="" ejemplo=false
+  local nombre=${1:-} admin="" puerto="" ejemplo=false usa_n8n=false n8n_avisos="" puerto_n8n=""
   [ -n "$nombre" ] || uso
   shift
   while [ $# -gt 0 ]; do
     case "$1" in
-      --admin) admin=${2:-}; shift 2 ;;
-      --puerto) puerto=${2:-}; shift 2 ;;
+      --admin) [ $# -ge 2 ] || fallar "--admin necesita un correo"; admin=$2; shift 2 ;;
+      --puerto) [ $# -ge 2 ] || fallar "--puerto necesita un numero"; puerto=$2; shift 2 ;;
       --ejemplo) ejemplo=true; shift ;;
+      --n8n) [ $# -ge 2 ] || fallar "--n8n necesita el correo donde llegaran los avisos"; usa_n8n=true; n8n_avisos=$2; shift 2 ;;
       *) fallar "opcion desconocida: $1" ;;
     esac
   done
@@ -88,6 +125,9 @@ cmd_nuevo() {
   [[ $nombre =~ ^[a-z][a-z0-9-]{1,30}$ ]] || fallar "el nombre usa letras minusculas, numeros y guiones (2 a 31 caracteres, empieza con letra)"
   [[ $nombre != *--* ]] || fallar "el nombre no puede llevar dos guiones seguidos"
   [[ $admin =~ ^[^@[:space:]]+@[^@[:space:]]+\.[^@[:space:]]+$ ]] || fallar "falta --admin con un correo valido"
+  if [ "$usa_n8n" = true ]; then
+    [[ $n8n_avisos =~ ^[^@[:space:]]+@[^@[:space:]]+\.[^@[:space:]]+$ ]] || fallar "--n8n necesita un correo valido donde llegaran los avisos"
+  fi
   mkdir -p "$DIR_CLIENTES"
   [ ! -e "$DIR_CLIENTES/$nombre.env" ] || fallar "el cliente $nombre ya existe"
 
@@ -97,6 +137,11 @@ cmd_nuevo() {
   else
     [[ $puerto =~ ^[0-9]+$ ]] || fallar "--puerto debe ser un numero"
     ! puerto_ocupado "$puerto" || fallar "el puerto $puerto ya esta en uso"
+  fi
+
+  if [ -n "$n8n_avisos" ]; then
+    puerto_n8n=$PUERTO_N8N_INICIAL
+    while puerto_ocupado "$puerto_n8n" || [ "$puerto_n8n" = "$puerto" ]; do puerto_n8n=$((puerto_n8n + 1)); done
   fi
 
   local clave_admin
@@ -126,24 +171,32 @@ TXT
   compose "$nombre" up -d --build
   esperar_sano "$nombre" || fallar "revisa los registros con: docker compose -p sscope-$nombre logs api"
 
+  if [ -n "$n8n_avisos" ]; then
+    echo "Creando la cuenta de n8n y levantando n8n en el puerto $puerto_n8n..."
+    crear_cuenta_n8n "$nombre" "$puerto" "$admin" "$clave_admin" "$n8n_avisos" "$puerto_n8n"
+    compose "$nombre" up -d
+  fi
+
   echo
   echo "Listo: $nombre"
   echo "  Puerto: $puerto (apunta el subdominio de ese cliente en Cloudflare a http://localhost:$puerto)"
+  [ -z "$puerto_n8n" ] || echo "  n8n: puerto $puerto_n8n, solo desde el servidor (ver el archivo de credenciales)"
   echo "  Credenciales del administrador: $DIR_CLIENTES/$nombre.credenciales.txt"
 }
 
 cmd_lista() {
-  local nombre puerto estado hay=false
-  printf '%-24s %-8s %s\n' CLIENTE PUERTO ESTADO
+  local nombre puerto puerto_n8n estado hay=false
+  printf '%-24s %-8s %-8s %s\n' CLIENTE PUERTO N8N ESTADO
   for nombre in $(nombres_de_clientes); do
     hay=true
     puerto=$(sed -n 's/^WEB_PUERTO=//p' "$DIR_CLIENTES/$nombre.env")
+    puerto_n8n=$(sed -n 's/^N8N_PUERTO=//p' "$DIR_CLIENTES/$nombre.env")
     if curl -fs -o /dev/null --max-time 3 "http://127.0.0.1:$puerto/api/health"; then
       estado=ok
     else
       estado="no responde"
     fi
-    printf '%-24s %-8s %s\n' "$nombre" "$puerto" "$estado"
+    printf '%-24s %-8s %-8s %s\n' "$nombre" "$puerto" "${puerto_n8n:--}" "$estado"
   done
   [ "$hay" = true ] || echo "(todavia no hay clientes)"
 }

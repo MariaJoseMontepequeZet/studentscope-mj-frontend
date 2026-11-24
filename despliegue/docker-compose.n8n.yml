@@ -1,0 +1,25 @@
+# Se suma al docker-compose.yml de un cliente cuando se crea con "clientes.sh nuevo ... --n8n".
+# n8n solo escucha en 127.0.0.1: para abrirlo se usa un tunel SSH.
+services:
+  n8n:
+    image: n8nio/n8n:2.48.7
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${N8N_PUERTO}:5678"
+    environment:
+      GENERIC_TIMEZONE: ${N8N_ZONA_HORARIA:-America/Guatemala}
+      TZ: ${N8N_ZONA_HORARIA:-America/Guatemala}
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
+      STUDENTSCOPE_URL: http://api:3100
+      STUDENTSCOPE_EMAIL: ${N8N_STUDENTSCOPE_EMAIL}
+      STUDENTSCOPE_PASSWORD: ${N8N_STUDENTSCOPE_PASSWORD}
+      AVISOS_REMITENTE: ${N8N_AVISOS_REMITENTE}
+      AVISOS_DESTINO: ${N8N_AVISOS_DESTINO}
+    volumes:
+      - n8n_datos:/home/node/.n8n
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  n8n_datos:
