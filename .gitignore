@@ -10,6 +10,9 @@ node_modules/
 despliegue/clientes/
 despliegue/respaldos/
 
+# Copia privada de la configuracion del servidor: tiene claves y datos del servidor
+docs/servidor/
+
 # Sistema operativo y editores
 .DS_Store
 Thumbs.db

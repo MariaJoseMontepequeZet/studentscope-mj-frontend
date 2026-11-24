@@ -60,3 +60,9 @@ describe('instalaciones por cliente', () => {
     }
   });
 });
+
+describe('configuracion privada del servidor', () => {
+  it('docs/servidor esta en .gitignore y no depende de exclusiones locales', () => {
+    expect(leer('.gitignore')).toMatch(/^docs\/servidor\/\r?$/m);
+  });
+});
