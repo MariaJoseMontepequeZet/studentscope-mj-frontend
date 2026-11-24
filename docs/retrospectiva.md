@@ -37,11 +37,10 @@ Pasar de una aplicación que guardaba todo en el navegador a un sistema completo
 ## Qué queda pendiente
 
 * **Límite de intentos de inicio de sesión por IP.** Hoy es por correo. Uno por IP bloquearía a todos a la vez porque, detrás de Cloudflare y Caddy, la API ve siempre la IP del proxy. Hay que confirmar primero qué cabecera trae la IP real.
-* **Medición con Lighthouse.** La accesibilidad se revisó a mano en el navegador; no se corrió Lighthouse.
-* **Capturas de pantalla** para el README.
-* **Plantillas de n8n y tablero de Power BI** sin probar de punta a punta en una instancia propia.
-* **Primera ejecución del CI en GitHub.** Su comparación del paquete de avatares se calculó en Windows y corre en Linux; puede pedir un ajuste.
+* **Tablero completo de Power BI y publicación en la nube.** La conexión a las vistas y las medidas se probaron en Power BI Desktop; no se armó un tablero completo ni se publicó.
+* **Disparadores programados de n8n.** Las tres plantillas se ejecutaron a mano con envío real de correo; no se esperó a la hora programada (lunes y diario a las 8:00).
 * **El modelo de riesgo** necesita al menos 30 abandonos reales para poder medirse.
+* **Caché de Cloudflare.** Añade `Cache-Control: max-age=14400` a los `.js` y `.css` y pisa el `no-cache` del servidor: quien ya visitó el sitio puede ver scripts viejos hasta 4 horas. Se arregla en el panel de Cloudflare (Browser Cache TTL en "Respect Existing Headers") y purgando la caché.
 * **Rotar el token del túnel de Cloudflare**, que apareció en capturas de pantalla.
 
 ## Qué haría distinto
