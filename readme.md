@@ -427,3 +427,7 @@ La configuración del servidor real (Docker Compose, Caddy y secretos) vive fuer
 * Una prueba nueva vigila que el compose de clientes siga en producción (119 pruebas en total).
 * Probado contra la API en producción: el inicio de sesión devuelve `Secure` y el flujo de `clientes.sh nuevo --n8n` (login, registro de la cuenta de servicio y cambio de rol con `curl` por `http://127.0.0.1`) sigue funcionando, porque `curl` acepta cookies seguras en `127.0.0.1`.
 * Sin verificar en el servidor: recrear la API de los clientes existentes con `./clientes.sh actualizar`.
+
+### Configuración privada del servidor fuera de git
+* `docs/servidor/` (la copia de la configuración del servidor, con claves) pasa a estar en `.gitignore`. Antes solo la protegía una exclusión local que ocultaba toda la carpeta `docs/`, y un archivo nuevo de documentación podía quedar sin subir sin que `git status` lo mostrara.
+* Una prueba vigila que `docs/servidor/` siga en `.gitignore` (120 pruebas en total).
