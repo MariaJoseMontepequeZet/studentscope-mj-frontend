@@ -95,9 +95,9 @@ function renderizarTablaTop10(top) {
     }).join('');
     return '<table class="db-table" style="min-width:520px">' +
         '<thead class="db-table__head"><tr>' +
-        '<th class="db-table__th">#</th><th class="db-table__th">Estudiante</th>' +
-        '<th class="db-table__th">Curso</th><th class="db-table__th">Progreso</th>' +
-        '<th class="db-table__th">Plan</th>' +
+        '<th class="db-table__th" scope="col">#</th><th class="db-table__th" scope="col">Estudiante</th>' +
+        '<th class="db-table__th" scope="col">Curso</th><th class="db-table__th" scope="col">Progreso</th>' +
+        '<th class="db-table__th" scope="col">Plan</th>' +
         '</tr></thead><tbody>' + rows + '</tbody></table>';
 }
 
@@ -113,17 +113,17 @@ function crearGraficosReportes(datos) {
                 labels: datos.porPlan.map(function (p) { return p.plan; }),
                 datasets: [{
                     data: datos.porPlan.map(function (p) { return p.total; }),
-                    backgroundColor: ['rgba(34,197,94,.8)', 'rgba(59,130,246,.8)', 'rgba(245,166,35,.8)'],
+                    backgroundColor: ['#7FE3D4', '#2A3E9E', '#1F2F7A'],
                     borderWidth: 0, hoverOffset: 6
                 }]
             },
             options: {
                 responsive: true, maintainAspectRatio: false, cutout: '65%',
                 plugins: {
-                    legend: { position: 'bottom', labels: { color: '#8B949E', padding: 16, font: { family: "'DM Sans'", size: 12 } } },
+                    legend: { position: 'bottom', labels: { color: '#444D78', padding: 16, font: { family: "'Atkinson Hyperlegible'", size: 12 } } },
                     tooltip: {
-                        backgroundColor: '#161B22', borderColor: 'rgba(255,255,255,.1)', borderWidth: 1,
-                        titleColor: '#F0F6FC', bodyColor: '#8B949E'
+                        backgroundColor: '#131A45', borderColor: 'rgba(19,26,69,.2)', borderWidth: 1,
+                        titleColor: '#FFFFFF', bodyColor: '#E6E9F6'
                     }
                 }
             }
@@ -139,8 +139,8 @@ function crearGraficosReportes(datos) {
                 labels: datos.rangosProgreso.map(function (r) { return r.rango; }),
                 datasets: [{
                     label: 'Estudiantes', data: datos.rangosProgreso.map(function (r) { return r.total; }),
-                    backgroundColor: ['rgba(239,68,68,.75)', 'rgba(249,115,22,.75)', 'rgba(245,166,35,.75)',
-                        'rgba(59,130,246,.75)', 'rgba(34,197,94,.75)'],
+                    backgroundColor: ['#B23018', '#C9602A', '#B88A00',
+                        '#2A3E9E', '#0A6D5F'],
                     borderRadius: 6, borderSkipped: false
                 }]
             },
@@ -149,18 +149,18 @@ function crearGraficosReportes(datos) {
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                        backgroundColor: '#161B22', borderColor: 'rgba(255,255,255,.1)', borderWidth: 1,
-                        titleColor: '#F0F6FC', bodyColor: '#8B949E'
+                        backgroundColor: '#131A45', borderColor: 'rgba(19,26,69,.2)', borderWidth: 1,
+                        titleColor: '#FFFFFF', bodyColor: '#E6E9F6'
                     }
                 },
                 scales: {
                     x: {
-                        beginAtZero: true, grid: { color: 'rgba(255,255,255,.05)' },
-                        ticks: { color: '#8B949E', stepSize: 1, font: { family: "'DM Sans'", size: 11 } }
+                        beginAtZero: true, grid: { color: 'rgba(19,26,69,.1)' },
+                        ticks: { color: '#444D78', stepSize: 1, font: { family: "'Atkinson Hyperlegible'", size: 11 } }
                     },
                     y: {
                         grid: { display: false },
-                        ticks: { color: '#8B949E', font: { family: "'DM Sans'", size: 11 } }
+                        ticks: { color: '#444D78', font: { family: "'Atkinson Hyperlegible'", size: 11 } }
                     }
                 }
             }

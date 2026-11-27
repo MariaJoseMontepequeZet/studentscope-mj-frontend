@@ -2,6 +2,7 @@ import { semillaDe } from './Configuracion.js';
 import { api, state } from './Estado.js';
 import { limpiarErrores, mostrarErrorCampo, mostrarErroresServidor, ocupado, showToast } from './Interfaz.js';
 import { cerrarPanelNotificaciones } from './Notificaciones.js';
+import { limpiarCielo } from './Observatorio.js';
 import { mostrarVista } from './Router.js';
 
 export function actualizarUsuarioDashboard(d) {
@@ -30,6 +31,10 @@ export function actualizarUsuarioActual(usuario) {
 function limpiarSesionLocal() {
     state.usuario = null;
     state.estudiantes = [];
+    state.cielo = [];
+    state.cieloOcultos = [];
+    state.cieloElegido = null;
+    limpiarCielo();
     state.total = 0;
     state.paginas = 0;
     state.resumen = null;
@@ -69,6 +74,9 @@ export async function iniciarSesion(e) {
 function errorPasswordLocal(password) {
     if (password.length < 8) return 'La contraseña debe tener al menos 8 caracteres';
     if (password.length > 72) return 'La contraseña no puede superar 72 caracteres';
+    if (new TextEncoder().encode(password).length > 72) {
+        return 'La contraseña es demasiado larga: los acentos y símbolos especiales ocupan más';
+    }
     if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) return 'La contraseña debe incluir letras y números';
     return '';
 }

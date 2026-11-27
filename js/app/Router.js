@@ -7,19 +7,31 @@ import { aplicarRol, esAdministrador, puedeGestionar } from './Permisos.js';
 import { renderizarReportes, vaciarReportes } from './Reportes.js';
 import { actualizarUsuarioDashboard } from './Sesion.js';
 
+var destinoPendiente = null;
+var cambioPendiente = null;
+
 export function mostrarVista(nombre, datos) {
     var saliente = document.getElementById('view-' + state.vistaActual);
     var entrante = document.getElementById('view-' + nombre);
-    if (!entrante || nombre === state.vistaActual) return;
+    if (!entrante || nombre === (destinoPendiente || state.vistaActual)) return;
 
-    if (saliente) {
+    clearTimeout(cambioPendiente);
+    destinoPendiente = nombre;
+    if (saliente && saliente !== entrante) {
         saliente.classList.add('view--leaving');
         setTimeout(function () {
-            saliente.classList.remove('view--active', 'view--leaving');
+            if (state.vistaActual !== saliente.id.replace('view-', '')) {
+                saliente.classList.remove('view--active', 'view--leaving');
+            }
         }, 350);
     }
 
-    setTimeout(function () {
+    cambioPendiente = setTimeout(function () {
+        destinoPendiente = null;
+        document.querySelectorAll('.view').forEach(function (v) {
+            if (v !== entrante) v.classList.remove('view--active', 'view--leaving');
+        });
+        entrante.classList.remove('view--leaving');
         entrante.classList.add('view--active');
         state.vistaActual = nombre;
         window.scrollTo(0, 0);

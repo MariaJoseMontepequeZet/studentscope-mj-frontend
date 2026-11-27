@@ -37,19 +37,19 @@ function renderizarCursos() {
         : state.cursos.filter(function (c) { return c.categoria === filtro; });
 
     var coloresCat = {
-        'web': '#3B82F6', 'data': '#F5A623', 'devops': '#8B5CF6',
-        'mobile': '#F97316', 'design': '#EC4899', 'seguridad': '#EF4444',
-        'marketing': '#22C55E'
+        'web': '#2A3E9E', 'data': '#7A5A00', 'devops': '#5B4BB7',
+        'mobile': '#9A4A14', 'design': '#A02463', 'seguridad': '#B23018',
+        'marketing': '#0A6D5F'
     };
 
     var tabsHTML = Object.keys(CATEGORIAS_INFO).map(function (k) {
         var activo = (k === filtro) ? ' cat-tab--active' : '';
-        return '<button class="cat-tab' + activo + '" data-cat="' + k + '">' +
+        return '<button type="button" class="cat-tab' + activo + '" data-cat="' + k + '" aria-pressed="' + (k === filtro) + '">' +
             esc(CATEGORIAS_INFO[k].label) + '</button>';
     }).join('');
 
     var cardsHTML = lista.map(function (c) {
-        var color = coloresCat[c.categoria] || '#F5A623';
+        var color = coloresCat[c.categoria] || '#7A5A00';
         var categoria = CATEGORIAS_INFO[c.categoria] ? CATEGORIAS_INFO[c.categoria].label : c.categoria;
         var nivelClass = c.nivel === 'Avanzado' ? 'nivel--avanzado' : c.nivel === 'Intermedio' ? 'nivel--intermedio' : 'nivel--basico';
         return '<article class="curso-card">' +
@@ -77,7 +77,7 @@ function renderizarCursos() {
         '<div><h2 class="page-header__title">Catálogo de <span>Cursos</span></h2>' +
         '<p class="page-header__meta">' + state.cursos.length + ' cursos disponibles · StudentScope MJ</p></div>' +
         '</header>' +
-        '<div class="cat-tabs" role="tablist" aria-label="Filtrar por categoría">' + tabsHTML + '</div>' +
+        '<div class="cat-tabs" role="group" aria-label="Filtrar por categoría">' + tabsHTML + '</div>' +
         '<p class="cursos-count">Mostrando <strong>' + lista.length + '</strong> curso' + (lista.length !== 1 ? 's' : '') + '</p>' +
         '<div class="cursos-grid">' + cardsHTML + '</div>';
 
@@ -85,6 +85,8 @@ function renderizarCursos() {
         btn.addEventListener('click', function () {
             state.filtroCategoria = this.getAttribute('data-cat');
             renderizarCursos();
+            var elegido = sec.querySelector('.cat-tab[data-cat="' + state.filtroCategoria + '"]');
+            if (elegido) elegido.focus();
         });
     });
 }

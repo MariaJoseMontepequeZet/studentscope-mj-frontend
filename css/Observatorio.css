@@ -1,0 +1,626 @@
+/* ─────────────────────────────────────────────────────────────
+   Observatorio: atlas celeste impreso.
+   Cielo cobalto para mirar, papel frío para trabajar.
+   Va al final: reorganiza el panel que definen las hojas anteriores.
+───────────────────────────────────────────────────────────── */
+:root {
+    --cielo: #1f2f7a;
+    --cielo-hondo: #18245f;
+    --cielo-linea: rgba(233, 237, 255, 0.2);
+    --cielo-texto: #f4f6ff;
+    --cielo-tenue: #c7cef4;
+    --agua: #7fe3d4;
+    --sol: #ffc53d;
+    --coral: #ff8a70;
+    --topbar-height: 64px;
+}
+
+h1,
+h2,
+h3 {
+    letter-spacing: -0.015em;
+}
+
+.page-header__title span,
+.login-logo span {
+    color: inherit;
+}
+
+.page-header__meta,
+.db-section-label,
+.config-card__title,
+.form-group label,
+.config-label,
+.db-table__th,
+.rep-kpi-label,
+.login-label {
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.btn {
+    border-radius: 999px;
+}
+
+.btn-sol {
+    background: var(--sol);
+    border: 1px solid var(--sol);
+    color: #131a45;
+}
+
+.btn-sol:hover {
+    background: #ffd36b;
+}
+
+.btn-cielo {
+    background: transparent;
+    border: 1px solid var(--cielo-tenue);
+    color: var(--cielo-texto);
+}
+
+.btn-cielo:hover {
+    background: rgba(244, 246, 255, 0.12);
+}
+
+/* ── Puntos, claves y guías ── */
+.punto {
+    stroke: var(--cielo-hondo);
+    stroke-width: 1.5;
+}
+
+.punto--activo {
+    fill: var(--agua);
+}
+
+.punto--abandono {
+    fill: var(--coral);
+}
+
+.punto--completo {
+    fill: var(--sol);
+}
+
+.punto--elegido {
+    stroke: #fff;
+    stroke-width: 3;
+}
+
+.guia {
+    stroke: var(--cielo-linea);
+    stroke-dasharray: 2 6;
+}
+
+.clave {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.clave::before {
+    content: '';
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--agua);
+}
+
+.clave--abandono::before {
+    background: var(--coral);
+}
+
+.clave--completo::before {
+    background: var(--sol);
+}
+
+/* ── Portada ── */
+.portada {
+    display: grid;
+    gap: var(--sp-8);
+    padding: var(--sp-5) clamp(1rem, 5vw, 4rem) var(--sp-16);
+    background: var(--cielo);
+    color: var(--cielo-texto);
+}
+
+.portada__barra {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-4);
+}
+
+.marca {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.25rem;
+}
+
+.portada__texto h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2.4rem, 5vw, 4.25rem);
+    line-height: 1.02;
+    max-width: 14ch;
+    text-wrap: balance;
+}
+
+.portada__texto p {
+    margin: var(--sp-6) 0;
+    max-width: 46ch;
+    font-size: var(--fs-lg);
+    line-height: 1.6;
+    color: var(--cielo-tenue);
+}
+
+.portada__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+}
+
+.portada__mapa {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    min-height: 20rem;
+}
+
+.portada__mapa svg {
+    flex: 1;
+    width: 100%;
+    min-height: 18rem;
+    border-left: 1px solid var(--cielo-linea);
+    border-bottom: 1px solid var(--cielo-linea);
+}
+
+.portada__mapa .aro {
+    fill: none;
+    stroke: var(--coral);
+    stroke-width: 1.5;
+}
+
+.portada__mapa figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-5);
+    font-size: var(--fs-sm);
+    color: var(--cielo-tenue);
+}
+
+@media (min-width: 960px) {
+    .portada {
+        grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+        align-items: center;
+        min-height: 88vh;
+    }
+}
+
+.portada__detalle {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--sp-10);
+    padding: var(--sp-16) clamp(1rem, 5vw, 4rem);
+}
+
+.portada__detalle h2 {
+    font-family: var(--font-display);
+    font-size: var(--fs-2xl);
+    margin-bottom: var(--sp-3);
+}
+
+.portada__detalle p {
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    max-width: 42ch;
+}
+
+.portada__pie {
+    padding: var(--sp-6) clamp(1rem, 5vw, 4rem);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
+    font-size: var(--fs-sm);
+}
+
+/* ── Acceso ── */
+.login-page {
+    background: var(--cielo);
+    background-image: radial-gradient(var(--cielo-linea) 1.5px, transparent 1.5px);
+    background-size: 44px 44px;
+}
+
+.login-card {
+    background: var(--color-bg-surface);
+    border: none;
+    border-radius: var(--radius-xl);
+}
+
+.login-logo {
+    font-family: var(--font-display);
+    font-weight: 800;
+}
+
+/* ── El panel: la navegación pasa a ser una barra arriba ── */
+.db-sidebar {
+    background: var(--cielo-hondo);
+    color: var(--cielo-texto);
+    border: none;
+}
+
+.db-sidebar .db-sidebar__logo-name,
+.db-sidebar .db-sidebar__user-name {
+    color: var(--cielo-texto);
+}
+
+.db-sidebar .db-sidebar__user-role,
+.db-sidebar .db-sidebar__nav-link {
+    color: var(--cielo-tenue);
+}
+
+.db-sidebar .db-sidebar__nav-link:hover {
+    background: rgba(244, 246, 255, 0.1);
+    color: var(--cielo-texto);
+}
+
+.db-sidebar .db-sidebar__nav-link--active {
+    background: var(--color-bg-base);
+    color: var(--color-text-primary);
+    border: none;
+}
+
+.db-sidebar .db-sidebar__nav-link--active:hover {
+    background: var(--color-bg-base);
+    color: var(--color-text-primary);
+}
+
+.db-sidebar .db-sidebar__logout {
+    background: transparent;
+    border: 1px solid var(--cielo-linea);
+    color: var(--cielo-texto);
+}
+
+.db-sidebar :focus-visible {
+    outline: 2px solid var(--sol);
+    outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+    .db-layout {
+        display: block;
+    }
+
+    .db-sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 120;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--sp-4);
+        width: 100%;
+        height: auto;
+        min-height: var(--topbar-height);
+        padding: var(--sp-2) var(--sp-5);
+        transform: none;
+        overflow: visible;
+    }
+
+    .db-sidebar__logo {
+        padding: 0;
+        border: none;
+        white-space: nowrap;
+    }
+
+    .db-sidebar__nav {
+        flex: 1;
+        padding: 0;
+        overflow-x: auto;
+    }
+
+    .db-sidebar__nav-list {
+        display: flex;
+        flex-direction: row;
+        gap: var(--sp-1);
+    }
+
+    .db-sidebar__nav-link {
+        border-radius: 999px;
+        white-space: nowrap;
+    }
+
+    .db-sidebar__nav-icon,
+    .db-sidebar__divider,
+    .db-sidebar__user-info {
+        display: none;
+    }
+
+    .db-sidebar__user {
+        padding: 0;
+    }
+
+    .db-sidebar .db-sidebar__logout {
+        width: auto;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    .db-main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .db-topbar {
+        position: static;
+        background: transparent;
+        border: none;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1040px) {
+    .db-sidebar__logo,
+    .db-sidebar__user {
+        display: none;
+    }
+}
+
+.db-content {
+    max-width: 1240px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ── El cielo ── */
+.cielo {
+    background: var(--cielo);
+    color: var(--cielo-texto);
+    border-radius: var(--radius-xl);
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.cielo__titular {
+    text-wrap: balance;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.05;
+    max-width: 22ch;
+}
+
+.cielo__cifras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-6);
+    margin-top: var(--sp-4);
+    color: var(--cielo-tenue);
+}
+
+.cielo__cifras strong {
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    color: var(--cielo-texto);
+}
+
+.cielo__medidor {
+    height: 4px;
+    margin-top: var(--sp-3);
+    max-width: 24rem;
+    background: var(--cielo-linea);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.cielo__medidor div {
+    height: 100%;
+    width: 0;
+    background: var(--sol);
+}
+
+.cielo__leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-top: var(--sp-6);
+}
+
+.cielo__leyenda button {
+    padding: 0.45rem 0.9rem;
+    background: rgba(244, 246, 255, 0.1);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    color: var(--cielo-texto);
+    font: inherit;
+    font-size: var(--fs-sm);
+    cursor: pointer;
+}
+
+.cielo__leyenda button[aria-pressed='false'] {
+    background: transparent;
+    border-color: var(--cielo-linea);
+    color: var(--cielo-tenue);
+    text-decoration: line-through;
+}
+
+.cielo__leyenda button:focus-visible,
+.cielo :focus-visible {
+    outline: 2px solid var(--sol);
+    outline-offset: 2px;
+}
+
+.cielo__marco {
+    margin-top: var(--sp-5);
+}
+
+.cielo__eje,
+.cielo__fechas {
+    font-size: var(--fs-sm);
+    color: var(--cielo-tenue);
+}
+
+.cielo__mapa {
+    position: relative;
+    margin: var(--sp-2) 0;
+    border-left: 1px solid var(--cielo-linea);
+    border-bottom: 1px solid var(--cielo-linea);
+}
+
+.cielo__mapa svg {
+    display: block;
+    width: 100%;
+    height: clamp(18rem, 48vh, 30rem);
+}
+
+.cielo__mapa .punto {
+    cursor: pointer;
+}
+
+.cielo__mapa .punto:hover {
+    stroke: #fff;
+}
+
+.cielo__ficha {
+    position: absolute;
+    top: var(--sp-3);
+    left: var(--sp-3);
+    max-width: min(19rem, calc(100% - 1.5rem));
+    padding: var(--sp-4);
+    background: var(--color-bg-surface);
+    color: var(--color-text-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-modal);
+    font-size: var(--fs-sm);
+    line-height: 1.5;
+}
+
+.cielo__ficha[hidden] {
+    display: none;
+}
+
+.cielo__ficha-nombre {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-lg);
+}
+
+.cielo__ficha .btn {
+    margin-top: var(--sp-3);
+}
+
+.cielo__fechas {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--sp-3);
+}
+
+/* ── A quién escribirle y de dónde son ── */
+.rezagados,
+.ciudades {
+    margin-top: var(--sp-10);
+}
+
+.rezagados h3,
+.ciudades h3 {
+    font-family: var(--font-display);
+    font-size: var(--fs-2xl);
+}
+
+.rezagados__cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-3);
+    padding-bottom: var(--sp-3);
+    border-bottom: 2px solid var(--color-text-primary);
+}
+
+.rezagados__lista,
+.ciudades__lista {
+    list-style: none;
+}
+
+.rezagados__lista li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-4);
+    padding: var(--sp-3) 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.rezagados__avance {
+    min-width: 4.5ch;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-2xl);
+    color: var(--color-danger);
+}
+
+.rezagados__quien {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 12rem;
+}
+
+.rezagados__quien span,
+.rezagados__vacio {
+    color: var(--color-text-muted);
+}
+
+.rezagados__correo {
+    color: var(--color-accent-primary);
+    text-decoration: underline;
+}
+
+.ciudades__lista {
+    margin-top: var(--sp-4);
+    max-width: 40rem;
+}
+
+.ciudades__lista li {
+    display: grid;
+    grid-template-columns: minmax(6rem, 10rem) minmax(0, 1fr) 3ch;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-1) 0;
+}
+
+.ciudades__barra {
+    height: 0.6rem;
+}
+
+.ciudades__barra i {
+    display: block;
+    height: 100%;
+    background: var(--cielo);
+    border-radius: 0 999px 999px 0;
+}
+
+/* ── Listados: fichas planas, sin elevarse al pasar ── */
+.student-card,
+.curso-card,
+.config-card,
+.rep-kpi-box,
+.rep-chart-box {
+    box-shadow: none;
+}
+
+.student-card:hover,
+.curso-card:hover,
+.rep-kpi-box:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--color-accent-primary);
+}
+
+.student-card {
+    border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

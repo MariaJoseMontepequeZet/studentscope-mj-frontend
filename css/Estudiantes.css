@@ -90,9 +90,9 @@ body {
 }
 
 .btn-primary:hover {
-    background: #f0b030;
+    background: #2A3E9E;
     transform: translateY(-1px);
-    box-shadow: 0 8px 32px rgba(245, 166, 35, 0.45);
+    box-shadow: 0 8px 32px rgba(31, 47, 122, 0.45);
 }
 
 .btn-secondary {
@@ -103,17 +103,17 @@ body {
 
 .btn-secondary:hover {
     background: var(--color-bg-elevated);
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(19, 26, 69, 0.2);
 }
 
 .btn-danger {
-    background: rgba(239, 68, 68, 0.12);
+    background: rgba(178, 48, 24, 0.12);
     color: var(--color-danger);
-    border: 1px solid rgba(239, 68, 68, 0.25);
+    border: 1px solid rgba(178, 48, 24, 0.25);
 }
 
 .btn-danger:hover {
-    background: rgba(239, 68, 68, 0.22);
+    background: rgba(178, 48, 24, 0.22);
 }
 
 .btn--sm {
@@ -178,7 +178,7 @@ body {
 .toolbar select:focus {
     outline: none;
     border-color: var(--color-accent-primary);
-    box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.15);
+    box-shadow: 0 0 0 3px rgba(31, 47, 122, 0.15);
     background: var(--color-bg-input-focus);
 }
 
@@ -307,7 +307,7 @@ body {
 .student-card:hover {
     border-color: var(--color-border-emphasis);
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 8px 32px rgba(19, 26, 69, 0.16);
 }
 
 /* Card header */
@@ -372,21 +372,21 @@ body {
 }
 
 .plan-badge--basico {
-    background: rgba(139, 92, 246, 0.15);
-    color: #A78BFA;
-    border: 1px solid rgba(139, 92, 246, 0.3);
+    background: rgba(91, 75, 183, 0.15);
+    color: #5B4BB7;
+    border: 1px solid rgba(91, 75, 183, 0.3);
 }
 
 .plan-badge--estandar {
-    background: rgba(59, 130, 246, 0.15);
-    color: #60A5FA;
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    background: rgba(42, 62, 158, 0.15);
+    color: #2A3E9E;
+    border: 1px solid rgba(42, 62, 158, 0.3);
 }
 
 .plan-badge--premium {
-    background: rgba(245, 166, 35, 0.15);
+    background: rgba(31, 47, 122, 0.15);
     color: var(--color-accent-primary);
-    border: 1px solid rgba(245, 166, 35, 0.3);
+    border: 1px solid rgba(31, 47, 122, 0.3);
 }
 
 /* Card body */
@@ -446,16 +446,16 @@ body {
 .progress-fill {
     height: 100%;
     border-radius: var(--radius-full);
-    background: linear-gradient(90deg, var(--color-accent-primary), #f0b030);
+    background: linear-gradient(90deg, var(--color-accent-primary), #2A3E9E);
     transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .progress-fill--complete {
-    background: linear-gradient(90deg, var(--color-accent-success), #16a34a);
+    background: linear-gradient(90deg, var(--color-accent-success), #0A6D5F);
 }
 
 .progress-fill--low {
-    background: linear-gradient(90deg, var(--color-accent-secondary), #2563eb);
+    background: linear-gradient(90deg, var(--color-accent-secondary), #1F2F7A);
 }
 
 /* Card estado inactivo */
@@ -511,40 +511,12 @@ body {
 }
 
 /* ── Gráfico de ciudades ──────────────────────────────────── */
-.chart-section {
-    margin-top: 3rem;
-    background: var(--color-bg-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-}
-
-.chart-section__title {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin-bottom: 1.25rem;
-    letter-spacing: -0.01em;
-}
-
-.chart-section__title span {
-    color: var(--color-text-muted);
-    font-weight: 400;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-}
-
-.chart-canvas-wrap {
-    position: relative;
-    height: 220px;
-}
 
 /* ── Modal overlay ────────────────────────────────────────── */
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(19, 26, 69, 0.55);
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
@@ -662,14 +634,14 @@ body {
 .form-group select:focus {
     outline: none;
     border-color: var(--color-accent-primary);
-    box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.15);
+    box-shadow: 0 0 0 3px rgba(31, 47, 122, 0.15);
     background: var(--color-bg-input-focus);
 }
 
 .form-group input.is-error,
 .form-group select.is-error {
     border-color: var(--color-danger);
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    box-shadow: 0 0 0 3px rgba(178, 48, 24, 0.15);
 }
 
 .form-group__error {
@@ -747,7 +719,7 @@ body {
 .confirm-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(19, 26, 69, 0.55);
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
@@ -766,13 +738,13 @@ body {
 
 .confirm-box {
     background: var(--color-bg-surface);
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    border: 1px solid rgba(178, 48, 24, 0.3);
     border-radius: var(--radius-lg);
     padding: 2rem;
     max-width: 380px;
     width: 100%;
     text-align: center;
-    box-shadow: 0 24px 64px rgba(239, 68, 68, 0.2);
+    box-shadow: 0 24px 64px rgba(178, 48, 24, 0.2);
     transform: scale(0.95);
     transition: transform 0.2s ease;
 }
@@ -843,7 +815,7 @@ body {
 }
 
 .toast--success {
-    border-color: rgba(34, 197, 94, 0.4);
+    border-color: rgba(10, 109, 95, 0.4);
 }
 
 .toast--success .toast__icon {
@@ -851,7 +823,7 @@ body {
 }
 
 .toast--error {
-    border-color: rgba(239, 68, 68, 0.4);
+    border-color: rgba(178, 48, 24, 0.4);
 }
 
 .toast--error .toast__icon {
@@ -859,7 +831,7 @@ body {
 }
 
 .toast--info {
-    border-color: rgba(245, 166, 35, 0.4);
+    border-color: rgba(31, 47, 122, 0.4);
 }
 
 .toast--info .toast__icon {

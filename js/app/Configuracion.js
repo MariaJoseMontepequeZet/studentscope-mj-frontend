@@ -19,7 +19,6 @@ function tarjetaSistema() {
         '<button class="btn btn-secondary" data-action="exportar-csv">Exportar CSV</button>' +
         '</div>' +
         '</div>' +
-        '<p class="config-version">StudentScope MJ v2.3 · Vanilla JS · CSS Puro · Sin frameworks</p>' +
         '</section>';
 }
 
@@ -46,7 +45,7 @@ export function renderizarConfiguracion() {
         '<div><h2 class="page-header__title">' +
         (admin ? 'Configuración <span>del Sistema</span>' : 'Mi <span>perfil</span>') + '</h2>' +
         '<p class="page-header__meta">' +
-        (admin ? 'Ajustes generales · StudentScope MJ v2.3' : 'Tus datos y tu contraseña') + '</p></div>' +
+        (admin ? 'Ajustes generales' : 'Tus datos y tu contraseña') + '</p></div>' +
         '</header>' +
 
         '<div class="config-grid">' +
