@@ -41,8 +41,8 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--color-accent-primary);
-    border: 1px solid rgba(245, 166, 35, 0.35);
-    background: rgba(245, 166, 35, 0.1);
+    border: 1px solid rgba(31, 47, 122, 0.35);
+    background: rgba(31, 47, 122, 0.1);
 }
 
 .rol-badge {
@@ -58,9 +58,9 @@
 }
 
 .rol-badge--admin {
-    color: #8b5cf6;
-    background: rgba(139, 92, 246, 0.12);
-    border-color: rgba(139, 92, 246, 0.35);
+    color: #5B4BB7;
+    background: rgba(91, 75, 183, 0.12);
+    border-color: rgba(91, 75, 183, 0.35);
 }
 
 .cuenta-ayuda {

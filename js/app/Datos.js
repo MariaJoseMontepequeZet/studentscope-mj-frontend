@@ -1,6 +1,7 @@
 import { api, state } from './Estado.js';
-import { actualizarGrafico, mostrarEstadoListado, poblarCursos, poblarSelectCiudades, renderizarCards } from './Estudiantes.js';
+import { mostrarEstadoListado, poblarCursos, poblarSelectCiudades, renderizarCards } from './Estudiantes.js';
 import { showToast, valorDe } from './Interfaz.js';
+import { pintarCielo, pintarCiudades, pintarResumenSinMapa } from './Observatorio.js';
 import { puedeGestionar } from './Permisos.js';
 
 export function avisarErrorCarga(error) {
@@ -12,7 +13,18 @@ async function cargarResumen() {
     state.resumen = await api.get('/api/resumen');
     poblarSelectCiudades();
     actualizarKPIs();
-    actualizarGrafico();
+}
+
+/* El mapa necesita a todos los estudiantes, no solo la página del listado. */
+async function cargarCielo() {
+    if (!puedeGestionar()) {
+        pintarResumenSinMapa(state.resumen);
+        return;
+    }
+    var todos = await obtenerTodosLosEstudiantes();
+    if (!state.usuario) return;
+    state.cielo = todos;
+    pintarCielo();
 }
 
 export async function cargarPanel() {
@@ -28,7 +40,11 @@ export async function cargarPanel() {
     poblarCursos();
     poblarSelectCiudades();
     actualizarKPIs();
-    actualizarGrafico();
+    try {
+        await cargarCielo();
+    } catch (error) {
+        avisarErrorCarga(error);
+    }
     if (puedeGestionar()) await cargarEstudiantes();
 }
 
@@ -69,10 +85,19 @@ export async function cargarEstudiantes() {
 export async function refrescarDatos() {
     try {
         await cargarResumen();
+        await cargarCielo();
         await cargarEstudiantes();
     } catch (error) {
         avisarErrorCarga(error);
     }
+}
+
+/* Contador de inactivos sobre la campana. Vive aquí porque se llena al cargar el panel. */
+export function mostrarAvisoPendiente(inactivos) {
+    var badge = document.getElementById('notifBadge');
+    if (!badge) return;
+    badge.textContent = inactivos || '';
+    badge.style.display = inactivos && puedeGestionar() ? 'flex' : 'none';
 }
 
 function actualizarKPIs() {
@@ -82,11 +107,12 @@ function actualizarKPIs() {
     set('kpiCursos', r.activos);
     set('kpiProgreso', r.progresoPromedio + '%');
     set('kpiTotal', r.total);
-    set('kpiCursosPie', r.inactivos + (r.inactivos === 1 ? ' inactivo' : ' inactivos'));
-    set('kpiProgresoPie', 'sobre ' + r.total + (r.total === 1 ? ' estudiante' : ' estudiantes'));
-    set('kpiTotalPie', r.activos + ' activos de ' + r.total);
     var bar = document.getElementById('kpiProgresoBar');
-    if (bar) bar.style.setProperty('--progress-value', r.progresoPromedio + '%');
+    if (bar) bar.style.width = r.progresoPromedio + '%';
+    var medidor = document.getElementById('kpiProgresoMedidor');
+    if (medidor) medidor.setAttribute('aria-valuenow', r.progresoPromedio);
+    mostrarAvisoPendiente(r.inactivos);
+    pintarCiudades(r.porCiudad);
 }
 
 export async function obtenerTodosLosEstudiantes() {

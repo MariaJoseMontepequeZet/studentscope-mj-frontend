@@ -1,8 +1,13 @@
-import { avisarErrorCarga } from './Datos.js';
+import { avisarErrorCarga, mostrarAvisoPendiente } from './Datos.js';
 import { api, esc, ico, num } from './Estado.js';
 import { puedeGestionar } from './Permisos.js';
 
 export var notifPanelAbierto = false;
+
+function marcarBoton(abierto) {
+    var boton = document.getElementById('btnNotificaciones');
+    if (boton) boton.setAttribute('aria-expanded', String(abierto));
+}
 
 function generarNotificaciones(r) {
     var inactivos = r.total - r.activos;
@@ -15,21 +20,21 @@ function generarNotificaciones(r) {
     if (inactivos > 0) {
         notifs.push({
             tipo: 'warning', icono: 'alerta', titulo: 'Estudiantes inactivos',
-            texto: inactivos + ' de ' + r.total + ' estudiantes están inactivos (retención ' + r.retencionPorcentaje + '%).',
+            texto: inactivos + ' de ' + r.total + (inactivos === 1 ? ' estudiantes está inactivo' : ' estudiantes están inactivos') + ' (retención ' + r.retencionPorcentaje + '%).',
             tiempo: 'Hoy'
         });
     }
     if (r.completaron > 0) {
         notifs.push({
             tipo: 'success', icono: 'graduacion', titulo: 'Cursos completados',
-            texto: r.completaron + ' estudiantes completaron su curso al 100%.',
+            texto: r.completaron + (r.completaron === 1 ? ' estudiante completó' : ' estudiantes completaron') + ' su curso al 100%.',
             tiempo: 'Hoy'
         });
     }
     if (bajos > 0) {
         notifs.push({
             tipo: 'info', icono: 'tendenciaBaja', titulo: 'Progreso bajo',
-            texto: bajos + ' estudiantes llevan menos del 25% de progreso.',
+            texto: bajos + (bajos === 1 ? ' estudiante lleva' : ' estudiantes llevan') + ' menos del 25% de progreso.',
             tiempo: 'Reciente'
         });
     }
@@ -55,10 +60,10 @@ export async function abrirPanelNotificaciones() {
     }
     var notifs = generarNotificaciones(datos);
     var colores = {
-        warning: { bg: 'rgba(245,166,35,0.08)', border: 'rgba(245,166,35,0.25)', dot: '#F5A623' },
-        success: { bg: 'rgba(34,197,94,0.08)', border: 'rgba(34,197,94,0.25)', dot: '#22C55E' },
-        info: { bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.25)', dot: '#3B82F6' },
-        stat: { bg: 'rgba(139,92,246,0.08)', border: 'rgba(139,92,246,0.25)', dot: '#8B5CF6' }
+        warning: { bg: 'rgba(122,90,0,0.08)', border: 'rgba(122,90,0,0.25)', dot: '#7A5A00' },
+        success: { bg: 'rgba(10,109,95,0.08)', border: 'rgba(10,109,95,0.25)', dot: '#0A6D5F' },
+        info: { bg: 'rgba(42,62,158,0.08)', border: 'rgba(42,62,158,0.25)', dot: '#2A3E9E' },
+        stat: { bg: 'rgba(91,75,183,0.08)', border: 'rgba(91,75,183,0.25)', dot: '#5B4BB7' }
     };
 
     var itemsHTML = notifs.map(function (n) {
@@ -79,19 +84,16 @@ export async function abrirPanelNotificaciones() {
     var panelContent = document.getElementById('notifPanelContent');
     if (panelContent) panelContent.innerHTML = itemsHTML;
 
-    var badge = document.getElementById('notifBadge');
-    var inactivos = datos.total - datos.activos;
-    if (badge) {
-        badge.textContent = inactivos || '';
-        badge.style.display = inactivos ? 'flex' : 'none';
-    }
+    mostrarAvisoPendiente(datos.total - datos.activos);
 
     notifPanelAbierto = true;
     panel.classList.add('is-open');
+    marcarBoton(true);
 }
 
 export function cerrarPanelNotificaciones() {
     var panel = document.getElementById('notifPanel');
     if (panel) panel.classList.remove('is-open');
     notifPanelAbierto = false;
+    marcarBoton(false);
 }

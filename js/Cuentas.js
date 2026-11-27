@@ -41,6 +41,7 @@
     function filaHTML(cuenta) {
         const esYo = yo() && cuenta.id === yo().id;
         const esAdmin = cuenta.rol === 'administrador';
+        const esCuentaDemo = cuenta.rol === 'demo';
         const id = num(cuenta.id);
         const nombre = esc(cuenta.nombre);
 
@@ -57,11 +58,13 @@
             '<span><strong>' + nombre + '</strong>' + (esYo ? ' <span class="cuenta-yo">Tú</span>' : '') + '</span></div></td>' +
             '<td class="db-table__td">' + esc(cuenta.email) + '</td>' +
             '<td class="db-table__td"><span class="rol-badge' + (esAdmin ? ' rol-badge--admin' : '') + '">' +
-            (esAdmin ? 'Administrador' : 'Usuario') + '</span></td>' +
+            (esAdmin ? 'Administrador' : esCuentaDemo ? 'Demostración' : 'Usuario') + '</span></td>' +
             '<td class="db-table__td">' + esc(formatearFecha(cuenta.creadoEn)) + '</td>' +
             '<td class="db-table__td"><div class="cuenta-acciones">' +
-            '<button class="btn btn-secondary btn--sm" data-action="cuenta-editar" data-id="' + id + '" aria-label="Editar la cuenta de ' + nombre + '">Editar</button>' +
-            botonRol + botonEliminar +
+            (esCuentaDemo
+                ? '<span class="cuenta-yo">La administra el servidor</span>'
+                : '<button class="btn btn-secondary btn--sm" data-action="cuenta-editar" data-id="' + id + '" aria-label="Editar la cuenta de ' + nombre + '">Editar</button>' +
+                  botonRol + botonEliminar) +
             '</div></td></tr>';
     }
 
