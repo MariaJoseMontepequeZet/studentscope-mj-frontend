@@ -44,7 +44,7 @@ function renderizarCursos() {
 
     var tabsHTML = Object.keys(CATEGORIAS_INFO).map(function (k) {
         var activo = (k === filtro) ? ' cat-tab--active' : '';
-        return '<button class="cat-tab' + activo + '" data-cat="' + k + '">' +
+        return '<button type="button" class="cat-tab' + activo + '" data-cat="' + k + '" aria-pressed="' + (k === filtro) + '">' +
             esc(CATEGORIAS_INFO[k].label) + '</button>';
     }).join('');
 
@@ -77,7 +77,7 @@ function renderizarCursos() {
         '<div><h2 class="page-header__title">Catálogo de <span>Cursos</span></h2>' +
         '<p class="page-header__meta">' + state.cursos.length + ' cursos disponibles · StudentScope MJ</p></div>' +
         '</header>' +
-        '<div class="cat-tabs" role="tablist" aria-label="Filtrar por categoría">' + tabsHTML + '</div>' +
+        '<div class="cat-tabs" role="group" aria-label="Filtrar por categoría">' + tabsHTML + '</div>' +
         '<p class="cursos-count">Mostrando <strong>' + lista.length + '</strong> curso' + (lista.length !== 1 ? 's' : '') + '</p>' +
         '<div class="cursos-grid">' + cardsHTML + '</div>';
 
@@ -85,6 +85,8 @@ function renderizarCursos() {
         btn.addEventListener('click', function () {
             state.filtroCategoria = this.getAttribute('data-cat');
             renderizarCursos();
+            var elegido = sec.querySelector('.cat-tab[data-cat="' + state.filtroCategoria + '"]');
+            if (elegido) elegido.focus();
         });
     });
 }

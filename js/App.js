@@ -80,7 +80,7 @@ function init() {
     if (co) co.addEventListener('click', function (e) { if (e.target === co) cerrarConfirm(); });
 
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') { cerrarModal(); cerrarConfirm(); }
+        if (e.key === 'Escape') { cerrarModal(); cerrarConfirm(); cerrarPanelNotificaciones(); }
         if (e.key === 'Tab') atraparFoco(e);
     });
 

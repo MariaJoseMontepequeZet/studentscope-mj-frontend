@@ -95,9 +95,9 @@ function renderizarTablaTop10(top) {
     }).join('');
     return '<table class="db-table" style="min-width:520px">' +
         '<thead class="db-table__head"><tr>' +
-        '<th class="db-table__th">#</th><th class="db-table__th">Estudiante</th>' +
-        '<th class="db-table__th">Curso</th><th class="db-table__th">Progreso</th>' +
-        '<th class="db-table__th">Plan</th>' +
+        '<th class="db-table__th" scope="col">#</th><th class="db-table__th" scope="col">Estudiante</th>' +
+        '<th class="db-table__th" scope="col">Curso</th><th class="db-table__th" scope="col">Progreso</th>' +
+        '<th class="db-table__th" scope="col">Plan</th>' +
         '</tr></thead><tbody>' + rows + '</tbody></table>';
 }
 

@@ -75,6 +75,14 @@ export async function refrescarDatos() {
     }
 }
 
+/* Contador de inactivos sobre la campana. Vive aquí porque se llena al cargar el panel. */
+export function mostrarAvisoPendiente(inactivos) {
+    var badge = document.getElementById('notifBadge');
+    if (!badge) return;
+    badge.textContent = inactivos || '';
+    badge.style.display = inactivos && puedeGestionar() ? 'flex' : 'none';
+}
+
 function actualizarKPIs() {
     var r = state.resumen;
     if (!r) return;
@@ -87,6 +95,9 @@ function actualizarKPIs() {
     set('kpiTotalPie', r.activos + ' activos de ' + r.total);
     var bar = document.getElementById('kpiProgresoBar');
     if (bar) bar.style.setProperty('--progress-value', r.progresoPromedio + '%');
+    var medidor = document.getElementById('kpiProgresoMedidor');
+    if (medidor) medidor.setAttribute('aria-valuenow', r.progresoPromedio);
+    mostrarAvisoPendiente(r.inactivos);
 }
 
 export async function obtenerTodosLosEstudiantes() {

@@ -56,7 +56,7 @@
     var FECHA_MIN = '2023-01-01';
 
     /** Datos del momento de la validación; se fijan en cada llamada a dataset() o registro() */
-    var contexto = { hoy: null };
+    var contexto = { hoy: null, cursos: null };
 
     /** Rango válido del campo progreso */
     var PROGRESO_MIN = 0;
@@ -349,14 +349,15 @@
 
         if (typeof curso !== 'string') return errores;
 
-        if (CURSOS_VALIDOS.indexOf(curso.trim()) === -1) {
+        var validos = contexto.cursos || CURSOS_VALIDOS;
+        if (validos.indexOf(curso.trim()) === -1) {
             errores.push(crearError(
                 'ERROR',
                 registro.id,
                 'curso',
                 'V-07',
                 'El curso "' + curso + '" no existe en el catálogo oficial. ' +
-                'Cursos válidos: ' + CURSOS_VALIDOS.join(' | '),
+                'Cursos válidos: ' + validos.join(' | '),
                 curso
             ));
         }
@@ -853,11 +854,13 @@
      * No evalúa las reglas que comparan varios registros (V-14 a V-18).
      *
      * @param   {*}      unRegistro  Registro a validar
-     * @param   {object} [opciones]  { hoy: 'AAAA-MM-DD' } para fijar la fecha de hoy
+     * @param   {object} [opciones]  { hoy: 'AAAA-MM-DD', cursos: [nombres] } para fijar la fecha
+     *                              de hoy y usar los cursos de la base de datos
      * @returns {{valido: boolean, errores: Array}}
      */
     function registro(unRegistro, opciones) {
         contexto.hoy = (opciones && opciones.hoy) || fechaLocalISO(new Date());
+        contexto.cursos = (opciones && opciones.cursos) || null;
 
         if (!esObjeto(unRegistro)) {
             return {

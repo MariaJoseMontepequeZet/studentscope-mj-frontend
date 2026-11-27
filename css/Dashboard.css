@@ -1277,6 +1277,13 @@
     transition: transform 0.2s ease;
 }
 
+/* En teléfonos angostos dos columnas recortaban las cifras */
+@media (max-width: 479px) {
+    .rep-kpi-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
 .rep-kpi-box:hover {
     transform: translateY(-2px);
 }

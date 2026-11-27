@@ -587,8 +587,7 @@
                                     </div>
                                 </article>
 
-                                <article class="db-kpi-card db-kpi-card--blue" aria-label="Progreso promedio"
-                                    role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                <article class="db-kpi-card db-kpi-card--blue" aria-label="Progreso promedio">
                                     <div class="db-kpi-card__header">
                                         <div class="db-kpi-card__icon-wrap db-kpi-card__icon-wrap--blue"
                                             aria-hidden="true" data-icono="tendencia"></div>
@@ -598,7 +597,9 @@
                                         <p class="db-kpi-card__label">Progreso promedio</p>
                                         <p class="db-kpi-card__value" id="kpiProgreso">—</p>
                                         <div class="db-kpi-progress">
-                                            <div class="db-kpi-progress__track">
+                                            <div class="db-kpi-progress__track" id="kpiProgresoMedidor" role="progressbar"
+                                                aria-label="Progreso promedio" aria-valuenow="0" aria-valuemin="0"
+                                                aria-valuemax="100">
                                                 <div class="db-kpi-progress__fill" id="kpiProgresoBar"
                                                     style="--progress-value:0%; --kpi-pct:0%"></div>
                                             </div>
@@ -699,18 +700,9 @@
 
                     </div>
                     <div id="secCursos" class="db-section db-section--hidden">
-                        <div class="placeholder-section">
-                            <p class="placeholder-section__title">Cursos</p>
-                            <p>El catálogo de cursos está en desarrollo. Aquí podrás gestionar todos los cursos de
-                                StudentScope MJ.</p>
-                        </div>
                     </div>
 
                     <div id="secReportes" class="db-section db-section--hidden">
-                        <div class="placeholder-section">
-                            <p class="placeholder-section__title">Reportes</p>
-                            <p>Los reportes analíticos estarán disponibles próximamente.</p>
-                        </div>
                     </div>
 
                     <div id="secCuentas" class="db-section db-section--hidden" data-solo-admin></div>
@@ -755,19 +747,20 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="fCiudad">Ciudad</label>
-                            <select id="fCiudad">
-                                <option value="">Seleccionar…</option>
-                                <option>Bogotá</option>
-                                <option>Medellín</option>
-                                <option>Cali</option>
-                                <option>Barranquilla</option>
-                                <option>Cartagena</option>
-                                <option>Bucaramanga</option>
-                                <option>Pereira</option>
-                                <option>Manizales</option>
-                                <option>Santa Marta</option>
-                                <option>Cúcuta</option>
-                            </select>
+                            <input type="text" id="fCiudad" list="listaCiudades" maxlength="60" autocomplete="off"
+                                placeholder="Escribe o elige" />
+                            <datalist id="listaCiudades">
+                                <option value="Bogotá"></option>
+                                <option value="Medellín"></option>
+                                <option value="Cali"></option>
+                                <option value="Barranquilla"></option>
+                                <option value="Cartagena"></option>
+                                <option value="Bucaramanga"></option>
+                                <option value="Pereira"></option>
+                                <option value="Manizales"></option>
+                                <option value="Santa Marta"></option>
+                                <option value="Cúcuta"></option>
+                            </datalist>
                             <span class="form-group__error" aria-live="polite"></span>
                         </div>
                         <div class="form-group">

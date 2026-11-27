@@ -69,6 +69,9 @@ export async function iniciarSesion(e) {
 function errorPasswordLocal(password) {
     if (password.length < 8) return 'La contraseña debe tener al menos 8 caracteres';
     if (password.length > 72) return 'La contraseña no puede superar 72 caracteres';
+    if (new TextEncoder().encode(password).length > 72) {
+        return 'La contraseña es demasiado larga: los acentos y símbolos especiales ocupan más';
+    }
     if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) return 'La contraseña debe incluir letras y números';
     return '';
 }

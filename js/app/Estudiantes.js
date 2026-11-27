@@ -79,7 +79,7 @@ export function cambiarPagina(p) {
 
 function actualizarContador(n) {
     var el = document.getElementById('resultsCount');
-    if (el) el.innerHTML = 'Mostrando <strong>' + num(n) + '</strong> estudiantes en total';
+    if (el) el.innerHTML = 'Mostrando <strong>' + num(n) + '</strong> ' + (n === 1 ? 'estudiante' : 'estudiantes') + ' en total';
 }
 
 export function filtrar() {
@@ -122,6 +122,7 @@ export function abrirModal(id) {
         document.getElementById('fProgresoVal').textContent = '0%';
         document.getElementById('fActivo').checked = true;
         document.getElementById('fFecha').value = window.StudentScope.validar.hoy();
+        document.getElementById('fPlan').value = 'Básico';
         sincronizarMonto('Básico');
     }
     var campoFecha = document.getElementById('fFecha');
@@ -149,7 +150,7 @@ export async function guardarEstudiante() {
         nombre: g('fNombre').value.trim(),
         apellido: g('fApellido').value.trim(),
         email: g('fEmail').value.trim(),
-        ciudad: g('fCiudad').value,
+        ciudad: g('fCiudad').value.trim(),
         cursoId: g('fCurso').value,
         plan: g('fPlan').value,
         progreso: parseInt(g('fProgreso').value, 10),
@@ -212,8 +213,10 @@ function mostrarErroresDelServidor(error) {
 }
 
 function validarRegistroCompleto(registro) {
-    var errores = window.StudentScope.validar.registro(registro).errores.filter(function (e) {
-        return e.nivel === 'ERROR';
+    var cursos = state.cursos.map(function (c) { return c.nombre; });
+    var errores = window.StudentScope.validar.registro(registro, { cursos: cursos }).errores.filter(function (e) {
+        /* El formato del correo ya se revisó con la misma regla del servidor. */
+        return e.nivel === 'ERROR' && e.regla !== 'V-04';
     });
     errores.forEach(function (e, i) {
         var mensaje = e.mensaje.split('. ')[0];
@@ -227,7 +230,7 @@ function validarRegistroCompleto(registro) {
 function validarCampos(d) {
     var err = [];
     [['fNombre', d.nombre, 'Nombre requerido'], ['fApellido', d.apellido, 'Apellido requerido'],
-    ['fCiudad', d.ciudad, 'Selecciona ciudad'], ['fCurso', d.cursoId, 'Selecciona curso'],
+    ['fCiudad', d.ciudad, 'Escribe la ciudad'], ['fCurso', d.cursoId, 'Selecciona curso'],
     ['fPlan', d.plan, 'Selecciona plan'], ['fFecha', d.fecha, 'Fecha requerida']
     ].forEach(function (r) {
         setFieldError(r[0], !r[1] ? r[2] : '');
@@ -307,7 +310,21 @@ export function sincronizarMonto(plan) {
     if (el && PLANES_MONTO[plan]) el.textContent = 'USD $' + PLANES_MONTO[plan];
 }
 
+/* Las ciudades que ya existen también se sugieren en el formulario. */
+function sugerirCiudades() {
+    var lista = document.getElementById('listaCiudades');
+    if (!lista || !state.resumen) return;
+    var conocidas = Array.from(lista.options, function (o) { return o.value; });
+    state.resumen.porCiudad.forEach(function (c) {
+        if (conocidas.indexOf(c.ciudad) !== -1) return;
+        var opcion = document.createElement('option');
+        opcion.value = c.ciudad;
+        lista.appendChild(opcion);
+    });
+}
+
 export function poblarSelectCiudades() {
+    sugerirCiudades();
     var sel = document.getElementById('filterCiudad');
     if (!sel || !state.resumen) return;
     var ciudades = state.resumen.porCiudad.map(function (c) { return c.ciudad; }).sort();

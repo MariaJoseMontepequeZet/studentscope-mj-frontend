@@ -431,3 +431,13 @@ La configuración del servidor real (Docker Compose, Caddy y secretos) vive fuer
 ### Configuración privada del servidor fuera de git
 * `docs/servidor/` (la copia de la configuración del servidor, con claves) pasa a estar en `.gitignore`. Antes solo la protegía una exclusión local que ocultaba toda la carpeta `docs/`, y un archivo nuevo de documentación podía quedar sin subir sin que `git status` lo mostrara.
 * Una prueba vigila que `docs/servidor/` siga en `.gitignore` (120 pruebas en total).
+
+### Revisión de calidad
+* La ciudad del formulario se escribe o se elige de sugerencias. Antes era una lista fija y al editar a alguien con otra ciudad el campo quedaba vacío.
+* El validador acepta los cursos de la base de datos, y el correo se valida igual que en el servidor.
+* El contador de inactivos aparece sobre la campana al entrar; el panel se cierra con Escape y anuncia si está abierto.
+* La barra de progreso promedio anuncia su valor real a los lectores de pantalla (antes siempre 0).
+* Reportes caben en teléfonos angostos; "1 estudiante" en singular; el alta preselecciona el plan que muestra el monto.
+* La cuenta de demostración aparece como tal en Cuentas y sin botones (la API también la protege).
+* En la API: identificadores enormes responden 400 en vez de 500, la contraseña se limita a 72 bytes y una navegación nueva cancela la pendiente.
+
