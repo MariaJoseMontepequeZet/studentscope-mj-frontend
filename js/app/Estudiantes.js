@@ -102,7 +102,8 @@ export function abrirModal(id) {
     state.editandoId = id || null;
     limpiarFormulario();
     if (id) {
-        var e = state.estudiantes.find(function (x) { return x.id === id; });
+        var mismo = function (x) { return x.id === id; };
+        var e = state.estudiantes.find(mismo) || state.cielo.find(mismo);
         if (!e) return;
         document.getElementById('modalTitulo').textContent = 'Editar Estudiante';
         document.getElementById('fNombre').value = e.nombre;
@@ -262,47 +263,6 @@ export function eliminarEstudiante(id) {
             await refrescarDatos();
         }
     );
-}
-
-export function actualizarGrafico() {
-    if (!state.resumen) return;
-    var cities = state.resumen.porCiudad.map(function (c) { return c.ciudad; });
-    var vals = state.resumen.porCiudad.map(function (c) { return c.total; });
-    var clrs = ['rgba(245,166,35,.85)', 'rgba(59,130,246,.85)', 'rgba(34,197,94,.85)',
-        'rgba(139,92,246,.85)', 'rgba(249,115,22,.85)', 'rgba(236,72,153,.85)', 'rgba(20,184,166,.85)'];
-    var bgColors = cities.map(function (_, i) { return clrs[i % clrs.length]; });
-    if (state.grafico) {
-        state.grafico.data.labels = cities;
-        state.grafico.data.datasets[0].data = vals;
-        state.grafico.data.datasets[0].backgroundColor = bgColors;
-        state.grafico.update(); return;
-    }
-    var ctx = document.getElementById('ciudadesChart');
-    if (!ctx || typeof Chart === 'undefined') return;
-    state.grafico = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: cities, datasets: [{
-                label: 'Estudiantes', data: vals,
-                backgroundColor: bgColors, borderRadius: 6, borderSkipped: false
-            }]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#161B22', borderColor: 'rgba(255,255,255,.1)', borderWidth: 1,
-                    titleColor: '#F0F6FC', bodyColor: '#8B949E',
-                    callbacks: { label: function (c) { return ' ' + c.parsed.y + ' estudiante' + (c.parsed.y !== 1 ? 's' : ''); } }
-                }
-            },
-            scales: {
-                x: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: '#8B949E', font: { family: "'DM Sans'", size: 11 } } },
-                y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: '#8B949E', stepSize: 1, font: { family: "'DM Sans'", size: 11 } } }
-            }
-        }
-    });
 }
 
 export function sincronizarMonto(plan) {

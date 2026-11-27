@@ -10,6 +10,9 @@ export var PLANES_MONTO = { 'Básico': 29.99, 'Estándar': 59.99, 'Premium': 99.
 
 export var state = {
     estudiantes: [],
+    cielo: [],
+    cieloOcultos: [],
+    cieloElegido: null,
     total: 0,
     paginas: 0,
     resumen: null,
@@ -17,7 +20,6 @@ export var state = {
     peticion: 0,
     temporizadorBusqueda: null,
     editandoId: null,
-    grafico: null,
     graficoPlan: null,
     graficoProgreso: null,
     confirmCb: null,

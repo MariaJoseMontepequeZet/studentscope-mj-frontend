@@ -2,6 +2,7 @@ import { semillaDe } from './Configuracion.js';
 import { api, state } from './Estado.js';
 import { limpiarErrores, mostrarErrorCampo, mostrarErroresServidor, ocupado, showToast } from './Interfaz.js';
 import { cerrarPanelNotificaciones } from './Notificaciones.js';
+import { limpiarCielo } from './Observatorio.js';
 import { mostrarVista } from './Router.js';
 
 export function actualizarUsuarioDashboard(d) {
@@ -30,6 +31,10 @@ export function actualizarUsuarioActual(usuario) {
 function limpiarSesionLocal() {
     state.usuario = null;
     state.estudiantes = [];
+    state.cielo = [];
+    state.cieloOcultos = [];
+    state.cieloElegido = null;
+    limpiarCielo();
     state.total = 0;
     state.paginas = 0;
     state.resumen = null;

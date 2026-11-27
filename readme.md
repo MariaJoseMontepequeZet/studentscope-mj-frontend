@@ -17,9 +17,9 @@ Hecho por María José Montepeque Zet.
 
 Tomadas de la demo en vivo con los datos de ejemplo (nombres y correos ficticios).
 
-| Portada | Dashboard |
+| Portada | Observatorio |
 | :--- | :--- |
-| ![Portada con los botones para iniciar sesión, crear cuenta y probar la demo](docs/capturas/portada.png) | ![Dashboard con estudiantes activos, progreso promedio y gráfica por ciudad](docs/capturas/dashboard.png) |
+| ![Portada con los botones para iniciar sesión, crear cuenta y probar la demo](docs/capturas/portada.png) | ![Observatorio: mapa de estudiantes con quién dejó su curso](docs/capturas/dashboard.png) |
 
 | Estudiantes | Cursos |
 | :--- | :--- |
@@ -27,13 +27,13 @@ Tomadas de la demo en vivo con los datos de ejemplo (nombres y correos ficticios
 
 | Reportes | Móvil |
 | :--- | :--- |
-| ![Reportes con ingresos, retención y gráficas por plan y progreso](docs/capturas/reportes.png) | ![Dashboard en un teléfono](docs/capturas/movil.png) |
+| ![Reportes con ingresos, retención y gráficas por plan y progreso](docs/capturas/reportes.png) | ![Observatorio en un teléfono](docs/capturas/movil.png) |
 
 ## Características principales
 
 * **SPA con enrutador ligero:** navegación entre Landing, Login, Registro y Dashboard sin recargar la página.
 * **Cuentas y roles:** registro de usuarios, inicio de sesión real contra la API y panel de administración de cuentas (editar, eliminar, hacer o quitar administrador).
-* **Dashboard analítico:** indicadores clave y gráficas con Chart.js.
+* **Observatorio:** cada estudiante es un punto según su fecha de inscripción y su avance; el color dice si sigue, terminó o dejó el curso, y debajo aparece a quién escribirle primero. Las cuentas sin permiso de gestión solo ven cifras y ciudades.
 * **Gestión de estudiantes (CRUD):**
   * Vista en tarjetas.
   * Búsqueda y filtros por nombre, ciudad, plan y estado, resueltos en el servidor.
@@ -43,7 +43,7 @@ Tomadas de la demo en vivo con los datos de ejemplo (nombres y correos ficticios
 * **Reportes (solo administrador):** ingresos, retención, progreso promedio, gráficas por plan y por rango de progreso, y Top 10 de estudiantes.
 * **Configuración:** exportación a JSON y CSV de todos los estudiantes, descargados desde la API.
 * **Notificaciones:** panel del administrador con alertas calculadas a partir de los reportes (inactivos, cursos completados, progreso bajo).
-* **Sidebar accesible:** menú colapsable con control de foco, cierre con Escape y adaptación a móvil.
+* **Navegación accesible:** barra superior en escritorio y menú lateral en el teléfono, con control de foco y cierre con Escape.
 * **Motor de validación:** módulo independiente con 20 reglas de negocio sobre el dataset.
 
 ---
@@ -95,7 +95,10 @@ flowchart LR
 | `js/app/Estudiantes.js` | Lista, filtros, paginación, formulario, validación y baja de estudiantes, y la gráfica del dashboard. |
 | `js/app/Cursos.js`, `Reportes.js`, `Configuracion.js`, `Notificaciones.js` | Una sección cada uno. |
 | `js/app/Interfaz.js` | Avisos, errores de campo, confirmación y otras ayudas de pantalla. |
-| `js/Sidebar.js` | Control del menú lateral: eventos, accesibilidad y cambio de tamaño. |
+| `js/Sidebar.js` | Menú lateral en el teléfono: eventos, accesibilidad y cambio de tamaño. |
+| `js/Cielo.js` | Cálculos del mapa del observatorio (estado, posición y titular), sin tocar la página. |
+| `js/app/Observatorio.js` | Dibuja el mapa, la ficha del punto elegido, a quién escribir y las ciudades. |
+| `css/Observatorio.css` | Identidad visual y disposición del panel: cielo para mirar, papel para trabajar. |
 | `js/Catalogo.js` | Catálogo oficial de 30 cursos: única fuente para la interfaz y el validador. |
 | `js/Validacion.js` | Motor de validación con 20 reglas de negocio, para un dataset completo o para un registro. |
 | `js/Csv.js` | Generación del archivo CSV: comillas, saltos de línea y protección contra fórmulas de hoja de cálculo. |
@@ -440,4 +443,12 @@ La configuración del servidor real (Docker Compose, Caddy y secretos) vive fuer
 * Reportes caben en teléfonos angostos; "1 estudiante" en singular; el alta preselecciona el plan que muestra el monto.
 * La cuenta de demostración aparece como tal en Cuentas y sin botones (la API también la protege).
 * En la API: identificadores enormes responden 400 en vez de 500, la contraseña se limita a 72 bytes y una navegación nueva cancela la pendiente.
+
+### Rediseño: Observatorio
+* La interfaz deja el aspecto de panel genérico y toma el de un atlas celeste: cielo cobalto para el mapa, papel claro para trabajar, tipografías Bricolage Grotesque y Atkinson Hyperlegible.
+* El inicio es un mapa de estudiantes en lugar de tarjetas de cifras y una gráfica de barras: arriba quien avanza, abajo quien se detuvo, con leyenda para ocultar grupos y la lista de quienes dejaron su curso.
+* La navegación pasa a una barra superior (en el teléfono sigue siendo un menú lateral).
+* La portada ya no promete cosas que no existen ("plataforma líder", "100% meta-validado") y explica qué hace la aplicación.
+* Se quitan los estilos que dejaron de usarse y se respeta "reducir movimiento".
+* Accesibilidad medida con Lighthouse en local: 100 en la portada y en el panel.
 

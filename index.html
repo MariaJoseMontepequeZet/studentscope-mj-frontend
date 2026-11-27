@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/Cuentas.css" />
     <link rel="stylesheet" href="css/Avatares.css" />
     <link rel="stylesheet" href="css/Demo.css" />
+    <link rel="stylesheet" href="css/Observatorio.css" />
 
     <style>
         /* ── Vistas (view router) ── */
@@ -47,7 +48,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--color-bg-base);
             padding: 1.5rem;
         }
 
@@ -58,7 +58,7 @@
             padding: 2.5rem 2rem;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow-modal);
         }
 
         .login-logo {
@@ -69,10 +69,6 @@
             letter-spacing: -0.02em;
             color: var(--color-text-primary);
             margin-bottom: 0.25rem;
-        }
-
-        .login-logo span {
-            color: var(--color-accent-primary);
         }
 
         .login-subtitle {
@@ -90,9 +86,7 @@
         .login-label {
             display: block;
             font-size: var(--fs-xs);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-weight: 700;
             color: var(--color-text-muted);
             margin-bottom: 0.35rem;
         }
@@ -112,7 +106,7 @@
         .login-input:focus {
             outline: none;
             border-color: var(--color-accent-primary);
-            box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.15);
+            box-shadow: 0 0 0 3px rgba(31, 47, 122, 0.18);
         }
 
         .login-input.is-error {
@@ -199,7 +193,7 @@
             min-height: 100vh;
             position: relative;
             background: var(--color-bg-base);
-            overflow-x: hidden;
+            overflow-x: clip;
         }
 
         /* sidebar sticky — sin margin-left necesario */
@@ -211,143 +205,78 @@
 <body>
 
     <div id="view-landing" class="view">
-        <nav class="navbar scrolled">
-            <div class="navbar__inner">
-                <div class="navbar__logo">StudentScope <span>MJ</span></div>
-                <div class="nav-links">
-                    <a href="#hero">Inicio</a>
-                    <a href="#cursos-landing">Cursos</a>
-                    <a href="#features">Beneficios</a>
-                </div>
-                <button class="btn btn-primary" data-action="ir-login">Iniciar Sesión</button>
-            </div>
-        </nav>
-
         <main id="contenidoLanding">
-        <header id="hero">
-            <div class="hero-content">
-                <h1>Aprende Tecnología con <span>StudentScope MJ</span></h1>
-                <p>La plataforma líder en capacitación y monitoreo analítico de estudiantes. Potencia tus habilidades
-                    técnicas en desarrollo web, bases de datos y cloud computing de manera guiada.</p>
-                <div class="hero-cta">
-                    <button class="btn btn-primary" data-action="ir-login">Iniciar sesión →</button>
-                    <button class="btn btn-secondary" data-action="ir-registro">Crear cuenta</button>
-                    <button class="btn btn-secondary" data-action="entrar-demo">Probar la demo</button>
+            <header class="portada">
+                <div class="portada__barra">
+                    <p class="marca">StudentScope MJ</p>
+                    <button type="button" class="btn btn-cielo" data-action="ir-login">Iniciar sesión</button>
                 </div>
-            </div>
-        </header>
 
-        <section id="stats">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-item__number">+35</div>
-                    <div class="stat-item__label">Estudiantes Demo</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-item__number">100%</div>
-                    <div class="stat-item__label">Meta-Validado</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-item__number">30</div>
-                    <div class="stat-item__label">Cursos Oficiales</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-item__number">3</div>
-                    <div class="stat-item__label">Planes de Suscripción</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="cursos-landing" class="landing-section">
-            <span class="section-label">Catálogo Especializado</span>
-            <h2 class="section-title">Nuestras Rutas Académicas</h2>
-            <p class="section-subtitle">Explora los programas diseñados bajo estrictos estándares de ingeniería para
-                llevar el conocimiento práctico a la interfaz de desarrollo.</p>
-
-            <div class="courses-grid">
-                <div class="course-card">
-                    <div class="course-body">
-                        <span class="course-badge course-badge--web">Desarrollo Web</span>
-                        <h3>Full Stack Developer</h3>
-                        <p>Domina la arquitectura cliente-servidor con JavaScript Vanilla, layouts avanzados y bases de
-                            datos estructuradas.</p>
+                <div class="portada__texto">
+                    <h1>Mira quién se está quedando atrás</h1>
+                    <p>Cada estudiante es un punto en el cielo de tu academia: arriba quien avanza, abajo quien se detuvo.
+                        Así sabes a quién escribirle antes de que abandone.</p>
+                    <div class="portada__acciones">
+                        <button type="button" class="btn btn-sol" data-action="entrar-demo">Probar la demo</button>
+                        <button type="button" class="btn btn-cielo" data-action="ir-registro">Crear cuenta</button>
                     </div>
-                    <footer>
-                        <span>Duración: 16 semanas</span>
-                        <strong>Premium</strong>
-                    </footer>
                 </div>
-                <div class="course-card">
-                    <div class="course-body">
-                        <span class="course-badge course-badge--data">Data Science</span>
-                        <h3>Python & Data Science</h3>
-                        <p>Análisis estadístico, automatización de datos y manipulación de entornos analíticos complejos
-                            de negocio.</p>
-                    </div>
-                    <footer>
-                        <span>Duración: 12 semanas</span>
-                        <strong>Estándar</strong>
-                    </footer>
-                </div>
-                <div class="course-card">
-                    <div class="course-body">
-                        <span class="course-badge course-badge--devops">Cloud</span>
-                        <h3>DevOps y Cloud Computing</h3>
-                        <p>Orquestación de entornos, optimización de servidores Linux y despliegue continuo de
-                            aplicaciones estables.</p>
-                    </div>
-                    <footer>
-                        <span>Duración: 14 semanas</span>
-                        <strong>Premium</strong>
-                    </footer>
-                </div>
-                <div class="course-card">
-                    <div class="course-body">
-                        <span class="course-badge course-badge--mobile">Mobile</span>
-                        <h3>React Native Desarrollo</h3>
-                        <p>Construcción avanzada de aplicaciones para múltiples plataformas usando esquemas y
-                            optimizaciones nativas.</p>
-                    </div>
-                    <footer>
-                        <span>Duración: 10 semanas</span>
-                        <strong>Básico</strong>
-                    </footer>
-                </div>
-            </div>
-        </section>
 
-        <section id="features" class="landing-section">
-            <span class="section-label">Ventajas operativas</span>
-            <h2 class="section-title">Por qué administrar con StudentScope MJ</h2>
-            <p class="section-subtitle">Garantizamos una visualización analítica libre de frameworks, veloz y
-                completamente modular.</p>
+                <figure class="portada__mapa">
+                    <svg role="img" aria-label="Ejemplo del mapa: tres estudiantes detenidos abajo, a la izquierda">
+                        <circle class="punto punto--abandono" cx="8%" cy="72%" r="9" />
+                        <circle class="punto punto--abandono" cx="13%" cy="58%" r="6" />
+                        <circle class="punto punto--abandono" cx="19%" cy="82%" r="6" />
+                        <circle class="punto punto--activo" cx="22%" cy="40%" r="6" />
+                        <circle class="punto punto--activo" cx="27%" cy="30%" r="6" />
+                        <circle class="punto punto--completo" cx="31%" cy="12%" r="9" />
+                        <circle class="punto punto--activo" cx="36%" cy="48%" r="6" />
+                        <circle class="punto punto--activo" cx="41%" cy="22%" r="6" />
+                        <circle class="punto punto--activo" cx="44%" cy="62%" r="6" />
+                        <circle class="punto punto--completo" cx="49%" cy="10%" r="6" />
+                        <circle class="punto punto--activo" cx="53%" cy="36%" r="9" />
+                        <circle class="punto punto--activo" cx="57%" cy="28%" r="6" />
+                        <circle class="punto punto--activo" cx="61%" cy="52%" r="6" />
+                        <circle class="punto punto--completo" cx="65%" cy="14%" r="6" />
+                        <circle class="punto punto--activo" cx="69%" cy="44%" r="6" />
+                        <circle class="punto punto--activo" cx="72%" cy="66%" r="9" />
+                        <circle class="punto punto--activo" cx="76%" cy="33%" r="6" />
+                        <circle class="punto punto--activo" cx="80%" cy="74%" r="6" />
+                        <circle class="punto punto--activo" cx="83%" cy="57%" r="6" />
+                        <circle class="punto punto--activo" cx="87%" cy="80%" r="6" />
+                        <circle class="punto punto--activo" cx="91%" cy="69%" r="9" />
+                        <circle class="punto punto--activo" cx="94%" cy="86%" r="6" />
+                        <circle class="punto punto--activo" cx="47%" cy="40%" r="6" />
+                        <circle class="punto punto--activo" cx="66%" cy="70%" r="6" />
+                        <circle class="aro" cx="13%" cy="58%" r="16" />
+                    </svg>
+                    <figcaption>
+                        <span class="clave clave--activo">en curso</span>
+                        <span class="clave clave--abandono">dejó el curso</span>
+                        <span class="clave clave--completo">terminó</span>
+                    </figcaption>
+                </figure>
+            </header>
 
-            <div class="features-grid">
-                <div class="feature-item">
-                    <h3>Control Analítico (KPIs)</h3>
-                    <p>Monitoreo inmediato de ingresos generados, estudiantes activos y promedios generales calculados
-                        dinámicamente.</p>
+            <section class="portada__detalle" aria-label="Qué puedes hacer">
+                <div>
+                    <h2>Lleva cada ficha</h2>
+                    <p>Agrega, busca y edita estudiantes con su curso, plan, ciudad y avance. Lo que guardas queda en la
+                        base de datos y se puede exportar a Excel.</p>
                 </div>
-                <div class="feature-item">
-                    <h3>Meta-Validación Rigurosa</h3>
-                    <p>Filtros estricto que aíslan datos corruptos, detectan duplicidades y asocian coherentemente
-                        planes con montos reales.</p>
+                <div>
+                    <h2>Lee las cuentas</h2>
+                    <p>Ingresos, retención, avance promedio y quiénes van al frente, calculados con los datos del momento.</p>
                 </div>
-                <div class="feature-item">
-                    <h3>Control de Sesión SPA</h3>
-                    <p>Enrutamiento reactivo que cambia de entorno de forma fluida mediante animaciones integradas y
-                        seguras.</p>
+                <div>
+                    <h2>Recibe el aviso</h2>
+                    <p>Con n8n en el servidor, un correo semanal con las cifras y otro con quienes dejaron su curso.</p>
                 </div>
-            </div>
-        </section>
-
+            </section>
         </main>
 
-        <footer class="site-footer">
-            <div class="footer-bottom">
-                <p>&copy; 2026 StudentScope MJ. Panel de Gestión Educativa Independiente.</p>
-                <p>Construido con HTML Semántico, CSS Puro y JS Vanilla.</p>
-            </div>
+        <footer class="portada__pie">
+            <p>StudentScope MJ, seguimiento de estudiantes. La demo usa datos de ejemplo.</p>
         </footer>
     </div>
 
@@ -355,7 +284,7 @@
         <div class="login-page">
             <div class="login-card">
 
-                <p class="login-logo">StudentScope <span>MJ</span></p>
+                <p class="login-logo">StudentScope MJ</p>
                 <p class="login-subtitle">Inicia sesión para continuar</p>
 
                 <form id="formLogin" class="login-form" novalidate>
@@ -375,7 +304,7 @@
                     </div>
 
                     <button type="submit" id="btnLogin" class="btn btn-primary login-btn">
-                        Iniciar sesión →
+                        Iniciar sesión
                     </button>
 
                 </form>
@@ -399,7 +328,7 @@
         <div class="login-page">
             <div class="login-card">
 
-                <p class="login-logo">StudentScope <span>MJ</span></p>
+                <p class="login-logo">StudentScope MJ</p>
                 <p class="login-subtitle">Crea tu cuenta</p>
 
                 <form id="formRegistro" class="login-form" novalidate>
@@ -434,7 +363,7 @@
                     </div>
 
                     <button type="submit" id="btnRegistro" class="btn btn-primary login-btn">
-                        Crear cuenta →
+                        Crear cuenta
                     </button>
 
                 </form>
@@ -459,7 +388,7 @@
 
                 <div class="db-sidebar__logo">
                     <span class="db-sidebar__logo-name">
-                        StudentScope <span style="color:var(--color-accent-primary)">MJ</span>
+                        StudentScope MJ
                     </span>
                 </div>
 
@@ -468,7 +397,7 @@
                         <li class="db-sidebar__nav-item">
                             <a href="#" class="db-sidebar__nav-link db-sidebar__nav-link--active"
                                 data-section="dashboard" aria-current="page">
-                                <span class="db-sidebar__nav-icon" data-icono="panel"></span> <span class="db-sidebar__nav-text">Dashboard</span>
+                                <span class="db-sidebar__nav-icon" data-icono="panel"></span> <span class="db-sidebar__nav-text">Observatorio</span>
                             </a>
                         </li>
                         <li class="db-sidebar__nav-item" data-gestion>
@@ -568,77 +497,54 @@
 
                     <div id="secDashboard" class="db-section">
 
-                        <section class="db-kpi-section" aria-label="Indicadores clave">
-                            <p class="db-section-label">Resumen general</p>
-                            <div class="db-kpi-grid">
+                        <section class="cielo" aria-labelledby="cieloTitular">
+                            <div class="cielo__cabecera">
+                                <h2 id="cieloTitular" class="cielo__titular">Mirando el cielo…</h2>
+                                <p class="cielo__cifras">
+                                    <span><strong id="kpiTotal">—</strong> estudiantes</span>
+                                    <span><strong id="kpiCursos">—</strong> activos</span>
+                                    <span>avance promedio <strong id="kpiProgreso">—</strong></span>
+                                </p>
+                                <div class="cielo__medidor" id="kpiProgresoMedidor" role="progressbar"
+                                    aria-label="Progreso promedio" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    <div id="kpiProgresoBar"></div>
+                                </div>
+                            </div>
 
-                                <article class="db-kpi-card db-kpi-card--yellow" aria-label="Estudiantes activos">
-                                    <div class="db-kpi-card__header">
-                                        <div class="db-kpi-card__icon-wrap db-kpi-card__icon-wrap--yellow"
-                                            aria-hidden="true" data-icono="libro"></div>
-                                        <span class="db-kpi-card__badge db-kpi-card__badge--orange">En curso</span>
-                                    </div>
-                                    <div class="db-kpi-card__body">
-                                        <p class="db-kpi-card__label">Estudiantes activos</p>
-                                        <p class="db-kpi-card__value" id="kpiCursos">—</p>
-                                    </div>
-                                    <div class="db-kpi-card__footer">
-                                        <span class="db-kpi-card__delta db-kpi-card__delta--neutral" id="kpiCursosPie">—</span>
-                                    </div>
-                                </article>
+                            <div class="cielo__leyenda" role="group" aria-label="Mostrar en el mapa" data-gestion>
+                                <button type="button" class="clave clave--activo" data-action="cielo-filtro"
+                                    data-estado="activo" aria-pressed="true">En curso <b id="cuentaActivo">0</b></button>
+                                <button type="button" class="clave clave--abandono" data-action="cielo-filtro"
+                                    data-estado="abandono" aria-pressed="true">Dejó el curso <b id="cuentaAbandono">0</b></button>
+                                <button type="button" class="clave clave--completo" data-action="cielo-filtro"
+                                    data-estado="completo" aria-pressed="true">Terminó <b id="cuentaCompleto">0</b></button>
+                            </div>
 
-                                <article class="db-kpi-card db-kpi-card--blue" aria-label="Progreso promedio">
-                                    <div class="db-kpi-card__header">
-                                        <div class="db-kpi-card__icon-wrap db-kpi-card__icon-wrap--blue"
-                                            aria-hidden="true" data-icono="tendencia"></div>
-                                        <span class="db-kpi-card__badge db-kpi-card__badge--blue">Promedio</span>
-                                    </div>
-                                    <div class="db-kpi-card__body">
-                                        <p class="db-kpi-card__label">Progreso promedio</p>
-                                        <p class="db-kpi-card__value" id="kpiProgreso">—</p>
-                                        <div class="db-kpi-progress">
-                                            <div class="db-kpi-progress__track" id="kpiProgresoMedidor" role="progressbar"
-                                                aria-label="Progreso promedio" aria-valuenow="0" aria-valuemin="0"
-                                                aria-valuemax="100">
-                                                <div class="db-kpi-progress__fill" id="kpiProgresoBar"
-                                                    style="--progress-value:0%; --kpi-pct:0%"></div>
-                                            </div>
-                                            <div class="db-kpi-progress__labels">
-                                                <span>0%</span><span>100%</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="db-kpi-card__footer">
-                                        <span class="db-kpi-card__delta db-kpi-card__delta--neutral" id="kpiProgresoPie">—</span>
-                                    </div>
-                                </article>
-
-                                <article class="db-kpi-card db-kpi-card--purple" aria-label="Total de estudiantes">
-                                    <div class="db-kpi-card__header">
-                                        <div class="db-kpi-card__icon-wrap db-kpi-card__icon-wrap--purple"
-                                            aria-hidden="true" data-icono="usuarios"></div>
-                                        <span class="db-kpi-card__badge db-kpi-card__badge--blue">Total</span>
-                                    </div>
-                                    <div class="db-kpi-card__body">
-                                        <p class="db-kpi-card__label">Total estudiantes</p>
-                                        <p class="db-kpi-card__value" id="kpiTotal">—</p>
-                                    </div>
-                                    <div class="db-kpi-card__footer">
-                                        <span class="db-kpi-card__delta db-kpi-card__delta--neutral" id="kpiTotalPie">—</span>
-                                    </div>
-                                </article>
-
+                            <div class="cielo__marco" data-gestion>
+                                <p class="cielo__eje">Avance: de 0 % abajo a 100 % arriba. El punto más grande es el plan más caro.</p>
+                                <div class="cielo__mapa">
+                                    <svg id="mapaCielo" role="img" aria-label="Mapa de estudiantes"></svg>
+                                    <div id="cieloFicha" class="cielo__ficha" aria-live="polite" hidden></div>
+                                </div>
+                                <p class="cielo__fechas">
+                                    <span id="cieloDesde"></span>
+                                    <span>Inscripción</span>
+                                    <span id="cieloHasta"></span>
+                                </p>
                             </div>
                         </section>
 
-                        <section class="chart-section" aria-label="Distribución por ciudad" style="margin-top:2rem;">
-                            <h3 class="chart-section__title">
-                                Estudiantes por ciudad
-                                <span>— distribución geográfica</span>
-                            </h3>
-                            <div class="chart-canvas-wrap">
-                                <canvas id="ciudadesChart"></canvas>
+                        <section class="rezagados" aria-labelledby="rezagadosTitulo" data-gestion>
+                            <div class="rezagados__cabecera">
+                                <h3 id="rezagadosTitulo">A quién escribirle primero</h3>
+                                <button type="button" class="btn btn-secondary btn--sm" data-action="ver-estudiantes">Ver todos los estudiantes</button>
                             </div>
+                            <ul id="listaRezagados" class="rezagados__lista"></ul>
+                        </section>
+
+                        <section class="ciudades" aria-labelledby="ciudadesTitulo">
+                            <h3 id="ciudadesTitulo">De dónde son</h3>
+                            <ul id="ciudadesBarras" class="ciudades__lista"></ul>
                         </section>
 
                     </div>
@@ -646,11 +552,11 @@
 
                         <header class="page-header">
                             <div>
-                                <h2 class="page-header__title">Gestión de <span>Estudiantes</span></h2>
-                                <p class="page-header__meta">StudentScope MJ · Panel Administrativo</p>
+                                <h2 class="page-header__title">Estudiantes</h2>
+                                <p class="page-header__meta">Cada ficha con su curso y su avance</p>
                             </div>
                             <button id="btnAgregarEstudiante" class="btn btn-primary">
-                                ＋ Agregar Estudiante
+                                Agregar estudiante
                             </button>
                         </header>
 
@@ -878,6 +784,7 @@
     <script src="js/Validacion.js"></script>
     <script src="js/Escapar.js"></script>
     <script src="js/Csv.js"></script>
+    <script src="js/Cielo.js"></script>
     <script src="js/Iconos.js"></script>
     <script src="js/Api.js"></script>
     <script src="js/vendor/avatares.js"></script>

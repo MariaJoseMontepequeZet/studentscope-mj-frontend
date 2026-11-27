@@ -37,9 +37,9 @@ function renderizarCursos() {
         : state.cursos.filter(function (c) { return c.categoria === filtro; });
 
     var coloresCat = {
-        'web': '#3B82F6', 'data': '#F5A623', 'devops': '#8B5CF6',
-        'mobile': '#F97316', 'design': '#EC4899', 'seguridad': '#EF4444',
-        'marketing': '#22C55E'
+        'web': '#2A3E9E', 'data': '#7A5A00', 'devops': '#5B4BB7',
+        'mobile': '#9A4A14', 'design': '#A02463', 'seguridad': '#B23018',
+        'marketing': '#0A6D5F'
     };
 
     var tabsHTML = Object.keys(CATEGORIAS_INFO).map(function (k) {
@@ -49,7 +49,7 @@ function renderizarCursos() {
     }).join('');
 
     var cardsHTML = lista.map(function (c) {
-        var color = coloresCat[c.categoria] || '#F5A623';
+        var color = coloresCat[c.categoria] || '#7A5A00';
         var categoria = CATEGORIAS_INFO[c.categoria] ? CATEGORIAS_INFO[c.categoria].label : c.categoria;
         var nivelClass = c.nivel === 'Avanzado' ? 'nivel--avanzado' : c.nivel === 'Intermedio' ? 'nivel--intermedio' : 'nivel--basico';
         return '<article class="curso-card">' +

@@ -7,6 +7,7 @@ import { num, state } from './app/Estado.js';
 import { abrirModal, buscarConRetraso, cambiarPagina, cerrarModal, eliminarEstudiante, filtrar, guardarEstudiante, sincronizarMonto } from './app/Estudiantes.js';
 import { abrirConfirm, abrirDialogo, atraparFoco, cerrarConfirm, cerrarDialogo, ejecutarConfirm, setFieldError, showToast } from './app/Interfaz.js';
 import { abrirPanelNotificaciones, cerrarPanelNotificaciones, notifPanelAbierto } from './app/Notificaciones.js';
+import { alternarEstado, elegirPunto } from './app/Observatorio.js';
 import { initNavSidebar, mostrarVista } from './app/Router.js';
 import { actualizarUsuarioActual, cerrarSesion, iniciarDemo, iniciarSesion, registrarCuenta, restaurarSesion, sesionExpirada } from './app/Sesion.js';
 
@@ -101,6 +102,9 @@ const ACCIONES = {
     'ir-landing': function () { mostrarVista('landing'); },
     'entrar-demo': function (el) { iniciarDemo(el); },
     'editar': function (el) { abrirModal(num(el.getAttribute('data-id'))); },
+    'cielo-punto': function (el) { elegirPunto(num(el.getAttribute('data-id'))); },
+    'cielo-filtro': function (el) { alternarEstado(el); },
+    'ver-estudiantes': function () { document.querySelector('.db-sidebar__nav-link[data-section="estudiantes"]').click(); },
     'eliminar': function (el) { eliminarEstudiante(num(el.getAttribute('data-id'))); },
     'pagina': function (el) { cambiarPagina(num(el.getAttribute('data-page'))); },
     'cerrar-modal': function () { cerrarModal(); },

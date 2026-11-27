@@ -60,10 +60,10 @@ export async function abrirPanelNotificaciones() {
     }
     var notifs = generarNotificaciones(datos);
     var colores = {
-        warning: { bg: 'rgba(245,166,35,0.08)', border: 'rgba(245,166,35,0.25)', dot: '#F5A623' },
-        success: { bg: 'rgba(34,197,94,0.08)', border: 'rgba(34,197,94,0.25)', dot: '#22C55E' },
-        info: { bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.25)', dot: '#3B82F6' },
-        stat: { bg: 'rgba(139,92,246,0.08)', border: 'rgba(139,92,246,0.25)', dot: '#8B5CF6' }
+        warning: { bg: 'rgba(122,90,0,0.08)', border: 'rgba(122,90,0,0.25)', dot: '#7A5A00' },
+        success: { bg: 'rgba(10,109,95,0.08)', border: 'rgba(10,109,95,0.25)', dot: '#0A6D5F' },
+        info: { bg: 'rgba(42,62,158,0.08)', border: 'rgba(42,62,158,0.25)', dot: '#2A3E9E' },
+        stat: { bg: 'rgba(91,75,183,0.08)', border: 'rgba(91,75,183,0.25)', dot: '#5B4BB7' }
     };
 
     var itemsHTML = notifs.map(function (n) {
